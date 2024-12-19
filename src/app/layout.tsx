@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ModeToggle } from "@/components/theme-toggle";
 import { Menu } from "lucide-react";
 
 const geistSans = localFont({
@@ -45,7 +45,7 @@ export default function RootLayout({
               <p className="text-xl font-semibold tracking-wider font-mono">
                 Limit: 2/week
               </p>
-              <ThemeToggle />
+              <ModeToggle />
               <Menu size={40} />
             </div>
           </header>
