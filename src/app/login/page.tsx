@@ -58,7 +58,7 @@ export default function Login() {
                   <FormItem className="w-full">
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Input placeholder="type your username" {...field} />
                     </FormControl>
 
                     <FormMessage />
