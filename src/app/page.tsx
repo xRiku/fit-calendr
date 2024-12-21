@@ -26,7 +26,7 @@ export default function Home() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="font-extrabold text-2xl">
-                Create cheat meal
+                Add cheat meal
               </DialogTitle>
               <DialogDescription>
                 Add the details of your cheat meal here. They are optional, but

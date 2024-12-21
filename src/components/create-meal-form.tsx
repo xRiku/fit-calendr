@@ -1,5 +1,15 @@
 "use client";
 
+import * as React from "react";
+import { format } from "date-fns";
+import { CalendarIcon, Moon, Sun, Sunrise, Sunset } from "lucide-react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -9,21 +19,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { z } from "zod";
-import { Sunrise, Sun, Sunset, Moon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { useRef } from "react";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 const formSchema = z.object({
-  mealName: z
-    .string()
-    .min(2, {
-      message: "Username must be at least 2 characters",
-    })
-    .max(50),
-  mealPeriod: z.enum(["dawn", "morning", "afternoon", "night", ""]),
+  mealName: z.string().max(50).optional(),
+  mealPeriod: z.enum(["dawn", "morning", "afternoon", "night", ""]).optional(),
+  mealDate: z.date().optional(),
 });
 
 export default function CreateMealForm() {
@@ -32,6 +40,7 @@ export default function CreateMealForm() {
     defaultValues: {
       mealName: "",
       mealPeriod: "",
+      mealDate: new Date(),
     },
   });
 
@@ -40,6 +49,8 @@ export default function CreateMealForm() {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  const popOverRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <Form {...form}>
@@ -53,11 +64,57 @@ export default function CreateMealForm() {
           name="mealName"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel>Meal name</FormLabel>
+              <FormLabel className="font-bold">Meal name</FormLabel>
               <FormControl>
                 <Input placeholder="type the name of your meal" {...field} />
               </FormControl>
-
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="mealDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col w-full">
+              <FormLabel className="font-bold">
+                The day to add the cheat meal
+              </FormLabel>
+              <Popover modal={true}>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        " pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverClose ref={popOverRef} />
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={(e) => {
+                      field.onChange(e);
+                      popOverRef.current?.click();
+                    }}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
@@ -67,7 +124,9 @@ export default function CreateMealForm() {
           name="mealPeriod"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel>What time did you have the meal?</FormLabel>
+              <FormLabel className="font-bold">
+                What time did you have the meal?
+              </FormLabel>
               <FormControl>
                 <ToggleGroup
                   type="single"
