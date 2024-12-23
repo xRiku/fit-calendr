@@ -15,10 +15,10 @@ datasource db {
 model CheatMeal {
   id String @id @default(uuid())
   name String?
-  date DateTime?
+  date DateTime @default(now())
   period String?
 
-  @@map("cheat_meal")
+  @@map("cheat_meals")
 }
 
 

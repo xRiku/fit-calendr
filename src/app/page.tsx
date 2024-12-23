@@ -11,16 +11,18 @@ import {
 import { Plus } from "lucide-react";
 import Cells from "@/components/cells";
 import CreateMealForm from "@/components/create-meal-form";
+import { ListCheatMealCell } from "@/components/list-cheat-meal-cell";
 
 export default function Home() {
   return (
     <main className="flex flex-col items-start justify-center w-11/12 mx-auto ">
       <Cells />
-      <div className="mt-4">
+      <div className="mt-4 w-10/12 gap-4 flex items-start justify-between">
+        <ListCheatMealCell />
         <Dialog>
           <DialogTrigger asChild>
             <Button asChild variant="ghost">
-              <Plus className="h-24 w-24 text-green-600 dark:hover:text-green-400 hover:text-green-400" />
+              <Plus className="h-32 w-32 text-green-600 dark:hover:text-green-400 hover:text-green-400" />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
