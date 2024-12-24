@@ -27,6 +27,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { useRef } from "react";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { addCheatMeal } from "@/app/actions/actions";
 
 const formSchema = z.object({
   mealName: z.string().max(50).optional(),
@@ -34,7 +35,7 @@ const formSchema = z.object({
   mealDate: z.date().optional(),
 });
 
-export default function CreateMealForm() {
+export default function MealForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,10 +45,12 @@ export default function CreateMealForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    console.log(typeof values.mealDate);
+    // await addCheatMeal(values);
   }
 
   const popOverRef = useRef<HTMLButtonElement | null>(null);
@@ -56,7 +59,8 @@ export default function CreateMealForm() {
     <Form {...form}>
       <form
         id="create-meal-form"
-        onSubmit={form.handleSubmit(onSubmit)}
+        action={addCheatMeal}
+        // onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4 flex flex-col items-end justify-center"
       >
         <FormField
@@ -116,6 +120,11 @@ export default function CreateMealForm() {
                 </PopoverContent>
               </Popover>
               <FormMessage />
+              <input
+                type="hidden"
+                name={field.name}
+                value={field.value?.toISOString()}
+              />
             </FormItem>
           )}
         />
@@ -166,6 +175,7 @@ export default function CreateMealForm() {
                 </ToggleGroup>
               </FormControl>
               <FormMessage />
+              <input type="hidden" name={field.name} value={field.value} />
             </FormItem>
           )}
         />

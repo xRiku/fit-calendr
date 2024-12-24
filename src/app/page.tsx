@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import Cells from "@/components/cells";
-import CreateMealForm from "@/components/create-meal-form";
+import MealForm from "@/components/meal-form";
 import { ListCheatMealCell } from "@/components/list-cheat-meal-cell";
 
 export default function Home() {
@@ -35,7 +35,7 @@ export default function Home() {
                 can be useful for analytics.
               </DialogDescription>
             </DialogHeader>
-            <CreateMealForm />
+            <MealForm />
             <DialogFooter className="flex sm:justify-center gap-4">
               <Button variant="outline" className="w-1/4">
                 Cancel
