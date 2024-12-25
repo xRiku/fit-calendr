@@ -1,3 +1,5 @@
+"use client";
+
 import { Filter, Moon, Sun, Sunrise, Sunset } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -8,7 +10,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Separator } from "./ui/separator";
-import prisma from "@/lib/db";
 import { DatePeriod, DayPeriod } from "@/types/enums";
 import {
   Table,
@@ -19,12 +20,13 @@ import {
   TableRow,
 } from "./ui/table";
 import { Badge } from "./ui/badge";
+import { useEffect, useState } from "react";
+import { getCheatMealsByDate } from "@/app/actions/actions";
+import { CheatMeal } from "@prisma/client";
 
 const today = new Date();
 
 export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
-  console.log(period);
-
   switch (period) {
     case DayPeriod.dawn:
       return <Sunrise />;
@@ -39,32 +41,30 @@ export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
   }
 }
 
-export async function ListCheatMealCell() {
-  const getCheatMealsByDate = async (datePeriod: DatePeriod) => {
-    "use server";
+export function ListCheatMealCell() {
+  const [cheatMeals, setCheatMeals] = useState<CheatMeal[]>([]);
+  const [selectedDatePeriod, setSelectedDatePeriod] = useState(
+    DatePeriod.today
+  );
 
-    if (datePeriod === DatePeriod.today) {
-      const dateOnly = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-      );
-      const data = await prisma.cheatMeal.findMany({
-        where: {
-          date: {
-            gt: dateOnly,
-          },
-        },
-      });
-      return data;
+  useEffect(() => {
+    async function fetchCheatMeals() {
+      const data = await getCheatMealsByDate(selectedDatePeriod);
+      if (data) {
+        setCheatMeals(data);
+      }
     }
-  };
 
-  const cheatMeals = await getCheatMealsByDate(DatePeriod.today);
+    fetchCheatMeals();
+  }, [selectedDatePeriod]);
 
   return (
     <section className="flex flex-col border-2 p-10 w-full rounded-xl">
-      <Select defaultValue="today">
+      <Select
+        value={selectedDatePeriod}
+        defaultValue={selectedDatePeriod}
+        onValueChange={(value: DatePeriod) => setSelectedDatePeriod(value)}
+      >
         <div className="flex w-full items-center justify-between">
           <SelectTrigger className="flex w-8/12">
             <div className="flex gap-2 items-center">
@@ -79,9 +79,15 @@ export async function ListCheatMealCell() {
           </span>
         </div>
         <SelectContent>
-          <SelectItem value="today">Today&apos;s cheat meal</SelectItem>
-          <SelectItem value="week">This week&apos;s cheat meal</SelectItem>
-          <SelectItem value="month">This month&apos;s cheat meal</SelectItem>
+          <SelectItem value={DatePeriod.today}>
+            Today&apos;s cheat meal
+          </SelectItem>
+          <SelectItem value={DatePeriod.week}>
+            This week&apos;s cheat meal
+          </SelectItem>
+          <SelectItem value={DatePeriod.month}>
+            This month&apos;s cheat meal
+          </SelectItem>
         </SelectContent>
       </Select>
       <Separator className="my-4" />
