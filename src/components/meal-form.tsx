@@ -28,6 +28,7 @@ import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { useRef } from "react";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { addCheatMeal } from "@/app/actions/actions";
+import { DayPeriod } from "@/types/enums";
 
 const formSchema = z.object({
   mealName: z.string().max(50).optional(),
@@ -35,7 +36,11 @@ const formSchema = z.object({
   mealDate: z.date().optional(),
 });
 
-export default function MealForm() {
+type MealFormProps = {
+  onFormSubmission: () => void;
+};
+
+export default function MealForm({ onFormSubmission }: MealFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,22 +50,16 @@ export default function MealForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    console.log(typeof values.mealDate);
-    // await addCheatMeal(values);
-  }
-
   const popOverRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <Form {...form}>
       <form
         id="create-meal-form"
-        action={addCheatMeal}
-        // onSubmit={form.handleSubmit(onSubmit)}
+        action={async (formData) => {
+          await addCheatMeal(formData);
+          onFormSubmission();
+        }}
         className="space-y-4 flex flex-col items-end justify-center"
       >
         <FormField
@@ -146,28 +145,28 @@ export default function MealForm() {
                 >
                   <ToggleGroupItem
                     asChild
-                    value="dawn"
+                    value={DayPeriod.dawn}
                     aria-label="Toggle dawn"
                   >
                     <Sunrise className="h-12 w-12" />
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     asChild
-                    value="morning"
+                    value={DayPeriod.morning}
                     aria-label="Toggle morning"
                   >
                     <Sun className="h-12 w-12" />
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     asChild
-                    value="afternoon"
+                    value={DayPeriod.afternoon}
                     aria-label="Toggle afternoon"
                   >
                     <Sunset className="h-12 w-12" />
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     asChild
-                    value="night"
+                    value={DayPeriod.night}
                     aria-label="Toggle night"
                   >
                     <Moon className="h-12 w-12" />

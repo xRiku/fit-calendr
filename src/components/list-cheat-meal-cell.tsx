@@ -1,4 +1,5 @@
-import { Filter } from "lucide-react";
+import { Filter, Moon, Sun, Sunrise, Sunset } from "lucide-react";
+import { format } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -8,7 +9,7 @@ import {
 } from "./ui/select";
 import { Separator } from "./ui/separator";
 import prisma from "@/lib/db";
-import { DatePeriod } from "@/types/enums";
+import { DatePeriod, DayPeriod } from "@/types/enums";
 import {
   Table,
   TableBody,
@@ -17,8 +18,26 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { Badge } from "./ui/badge";
 
 const today = new Date();
+
+export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
+  console.log(period);
+
+  switch (period) {
+    case DayPeriod.dawn:
+      return <Sunrise />;
+    case DayPeriod.morning:
+      return <Sun />;
+    case DayPeriod.afternoon:
+      return <Sunset />;
+    case DayPeriod.night:
+      return <Moon />;
+    default:
+      return "No period specified.";
+  }
+}
 
 export async function ListCheatMealCell() {
   const getCheatMealsByDate = async (datePeriod: DatePeriod) => {
@@ -70,18 +89,26 @@ export async function ListCheatMealCell() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-2/12">Name</TableHead>
-            <TableHead>Category</TableHead>
+            <TableHead className="w-2/12">Category</TableHead>
+            <TableHead className="w-2/12">Day Period</TableHead>
+            <TableHead>Name</TableHead>
             <TableHead className="text-center w-2/12">Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {cheatMeals?.map((cheatMeal) => (
             <TableRow key={cheatMeal.id}>
-              <TableCell className="font-medium">{"category"}</TableCell>
-              <TableCell className="font-medium">{cheatMeal.name}</TableCell>
+              <TableCell>
+                <Badge variant="outline" className="bg-green-300/80">
+                  Hamburger
+                </Badge>
+              </TableCell>
+              <TableCell className="font-medium">
+                {mapTimePeriodEnumToIcon(cheatMeal.period)}
+              </TableCell>
+              <TableCell className=" font-medium">{cheatMeal.name}</TableCell>
               <TableCell className="text-center">
-                {cheatMeal.date.toLocaleDateString()}
+                {format(cheatMeal.date, "dd/MM/yyyy")}
               </TableCell>
             </TableRow>
           ))}
