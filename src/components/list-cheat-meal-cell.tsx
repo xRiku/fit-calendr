@@ -1,7 +1,15 @@
 "use client";
 
-import { Filter, Moon, Sun, Sunrise, Sunset } from "lucide-react";
-import { format } from "date-fns";
+import {
+  Filter,
+  Moon,
+  Sun,
+  Sunrise,
+  Sunset,
+  Trash,
+  PenSquare,
+} from "lucide-react";
+import { format, sub } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -47,6 +55,27 @@ export function ListCheatMealCell() {
     DatePeriod.today
   );
 
+  function resolveDateString(datePeriod: DatePeriod): string {
+    switch (datePeriod) {
+      case DatePeriod.week:
+        return `${sub(today, {
+          days: 7,
+        }).toLocaleDateString(undefined, {
+          dateStyle: "medium",
+        })} - ${today.toLocaleDateString(undefined, {
+          dateStyle: "medium",
+        })}`;
+      case DatePeriod.month:
+        return `${today.toLocaleDateString(undefined, {
+          dateStyle: "short",
+        })}`;
+      default:
+        return `${today.toLocaleDateString(undefined, {
+          dateStyle: "medium",
+        })}`;
+    }
+  }
+
   useEffect(() => {
     async function fetchCheatMeals() {
       const data = await getCheatMealsByDate(selectedDatePeriod);
@@ -73,9 +102,7 @@ export function ListCheatMealCell() {
             </div>
           </SelectTrigger>
           <span className="font-mono">
-            {today.toLocaleDateString(undefined, {
-              dateStyle: "medium",
-            })}
+            {resolveDateString(selectedDatePeriod)}
           </span>
         </div>
         <SelectContent>
@@ -115,6 +142,12 @@ export function ListCheatMealCell() {
               <TableCell className=" font-medium">{cheatMeal.name}</TableCell>
               <TableCell className="text-center">
                 {format(cheatMeal.date, "dd/MM/yyyy")}
+              </TableCell>
+              <TableCell className="w-[5%] text-red-500">
+                <Trash className="w-6 h-6" />
+              </TableCell>
+              <TableCell className="w-[5%] ">
+                <PenSquare className="w-6 h-6" />
               </TableCell>
             </TableRow>
           ))}

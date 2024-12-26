@@ -55,7 +55,7 @@ export default function MealForm({ onFormSubmission }: MealFormProps) {
   return (
     <Form {...form}>
       <form
-        id="create-meal-form"
+        id="meal-form"
         action={async (formData) => {
           await addCheatMeal(formData);
           onFormSubmission();

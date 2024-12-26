@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import "./globals.css";
 import SiteHeader from "@/components/site-header";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,6 +40,7 @@ export default function RootLayout({
           <SiteHeader />
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

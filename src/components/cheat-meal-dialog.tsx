@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import MealForm from "./meal-form";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function CheatMealDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -39,7 +40,19 @@ export default function CheatMealDialog() {
           <Button variant="outline" className="w-1/4">
             Cancel
           </Button>
-          <Button form="create-meal-form" type="submit" className="w-1/4">
+          <Button
+            onClick={() =>
+              toast("Cheat meal added", {
+                action: {
+                  label: "Undo",
+                  onClick: () => console.log("Undo"),
+                },
+              })
+            }
+            form="meal-form"
+            type="submit"
+            className="w-1/4"
+          >
             Save
           </Button>
         </DialogFooter>
