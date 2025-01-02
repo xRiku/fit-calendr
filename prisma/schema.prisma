@@ -14,13 +14,10 @@ datasource db {
 
 model CheatMeal {
   id String @id @default(uuid())
-  name String?
-  date DateTime @default(now())
-  period String?
+  name String
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
   @@map("cheat_meals")
 }
-
 

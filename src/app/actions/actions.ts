@@ -9,8 +9,6 @@ export async function addCheatMeal(formData: unknown) {
   await prisma.cheatMeal.create({
     data: {
       name: formData.get("mealName"),
-      period: formData.get("mealPeriod"),
-      date: formData.get("mealDate"),
     },
   });
 
@@ -28,7 +26,7 @@ export async function getCheatMealsByDate(datePeriod: DatePeriod) {
     );
     const data = await prisma.cheatMeal.findMany({
       where: {
-        date: {
+        createdAt: {
           gt: dateOnly,
         },
       },
@@ -44,7 +42,7 @@ export async function getCheatMealsByDate(datePeriod: DatePeriod) {
     );
     const data = await prisma.cheatMeal.findMany({
       where: {
-        date: {
+        createdAt: {
           lt: add(dateOnly, {
             days: 1,
           }),

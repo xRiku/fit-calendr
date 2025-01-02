@@ -7,7 +7,7 @@ import {
   DialogContent,
   Dialog,
   DialogTitle,
-  DialogDescription,
+  DialogClose,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import MealForm from "./meal-form";
@@ -26,20 +26,18 @@ export default function CheatMealDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+        <DialogHeader aria-describedby="Cheat Meal Form">
           <DialogTitle className="font-extrabold text-2xl">
             Add cheat meal
           </DialogTitle>
-          <DialogDescription>
-            Add the details of your cheat meal here. They are optional, but can
-            be useful for analytics.
-          </DialogDescription>
         </DialogHeader>
         <MealForm onFormSubmission={() => setIsDialogOpen(false)} />
         <DialogFooter className="flex sm:justify-center gap-4">
-          <Button variant="outline" className="w-1/4">
-            Cancel
-          </Button>
+          <DialogClose asChild>
+            <Button variant="outline" className="w-1/4">
+              Cancel
+            </Button>
+          </DialogClose>
           <Button
             onClick={() =>
               toast("Cheat meal added", {
