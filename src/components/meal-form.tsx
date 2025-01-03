@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Moon, Sun, Sunrise, Sunset } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,11 +24,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { useRef } from "react";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { addCheatMeal } from "@/app/actions/actions";
-import { DayPeriod } from "@/types/enums";
 
 const formSchema = z.object({
   mealName: z.string().max(50).optional(),
@@ -37,10 +35,11 @@ const formSchema = z.object({
 });
 
 type MealFormProps = {
-  onFormSubmission: () => void;
+  onFormSubmission: (mealType?: string) => void;
+  type?: "create" | "edit";
 };
 
-export default function MealForm({ onFormSubmission }: MealFormProps) {
+export default function MealForm({ onFormSubmission, type }: MealFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,7 +68,7 @@ export default function MealForm({ onFormSubmission }: MealFormProps) {
             <FormItem className="w-full">
               <FormLabel className="font-bold">Meal name</FormLabel>
               <FormControl>
-                <Input placeholder="type the name of your meal" {...field} />
+                <Input placeholder="e.g Hamburger" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,9 +79,7 @@ export default function MealForm({ onFormSubmission }: MealFormProps) {
           name="mealDate"
           render={({ field }) => (
             <FormItem className="flex flex-col w-full">
-              <FormLabel className="font-bold">
-                The day to add the cheat meal
-              </FormLabel>
+              <FormLabel className="font-bold">Day you ate the meal</FormLabel>
               <Popover modal={true}>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -124,57 +121,6 @@ export default function MealForm({ onFormSubmission }: MealFormProps) {
                 name={field.name}
                 value={field.value?.toISOString()}
               />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="mealPeriod"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel className="font-bold">
-                What time did you have the meal?
-              </FormLabel>
-              <FormControl>
-                <ToggleGroup
-                  type="single"
-                  variant="outline"
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="justify-center gap-4"
-                >
-                  <ToggleGroupItem
-                    asChild
-                    value={DayPeriod.dawn}
-                    aria-label="Toggle dawn"
-                  >
-                    <Sunrise className="h-12 w-12" />
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    asChild
-                    value={DayPeriod.morning}
-                    aria-label="Toggle morning"
-                  >
-                    <Sun className="h-12 w-12" />
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    asChild
-                    value={DayPeriod.afternoon}
-                    aria-label="Toggle afternoon"
-                  >
-                    <Sunset className="h-12 w-12" />
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    asChild
-                    value={DayPeriod.night}
-                    aria-label="Toggle night"
-                  >
-                    <Moon className="h-12 w-12" />
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </FormControl>
-              <FormMessage />
-              <input type="hidden" name={field.name} value={field.value} />
             </FormItem>
           )}
         />

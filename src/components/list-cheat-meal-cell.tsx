@@ -29,8 +29,10 @@ import {
 } from "./ui/table";
 import { Badge } from "./ui/badge";
 import { useEffect, useState } from "react";
-import { getCheatMealsByDate } from "@/app/actions/actions";
-import { CheatMeal } from "@prisma/client";
+import { deleteCheatMeal, getCheatMealsByDate } from "@/app/actions/actions";
+import type { CheatMeal } from "@prisma/client";
+import { Button } from "./ui/button";
+import { useModalStore } from "@/stores/cheat-meal-modal";
 
 const today = new Date();
 
@@ -50,6 +52,7 @@ export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
 }
 
 export function ListCheatMealCell() {
+  const { toggleCheatMealModalState } = useModalStore();
   const [cheatMeals, setCheatMeals] = useState<CheatMeal[]>([]);
   const [selectedDatePeriod, setSelectedDatePeriod] = useState(
     DatePeriod.today
@@ -75,6 +78,14 @@ export function ListCheatMealCell() {
         })}`;
     }
   }
+
+  const handleDeleteCheatMeal = async (id: string) => {
+    try {
+      await deleteCheatMeal(id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     async function fetchCheatMeals() {
@@ -123,7 +134,6 @@ export function ListCheatMealCell() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-2/12">Category</TableHead>
-            <TableHead className="w-2/12">Day Period</TableHead>
             <TableHead>Name</TableHead>
             <TableHead className="text-center w-2/12">Date</TableHead>
           </TableRow>
@@ -136,18 +146,25 @@ export function ListCheatMealCell() {
                   Hamburger
                 </Badge>
               </TableCell>
-              <TableCell className="font-medium">
-                {mapTimePeriodEnumToIcon(cheatMeal.period)}
-              </TableCell>
               <TableCell className=" font-medium">{cheatMeal.name}</TableCell>
               <TableCell className="text-center">
-                {format(cheatMeal.date, "dd/MM/yyyy")}
+                {format(cheatMeal.createdAt, "dd/MM/yyyy")}
               </TableCell>
-              <TableCell className="w-[5%] text-red-500">
-                <Trash className="w-6 h-6" />
+              <TableCell className="w-[5%] p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => toggleCheatMealModalState("edit")}
+                >
+                  <PenSquare className="w-6 h-6 " />
+                </Button>
               </TableCell>
-              <TableCell className="w-[5%] ">
-                <PenSquare className="w-6 h-6" />
+              <TableCell className="w-[5%] p-0">
+                <Button
+                  variant="ghost"
+                  onClick={() => handleDeleteCheatMeal(cheatMeal.id)}
+                >
+                  <Trash className="h-6 w-6 text-red-500" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
