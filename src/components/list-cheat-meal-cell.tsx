@@ -52,7 +52,7 @@ export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
 }
 
 export function ListCheatMealCell() {
-  const { toggleCheatMealModalState } = useModalStore();
+  const { toggleCheatMealModalState, setEditingCheatMeal } = useModalStore();
   const [cheatMeals, setCheatMeals] = useState<CheatMeal[]>([]);
   const [selectedDatePeriod, setSelectedDatePeriod] = useState(
     DatePeriod.today
@@ -85,6 +85,11 @@ export function ListCheatMealCell() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleEditCheatMeal = (editingCheatMeal: CheatMeal) => {
+    setEditingCheatMeal(editingCheatMeal);
+    toggleCheatMealModalState("edit");
   };
 
   useEffect(() => {
@@ -153,7 +158,7 @@ export function ListCheatMealCell() {
               <TableCell className="w-[5%] p-0">
                 <Button
                   variant="ghost"
-                  onClick={() => toggleCheatMealModalState("edit")}
+                  onClick={() => handleEditCheatMeal(cheatMeal)}
                 >
                   <PenSquare className="w-6 h-6 " />
                 </Button>

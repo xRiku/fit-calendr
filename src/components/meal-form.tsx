@@ -26,7 +26,8 @@ import {
 } from "@/components/ui/popover";
 import { useRef } from "react";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { addCheatMeal } from "@/app/actions/actions";
+import { addCheatMeal, updateCheatMeal } from "@/app/actions/actions";
+import { useModalStore } from "@/stores/cheat-meal-modal";
 
 const formSchema = z.object({
   mealName: z.string().max(50).optional(),
@@ -36,10 +37,11 @@ const formSchema = z.object({
 
 type MealFormProps = {
   onFormSubmission: (mealType?: string) => void;
-  type?: "create" | "edit";
 };
 
-export default function MealForm({ onFormSubmission, type }: MealFormProps) {
+export default function MealForm({ onFormSubmission }: MealFormProps) {
+  const { editingCheatMeal, mealType } = useModalStore();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,7 +58,15 @@ export default function MealForm({ onFormSubmission, type }: MealFormProps) {
       <form
         id="meal-form"
         action={async (formData) => {
-          await addCheatMeal(formData);
+          if (mealType === "create") {
+            await addCheatMeal(formData);
+          }
+
+          if (mealType === "edit") {
+            if (editingCheatMeal) {
+              await updateCheatMeal({ id: editingCheatMeal.id, formData });
+            }
+          }
           onFormSubmission();
         }}
         className="space-y-4 flex flex-col items-end justify-center"
