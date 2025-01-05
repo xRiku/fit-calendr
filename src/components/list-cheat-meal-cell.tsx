@@ -29,10 +29,11 @@ import {
 } from "./ui/table";
 import { Badge } from "./ui/badge";
 import { useEffect, useState } from "react";
-import { deleteCheatMeal, getCheatMealsByDate } from "@/app/actions/actions";
+import { getCheatMealsByDate } from "@/app/actions/actions";
 import type { CheatMeal } from "@prisma/client";
 import { Button } from "./ui/button";
 import { useModalStore } from "@/stores/cheat-meal-modal";
+import { useDeleteConfirmationModalStore } from "@/stores/delete-cheat-meal-dialog-modal";
 
 const today = new Date();
 
@@ -52,7 +53,9 @@ export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
 }
 
 export function ListCheatMealCell() {
-  const { toggleCheatMealModalState, setEditingCheatMeal } = useModalStore();
+  const { toggleCheatMealModalState, setSelectedCheatMeal } = useModalStore();
+  const { toggleIsDeleteConfirmationModalOpened } =
+    useDeleteConfirmationModalStore();
   const [cheatMeals, setCheatMeals] = useState<CheatMeal[]>([]);
   const [selectedDatePeriod, setSelectedDatePeriod] = useState(
     DatePeriod.today
@@ -79,16 +82,13 @@ export function ListCheatMealCell() {
     }
   }
 
-  const handleDeleteCheatMeal = async (id: string) => {
-    try {
-      await deleteCheatMeal(id);
-    } catch (err) {
-      console.log(err);
-    }
+  const handleDeleteCheatMeal = (editingCheatMeal: CheatMeal) => {
+    setSelectedCheatMeal(editingCheatMeal);
+    toggleIsDeleteConfirmationModalOpened();
   };
 
   const handleEditCheatMeal = (editingCheatMeal: CheatMeal) => {
-    setEditingCheatMeal(editingCheatMeal);
+    setSelectedCheatMeal(editingCheatMeal);
     toggleCheatMealModalState("edit");
   };
 
@@ -166,7 +166,7 @@ export function ListCheatMealCell() {
               <TableCell className="w-[5%] p-0">
                 <Button
                   variant="ghost"
-                  onClick={() => handleDeleteCheatMeal(cheatMeal.id)}
+                  onClick={() => handleDeleteCheatMeal(cheatMeal)}
                 >
                   <Trash className="h-6 w-6 text-red-500" />
                 </Button>
