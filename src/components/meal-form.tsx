@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { useRef } from "react";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { addCheatMeal, updateCheatMeal } from "@/app/actions/actions";
+import { addCheatMeal, updateCheatMeal } from "@/actions/actions";
 import { useModalStore } from "@/stores/cheat-meal-modal";
 
 const formSchema = z.object({

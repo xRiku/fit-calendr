@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/theme-provider";
 import localFont from "next/font/local";
 import "./globals.css";
-import SiteHeader from "@/components/site-header";
-import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,18 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} dark:bg-slate-950 bg-slate-50 antialiased min-h-screen `}
+        className={`${geistSans.variable} ${geistMono.variable} dark:bg-stone-950 bg-stone-50 antialiased min-h-screen `}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SiteHeader />
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

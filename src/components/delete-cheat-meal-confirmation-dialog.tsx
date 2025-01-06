@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogFooter,
 } from "./ui/alert-dialog";
-import { deleteCheatMeal } from "@/app/actions/actions";
+import { deleteCheatMeal } from "@/actions/actions";
 import { useModalStore } from "@/stores/cheat-meal-modal";
 
 export function DeleteCheatMealConfirmationDialog() {

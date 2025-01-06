@@ -1,7 +1,7 @@
 import { Menu } from "lucide-react";
 import { ModeToggle } from "./theme-toggle";
 
-export default function SiteHeader() {
+export default function Header() {
   return (
     <header className="w-full px-10 py-6 flex justify-between items-center mb-10">
       <h1 className="text-5xl font-bold tracking-widest">CHEAT MEAL TRACKER</h1>

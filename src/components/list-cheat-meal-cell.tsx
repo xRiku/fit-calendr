@@ -29,7 +29,7 @@ import {
 } from "./ui/table";
 import { Badge } from "./ui/badge";
 import { useEffect, useState } from "react";
-import { getCheatMealsByDate } from "@/app/actions/actions";
+import { getCheatMealsByDate } from "@/actions/actions";
 import type { CheatMeal } from "@prisma/client";
 import { Button } from "./ui/button";
 import { useModalStore } from "@/stores/cheat-meal-modal";
