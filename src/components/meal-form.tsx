@@ -40,7 +40,7 @@ type MealFormProps = {
 };
 
 export default function MealForm({ onFormSubmission }: MealFormProps) {
-  const { editingCheatMeal, mealType } = useModalStore();
+  const { selectedCheatMeal, mealType } = useModalStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,8 +63,8 @@ export default function MealForm({ onFormSubmission }: MealFormProps) {
           }
 
           if (mealType === "edit") {
-            if (editingCheatMeal) {
-              await updateCheatMeal({ id: editingCheatMeal.id, formData });
+            if (selectedCheatMeal) {
+              await updateCheatMeal({ id: selectedCheatMeal.id, formData });
             }
           }
           onFormSubmission();
