@@ -13,7 +13,7 @@ datasource db {
 
 
 model CheatMeal {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
   name String
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -21,3 +21,12 @@ model CheatMeal {
   @@map("cheat_meals")
 }
 
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  hashedPassword String
+  name String 
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+  @@map("users")
+}

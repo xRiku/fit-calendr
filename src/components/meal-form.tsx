@@ -45,7 +45,7 @@ export default function MealForm({ onFormSubmission }: MealFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      mealName: "",
+      mealName: selectedCheatMeal ? selectedCheatMeal.name : "",
       mealPeriod: "",
       mealDate: new Date(),
     },
