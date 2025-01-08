@@ -1,9 +1,12 @@
 "use server";
 
+import { signIn } from "@/auth";
 import prisma from "@/lib/db";
 import { DatePeriod } from "@/types/enums";
 import { sub, add } from "date-fns";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 export async function addCheatMeal(formData: unknown) {
   await prisma.cheatMeal.create({
@@ -16,9 +19,6 @@ export async function addCheatMeal(formData: unknown) {
 }
 
 export async function updateCheatMeal({ id, formData }: unknown) {
-  console.log("id", id);
-  console.log("formData", formData);
-
   await prisma.cheatMeal.update({
     data: {
       name: formData.get("mealName"),
@@ -88,4 +88,30 @@ export async function getCheatMealsByDate(datePeriod: DatePeriod) {
     });
     return data;
   }
+}
+
+// Auth
+
+// const signInFormSchema = z.object({
+//   email: z.string().email({message: "Please enter a valid email address"})
+// })
+
+export async function signInWithEmail(data: FormData) {
+  const authData = Object.entries(data.entries());
+  await signIn("credentials", authData);
+}
+
+export async function createUser(formData: FormData) {
+  console.log(formData);
+  const hashedPassword = await bcrypt.hash(
+    formData.get("password") as string,
+    6
+  );
+  await prisma.user.create({
+    data: {
+      email: formData.get("email") as string,
+      name: formData.get("name") as string,
+      hashedPassword,
+    },
+  });
 }
