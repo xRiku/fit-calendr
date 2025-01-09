@@ -17,6 +17,8 @@ model CheatMeal {
   name String
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  userId String
 
   @@map("cheat_meals")
 }
@@ -26,7 +28,10 @@ model User {
   email String @unique
   hashedPassword String
   name String 
+  cheatMeals CheatMeal[]
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
+
+
   @@map("users")
 }
