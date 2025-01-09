@@ -1,17 +1,20 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
 import prisma from "@/lib/db";
 import { DatePeriod } from "@/types/enums";
 import { sub, add } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
+import { User } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export async function addCheatMeal(formData: unknown) {
   await prisma.cheatMeal.create({
     data: {
       name: formData.get("mealName"),
+      userId: "cm5oazrhp00003gx3fvgxx4hy",
     },
   });
 
@@ -49,55 +52,19 @@ export async function deleteCheatMeal(id: string) {
   });
 }
 
-export async function getCheatMealsByDate(datePeriod: DatePeriod) {
-  const today = new Date();
-
-  if (datePeriod === DatePeriod.today) {
-    const dateOnly = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    );
-    const data = await prisma.cheatMeal.findMany({
-      where: {
-        createdAt: {
-          gt: dateOnly,
-        },
-      },
-    });
-    return data;
-  }
-
-  if (datePeriod === DatePeriod.week) {
-    const dateOnly = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    );
-    const data = await prisma.cheatMeal.findMany({
-      where: {
-        createdAt: {
-          lt: add(dateOnly, {
-            days: 1,
-          }),
-          gt: sub(dateOnly, {
-            days: 7,
-          }),
-        },
-      },
-    });
-    return data;
-  }
+export async function getCheatMeals(userId: User["id"]) {
+  const data = await prisma.cheatMeal.findMany({
+    where: {
+      userId,
+    },
+  });
+  return data;
 }
 
 // Auth
 
-// const signInFormSchema = z.object({
-//   email: z.string().email({message: "Please enter a valid email address"})
-// })
-
-export async function signInWithEmail(data: FormData) {
-  const authData = Object.entries(data.entries());
+export async function signInWithCredentials(data: FormData) {
+  const authData = Object.fromEntries(data.entries());
   await signIn("credentials", authData);
 }
 
@@ -114,4 +81,13 @@ export async function createUser(formData: FormData) {
       hashedPassword,
     },
   });
+}
+
+export async function checkAuth() {
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  return session;
 }

@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, LogIn } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signInWithCredentials } from "@/actions/actions";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -20,7 +20,6 @@ type SignInFormSchema = z.infer<typeof signInFormSchema>;
 export function SignInForm() {
   const {
     register,
-    handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
@@ -30,18 +29,15 @@ export function SignInForm() {
     },
   });
 
-  async function handleSignIn(data: SignInFormSchema) {
-    const { email, password } = data;
-
-    await signIn("credentials", {
-      email,
-      password,
-      callbackUrl: "/",
-    });
+  async function handleSignIn(formData: FormData) {
+    await signInWithCredentials(formData);
   }
 
   return (
-    <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
+    <form
+      action={async (formData) => await handleSignIn(formData)}
+      className="space-y-4"
+    >
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
         <Input id="email" type="email" {...register("email")} />
