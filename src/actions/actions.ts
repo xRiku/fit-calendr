@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/db";
 import { DatePeriod } from "@/types/enums";
 import { sub, add } from "date-fns";
@@ -57,6 +57,9 @@ export async function getCheatMeals(userId: User["id"]) {
     where: {
       userId,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return data;
 }
@@ -66,6 +69,10 @@ export async function getCheatMeals(userId: User["id"]) {
 export async function signInWithCredentials(data: FormData) {
   const authData = Object.fromEntries(data.entries());
   await signIn("credentials", authData);
+}
+
+export async function logOut() {
+  await signOut({ redirectTo: "/auth/signin" });
 }
 
 export async function createUser(formData: FormData) {
