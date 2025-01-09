@@ -2,19 +2,25 @@
 
 import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/db";
-import { DatePeriod } from "@/types/enums";
-import { sub, add } from "date-fns";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export async function addCheatMeal(formData: unknown) {
+  const session = await auth();
+
+  if (!session) {
+    return;
+  }
+
   await prisma.cheatMeal.create({
     data: {
       name: formData.get("mealName"),
-      userId: "cm5oazrhp00003gx3fvgxx4hy",
+      user: {
+        connect: {
+          id: session.user?.id,
+        },
+      },
     },
   });
 
@@ -52,10 +58,16 @@ export async function deleteCheatMeal(id: string) {
   });
 }
 
-export async function getCheatMeals(userId: User["id"]) {
+export async function getCheatMeals() {
+  const session = await auth();
+
+  if (!session) {
+    return;
+  }
+
   const data = await prisma.cheatMeal.findMany({
     where: {
-      userId,
+      userId: session.user?.id,
     },
     orderBy: {
       createdAt: "desc",
@@ -79,7 +91,7 @@ export async function createUser(formData: FormData) {
   console.log(formData);
   const hashedPassword = await bcrypt.hash(
     formData.get("password") as string,
-    6
+    10
   );
   await prisma.user.create({
     data: {

@@ -7,7 +7,6 @@ export const authConfig = {
   providers: [
     Credentials({
       async authorize(credentials) {
-        console.log(credentials);
         const { email, password } = credentials;
 
         const user = await prisma.user.findUnique({
@@ -43,13 +42,16 @@ export const authConfig = {
         nextUrl.pathname.startsWith("/auth") || isOnMarketingPage;
       const isOnPrivatePages = !isOnPublicPages;
 
+      if (isLoggedIn && isOnPublicPages) {
+        return Response.redirect(new URL("/app/dashboard", nextUrl));
+      }
+
       if (!isLoggedIn && isOnPublicPages) {
         return true;
       }
 
       if (isLoggedIn && isOnPrivatePages) {
         return true;
-        // return Response.redirect(new URL("/app", nextUrl));
       }
 
       if (!isLoggedIn && isOnPrivatePages) {
@@ -58,13 +60,11 @@ export const authConfig = {
 
       return false;
     },
-    jwt({ user, token }) {
-      if (user) {
-        token.userId = user.id;
-        token.email = user.email;
-      }
 
-      return token;
+    session({ session, token }) {
+      session.user.id = token.sub;
+
+      return session;
     },
   },
 } satisfies NextAuthConfig;

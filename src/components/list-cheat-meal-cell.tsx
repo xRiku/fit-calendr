@@ -29,7 +29,7 @@ import {
 } from "./ui/table";
 import { Badge } from "./ui/badge";
 import { useEffect, useState } from "react";
-import { getCheatMealsByDate } from "@/actions/actions";
+import { getCheatMeals } from "@/actions/actions";
 import type { CheatMeal } from "@prisma/client";
 import { Button } from "./ui/button";
 import { useModalStore } from "@/stores/cheat-meal-modal";
@@ -54,6 +54,7 @@ export function mapTimePeriodEnumToIcon(period: DayPeriod | null) {
 
 export function ListCheatMealCell() {
   const { toggleCheatMealModalState, setSelectedCheatMeal } = useModalStore();
+
   const { toggleIsDeleteConfirmationModalOpened } =
     useDeleteConfirmationModalStore();
   const [cheatMeals, setCheatMeals] = useState<CheatMeal[]>([]);
@@ -94,14 +95,14 @@ export function ListCheatMealCell() {
 
   useEffect(() => {
     async function fetchCheatMeals() {
-      const data = await getCheatMealsByDate(selectedDatePeriod);
+      const data = await getCheatMeals();
       if (data) {
         setCheatMeals(data);
       }
     }
 
     fetchCheatMeals();
-  }, [selectedDatePeriod]);
+  }, []);
 
   return (
     <section className="flex flex-col border-2 p-10 w-full rounded-xl">
