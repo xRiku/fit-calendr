@@ -2,12 +2,23 @@ import prisma from "@/lib/db";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
+import { z } from "zod";
+
+const authSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
 
 export const authConfig = {
   providers: [
     Credentials({
       async authorize(credentials) {
-        const { email, password } = credentials;
+        const validatedFormData = authSchema.safeParse(credentials);
+        if (!validatedFormData.success) {
+          return null;
+        }
+
+        const { email, password } = validatedFormData.data;
 
         const user = await prisma.user.findUnique({
           where: {

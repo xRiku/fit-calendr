@@ -3,10 +3,9 @@
 import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
-import type { User } from "@prisma/client";
 import { redirect } from "next/navigation";
 
-export async function addCheatMeal(formData: unknown) {
+export async function addCheatMeal(formData: FormData) {
   const session = await auth();
 
   if (!session) {
@@ -15,7 +14,7 @@ export async function addCheatMeal(formData: unknown) {
 
   await prisma.cheatMeal.create({
     data: {
-      name: formData.get("mealName"),
+      name: formData.get("mealName") as string,
       user: {
         connect: {
           id: session.user?.id,
@@ -27,10 +26,29 @@ export async function addCheatMeal(formData: unknown) {
   // revalidatePath("/", "page");
 }
 
-export async function updateCheatMeal({ id, formData }: unknown) {
+export async function updateCheatMeal({
+  id,
+  formData,
+}: {
+  id: string;
+  formData: FormData;
+}) {
+  const existingCheatMeal = await prisma.cheatMeal.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!existingCheatMeal) {
+    throw new Error(`Cheat Meal with specified id: ${id} does not exist.`);
+  }
+
   await prisma.cheatMeal.update({
     data: {
-      name: formData.get("mealName"),
+      name: formData.get("mealName") as string,
     },
     where: {
       id,
@@ -44,6 +62,9 @@ export async function deleteCheatMeal(id: string) {
   const existingCheatMeal = await prisma.cheatMeal.findUnique({
     where: {
       id,
+    },
+    select: {
+      id: true,
     },
   });
 
