@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Onest } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+export const onest = Onest({
+  subsets: ["latin"],
+  variable: "--font-onest",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${onest.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} dark:bg-stone-950 bg-stone-50 antialiased min-h-screen `}
+        className={
+          "dark:bg-[#121212] bg-[#F5F5F5] antialiased min-h-screen onest"
+        }
       >
         <ThemeProvider
           attribute="class"
