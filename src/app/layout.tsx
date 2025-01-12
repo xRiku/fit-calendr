@@ -3,7 +3,7 @@ import { Onest } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-export const onest = Onest({
+const onest = Onest({
   subsets: ["latin"],
   variable: "--font-onest",
 });

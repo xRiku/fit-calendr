@@ -81,28 +81,13 @@ export function SignUpForm() {
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          type="password"
-          {...register("confirmPassword")}
-        />
-
-        {errors.confirmPassword && (
-          <p className="text-sm font-medium text-red-500 dark:text-red-400">
-            {errors.confirmPassword.message}
-          </p>
-        )}
-      </div>
-
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          <LogIn className="mr-2 h-4 w-4" />
+          <LogIn className="mr-2 h-4 w-4 hidden" />
         )}
-        Sign Up
+        Create account
       </Button>
     </form>
   );
