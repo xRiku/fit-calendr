@@ -12,7 +12,7 @@ export default function MainNav() {
         href="/app/dashboard"
         className={`${
           pathname === "/app/dashboard" ? "underline" : ""
-        } underline-offset-4`}
+        } underline-offset-4 decoration-primary`}
       >
         Dashboard
       </Link>
@@ -20,7 +20,7 @@ export default function MainNav() {
         href="/app/account"
         className={`${
           pathname === "/app/account" ? "underline" : ""
-        } underline-offset-4`}
+        } underline-offset-4 decoration-primary`}
       >
         Account
       </Link>

@@ -97,6 +97,38 @@ export async function getCheatMeals() {
   return data;
 }
 
+export async function fetchCheatMealsByYearGroupedByMonth({
+  id,
+  year = new Date().getFullYear(),
+}: {
+  id: string;
+  year: number;
+}) {
+  const data = await prisma.cheatMeal.findMany({
+    where: {
+      userId: id,
+      createdAt: {
+        lte: new Date(year, 11, 31),
+        gte: new Date(year, 0, 1),
+      },
+    },
+  });
+
+  const hashTable: { [key: number]: typeof data } = {};
+  for (const item of data) {
+    const date = new Date(item.createdAt);
+    const month = date.getUTCMonth();
+    if (!hashTable[month]) {
+      hashTable[month] = [item];
+      continue;
+    }
+
+    hashTable[month].push(item);
+  }
+
+  return hashTable;
+}
+
 // Auth
 
 export async function signInWithCredentials(data: FormData) {

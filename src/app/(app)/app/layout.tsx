@@ -1,10 +1,10 @@
-import Header from "@/components/header";
+import LoggedHeader from "@/components/logged-header";
 import { Toaster } from "@/components/ui/sonner";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
+      <LoggedHeader />
       {children}
       <Toaster />
     </>

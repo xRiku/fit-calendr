@@ -7,18 +7,30 @@ import { DayPicker } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+  modifiersArray?: Date[];
+};
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  disableNavigation = false,
+  defaultMonth,
+  modifiersArray,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
+      disableNavigation={disableNavigation}
+      defaultMonth={defaultMonth}
+      modifiers={
+        modifiersArray && {
+          gym: modifiersArray,
+        }
+      }
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -61,6 +73,21 @@ function Calendar({
         IconRight: ({ className, ...props }) => (
           <ChevronRight className={cn("h-4 w-4", className)} {...props} />
         ),
+        DayContent: ({ date, activeModifiers }) => {
+          return (
+            <div className="flex flex-col items-center justify-center">
+              <p className="absolute">{date.getDate()}</p>
+              {activeModifiers.gym && (
+                <div className="relative top-3 flex items-center justify-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-primary" />
+                  {date.getDate() % 2 === 0 && date.getDate() % 3 === 0 && (
+                    <span className="w-1 h-1 rounded-full bg-secondary" />
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        },
       }}
       {...props}
     />
