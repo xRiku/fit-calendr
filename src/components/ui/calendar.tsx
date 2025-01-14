@@ -5,7 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { useModalStore } from "@/stores/cheat-meal-modal";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   gymModifiersArray?: Date[];
@@ -22,6 +23,12 @@ function Calendar({
   cheatMealModifiersArray,
   ...props
 }: CalendarProps) {
+  const { toggleCheatMealModalState } = useModalStore();
+
+  const handleClickOnDayCell = () => {
+    toggleCheatMealModalState();
+  };
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -52,7 +59,7 @@ function Calendar({
         cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-stone-100/50 [&:has([aria-selected])]:bg-stone-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 dark:[&:has([aria-selected].day-outside)]:bg-stone-800/50 dark:[&:has([aria-selected])]:bg-stone-800",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
+          "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:cursor-pointer"
         ),
         day_range_end: "day-range-end",
         day_selected:
@@ -76,17 +83,19 @@ function Calendar({
         ),
         DayContent: ({ date, activeModifiers }) => {
           return (
-            <div className="flex flex-col items-center justify-center">
-              <p className="absolute">{date.getDate()}</p>
-              <div className="relative top-3 flex items-center justify-center gap-1">
-                {activeModifiers.gym && (
-                  <span className="w-1 h-1 rounded-full bg-primary" />
-                )}
-                {activeModifiers.cheatMeal && (
-                  <span className="w-1 h-1 rounded-full bg-secondary" />
-                )}
+            <Button variant="ghost" asChild onClick={handleClickOnDayCell}>
+              <div className="flex flex-col items-center justify-center">
+                <p className="absolute">{date.getDate()}</p>
+                <div className="relative top-3 flex items-center justify-center gap-1">
+                  {activeModifiers.gym && (
+                    <span className="w-1 h-1 rounded-full bg-primary" />
+                  )}
+                  {activeModifiers.cheatMeal && (
+                    <span className="w-1 h-1 rounded-full bg-secondary" />
+                  )}
+                </div>
               </div>
-            </div>
+            </Button>
           );
         },
       }}

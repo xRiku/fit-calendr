@@ -3,19 +3,19 @@
 import {
   DialogHeader,
   DialogFooter,
-  DialogTrigger,
   DialogContent,
   Dialog,
   DialogTitle,
   DialogClose,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import MealForm from "./meal-form";
-import { Plus } from "lucide-react";
+import DayInfoForm from "./day-info-form";
 import { toast } from "sonner";
 import { useModalStore } from "@/stores/cheat-meal-modal";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { format } from "date-fns";
 
-export default function CheatMealDialog() {
+export default function CheckDialog() {
   const { cheatMealModalState, toggleCheatMealModalState, mealType } =
     useModalStore();
 
@@ -24,19 +24,18 @@ export default function CheatMealDialog() {
       open={cheatMealModalState}
       onOpenChange={() => toggleCheatMealModalState()}
     >
-      <DialogTrigger asChild>
-        <Button asChild variant="ghost">
-          <Plus className="h-32 w-32 text-green-600 dark:hover:text-green-400 hover:text-green-400" />
-        </Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader aria-describedby="Cheat Meal Form">
+        <DialogHeader aria-describedby="Day Info Form">
           <DialogTitle className="font-extrabold text-2xl">
-            {mealType === "create" && "Add cheat meal"}
-            {mealType === "edit" && "Edit cheat meal"}
+            {mealType === "create" && "Add info for the day"}
+            {mealType === "edit" && "Edit info for the day"}
           </DialogTitle>
+          <DialogDescription>
+            {/* to fix */}
+            {format(new Date(), "dd/MM/yyyy")}
+          </DialogDescription>
         </DialogHeader>
-        <MealForm onFormSubmission={() => toggleCheatMealModalState()} />
+        <DayInfoForm onFormSubmission={() => toggleCheatMealModalState()} />
         <DialogFooter className="flex sm:justify-center gap-4">
           <DialogClose asChild>
             <Button variant="outline" className="w-1/4">
