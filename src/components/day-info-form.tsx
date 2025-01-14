@@ -16,28 +16,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { addCheatMeal, updateCheatMeal } from "@/actions/actions";
-import { useModalStore } from "@/stores/cheat-meal-modal";
+import { addDayInfo } from "@/actions/actions";
+import { useModalStore } from "@/stores/day-info-modal";
 
 const formSchema = z.object({
-  mealName: z.string().max(50).optional(),
-  mealPeriod: z.enum(["dawn", "morning", "afternoon", "night", ""]).optional(),
-  mealDate: z.date().optional(),
+  cheatMealName: z.string().max(50).optional(),
+  workoutDescription: z.string().max(50).optional(),
 });
 
-type MealFormProps = {
-  onFormSubmission: (mealType?: string) => void;
-};
-
-export default function DayInfoForm({ onFormSubmission }: MealFormProps) {
-  const { selectedCheatMeal, mealType } = useModalStore();
+export default function DayInfoForm() {
+  const { selectedDayInfo, dayInfoType, toggleDayInfoModalState } =
+    useModalStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      mealName: selectedCheatMeal ? selectedCheatMeal.name : "",
-      mealPeriod: "",
-      mealDate: new Date(),
+      cheatMealName: selectedDayInfo?.cheatMeal?.name ?? "",
+      workoutDescription: selectedDayInfo?.gymCheck?.description ?? "",
     },
   });
 
@@ -46,22 +41,26 @@ export default function DayInfoForm({ onFormSubmission }: MealFormProps) {
       <form
         id="day-info-form"
         action={async (formData) => {
-          if (mealType === "create") {
-            await addCheatMeal(formData);
+          if (dayInfoType === "create") {
+            await addDayInfo({
+              formData,
+              date: selectedDayInfo?.date ?? new Date(),
+            });
           }
 
-          if (mealType === "edit") {
-            if (selectedCheatMeal) {
-              await updateCheatMeal({ id: selectedCheatMeal.id, formData });
-            }
+          if (dayInfoType === "edit") {
+            // if (selectedDayInfo) {
+            //   await updateCheatMeal({ id: selectedDayInfo.id, formData });
+            // }
           }
-          onFormSubmission();
+
+          toggleDayInfoModalState();
         }}
         className="space-y-4 flex flex-col items-end justify-center"
       >
         <FormField
           control={form.control}
-          name="mealName"
+          name="cheatMealName"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className="font-bold">Cheat meal name</FormLabel>
@@ -74,7 +73,7 @@ export default function DayInfoForm({ onFormSubmission }: MealFormProps) {
         />
         <FormField
           control={form.control}
-          name="mealName"
+          name="workoutDescription"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className="font-bold">Workout description</FormLabel>

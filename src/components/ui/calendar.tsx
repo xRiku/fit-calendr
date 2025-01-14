@@ -1,16 +1,17 @@
 "use client";
 
-import * as React from "react";
+import type * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useModalStore } from "@/stores/cheat-meal-modal";
+import { useModalStore } from "@/stores/day-info-modal";
+import type { CheatMeal, GymCheck } from "@prisma/client";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  gymModifiersArray?: Date[];
-  cheatMealModifiersArray?: Date[];
+  gymModifiersArray?: GymCheck[];
+  cheatMealModifiersArray?: CheatMeal[];
 };
 
 function Calendar({
@@ -23,10 +24,24 @@ function Calendar({
   cheatMealModifiersArray,
   ...props
 }: CalendarProps) {
-  const { toggleCheatMealModalState } = useModalStore();
+  const { toggleDayInfoModalState, setSelectedDayInfo } = useModalStore();
 
-  const handleClickOnDayCell = () => {
-    toggleCheatMealModalState();
+  const handleClickOnDayCell = (date: Date) => {
+    const gymCheck = gymModifiersArray?.find((item) => {
+      return item.date === date;
+    });
+
+    const cheatMeal = cheatMealModifiersArray?.find((item) => {
+      return item.date === date;
+    });
+
+    setSelectedDayInfo({
+      date,
+      gymCheck,
+      cheatMeal,
+    });
+
+    toggleDayInfoModalState();
   };
 
   return (
@@ -36,8 +51,16 @@ function Calendar({
       disableNavigation={disableNavigation}
       defaultMonth={defaultMonth}
       modifiers={{
-        ...(gymModifiersArray && { gym: gymModifiersArray }),
-        ...(cheatMealModifiersArray && { cheatMeal: cheatMealModifiersArray }),
+        ...(gymModifiersArray && {
+          gym: gymModifiersArray?.map((item, i) => {
+            return item.date;
+          }),
+        }),
+        ...(cheatMealModifiersArray && {
+          cheatMeal: cheatMealModifiersArray?.map((item, i) => {
+            return item.date;
+          }),
+        }),
       }}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
@@ -83,7 +106,11 @@ function Calendar({
         ),
         DayContent: ({ date, activeModifiers }) => {
           return (
-            <Button variant="ghost" asChild onClick={handleClickOnDayCell}>
+            <Button
+              variant="ghost"
+              asChild
+              onClick={() => handleClickOnDayCell(date)}
+            >
               <div className="flex flex-col items-center justify-center">
                 <p className="absolute">{date.getDate()}</p>
                 <div className="relative top-3 flex items-center justify-center gap-1">

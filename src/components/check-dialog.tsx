@@ -11,31 +11,33 @@ import {
 import { Button } from "./ui/button";
 import DayInfoForm from "./day-info-form";
 import { toast } from "sonner";
-import { useModalStore } from "@/stores/cheat-meal-modal";
+import { useModalStore } from "@/stores/day-info-modal";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { format } from "date-fns";
 
 export default function CheckDialog() {
-  const { cheatMealModalState, toggleCheatMealModalState, mealType } =
-    useModalStore();
+  const {
+    dayInfoModalState,
+    toggleDayInfoModalState,
+    dayInfoType,
+    selectedDayInfo,
+  } = useModalStore();
 
   return (
     <Dialog
-      open={cheatMealModalState}
-      onOpenChange={() => toggleCheatMealModalState()}
+      open={dayInfoModalState}
+      onOpenChange={() => toggleDayInfoModalState()}
     >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader aria-describedby="Day Info Form">
           <DialogTitle className="font-extrabold text-2xl">
-            {mealType === "create" && "Add info for the day"}
-            {mealType === "edit" && "Edit info for the day"}
+            {dayInfoType === "create" && "Add info for the day"}
+            {dayInfoType === "edit" && "Edit info for the day"}
           </DialogTitle>
           <DialogDescription>
-            {/* to fix */}
-            {format(new Date(), "dd/MM/yyyy")}
+            {selectedDayInfo?.date.toDateString()}
           </DialogDescription>
         </DialogHeader>
-        <DayInfoForm onFormSubmission={() => toggleCheatMealModalState()} />
+        <DayInfoForm />
         <DialogFooter className="flex sm:justify-center gap-4">
           <DialogClose asChild>
             <Button variant="outline" className="w-1/4">
@@ -51,7 +53,7 @@ export default function CheckDialog() {
                 },
               })
             }
-            form="meal-form"
+            form="day-info-form"
             type="submit"
             className="w-1/4"
           >

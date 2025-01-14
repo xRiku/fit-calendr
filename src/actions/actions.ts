@@ -3,27 +3,51 @@
 import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function addCheatMeal(formData: FormData) {
+export async function addDayInfo({
+  formData,
+  date,
+}: {
+  formData: FormData;
+  date: Date;
+}) {
   const session = await auth();
 
   if (!session) {
     return;
   }
 
-  await prisma.cheatMeal.create({
-    data: {
-      name: formData.get("mealName") as string,
-      user: {
-        connect: {
-          id: session.user?.id,
+  if (formData.get("cheatMealName")) {
+    await prisma.cheatMeal.create({
+      data: {
+        name: formData.get("cheatMealName") as string,
+        date: date,
+        user: {
+          connect: {
+            id: session.user?.id,
+          },
         },
       },
-    },
-  });
+    });
+  }
 
-  // revalidatePath("/", "page");
+  if (formData.get("workoutDescription")) {
+    await prisma.gymCheck.create({
+      data: {
+        description: formData.get("workoutDescription") as string,
+        date,
+        user: {
+          connect: {
+            id: session.user?.id,
+          },
+        },
+      },
+    });
+  }
+
+  revalidatePath("/app/dashboard", "page");
 }
 
 export async function updateCheatMeal({
@@ -165,7 +189,7 @@ export async function fetchGymChecksByYearGroupedByMonth({
 
 export async function signInWithCredentials(data: FormData) {
   const authData = Object.fromEntries(data.entries());
-  await signIn("credentials", authData);
+  await signIn("credentials", { redirectTo: "/app/dashboard", ...authData });
 }
 
 export async function logOut() {

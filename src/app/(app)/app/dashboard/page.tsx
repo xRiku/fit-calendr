@@ -49,14 +49,8 @@ export default async function DashboardPage() {
               defaultMonth={add(new Date(2025, 0, 1), {
                 months: i,
               })}
-              cheatMealModifiersArray={cheatMealsGroupedByMonth[i]?.map(
-                (item, i) => {
-                  return item.date;
-                }
-              )}
-              gymModifiersArray={gymChecksGroupedByMonth[i]?.map((item, i) => {
-                return item.date;
-              })}
+              cheatMealModifiersArray={cheatMealsGroupedByMonth[i]}
+              gymModifiersArray={gymChecksGroupedByMonth[i]}
             />
           );
         })}
