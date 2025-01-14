@@ -1,4 +1,7 @@
-import { fetchCheatMealsByYearGroupedByMonth } from "@/actions/actions";
+import {
+  fetchCheatMealsByYearGroupedByMonth,
+  fetchGymChecksByYearGroupedByMonth,
+} from "@/actions/actions";
 import { auth } from "@/auth";
 import H1 from "@/components/h1";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,11 +14,19 @@ export default async function DashboardPage() {
   if (!session) {
     redirect("/auth/signin");
   }
-
-  const dataGroupedByMonth: { [key: string]: any } =
-    await fetchCheatMealsByYearGroupedByMonth({
+  const cheatMealsGroupedByMonthPromise: { [key: string]: any } =
+    fetchCheatMealsByYearGroupedByMonth({
       id: session.user.id,
     });
+
+  const gymChecksGroupedByMonthPromise: { [key: string]: any } =
+    fetchGymChecksByYearGroupedByMonth({
+      id: session.user.id,
+    });
+
+  const [cheatMealsGroupedByMonth, gymChecksGroupedByMonth] = await Promise.all(
+    [cheatMealsGroupedByMonthPromise, gymChecksGroupedByMonthPromise]
+  );
 
   return (
     <main className="flex flex-col items-start justify-center w-11/12 mx-auto ">
@@ -38,8 +49,13 @@ export default async function DashboardPage() {
               defaultMonth={add(new Date(2025, 0, 1), {
                 months: i,
               })}
-              modifiersArray={dataGroupedByMonth[i]?.map((item, i) => {
-                return item.createdAt;
+              cheatMealModifiersArray={cheatMealsGroupedByMonth[i]?.map(
+                (item, i) => {
+                  return item.date;
+                }
+              )}
+              gymModifiersArray={gymChecksGroupedByMonth[i]?.map((item, i) => {
+                return item.date;
               })}
             />
           );

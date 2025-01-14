@@ -7,20 +7,42 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  // dev
+  provider = "sqlite"
+  
+  // prod
+  // provider = "postgresql"
+  // directUrl = env("DIRECT_URL")
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+}
+
+
+model GymCheck {
+  id String @id @default(cuid())
+  description String
+  date DateTime
+
+  user User @relation(fields: [userId], references: [id])
+  userId String
+
+
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+  @@map("gym_checks")
 }
 
 
 model CheatMeal {
   id String @id @default(cuid())
   name String
-  updatedAt DateTime @updatedAt @default(now())
-  createdAt DateTime @default(now())
+  date DateTime
+  
   user User @relation(fields: [userId], references: [id])
   userId String
 
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
   @@map("cheat_meals")
 }
 
@@ -29,10 +51,12 @@ model User {
   email String @unique
   hashedPassword String
   name String 
+
   cheatMeals CheatMeal[]
+  gymChecks GymCheck[]
+
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
-
 
   @@map("users")
 }

@@ -107,7 +107,7 @@ export async function fetchCheatMealsByYearGroupedByMonth({
   const data = await prisma.cheatMeal.findMany({
     where: {
       userId: id,
-      createdAt: {
+      date: {
         lte: new Date(year, 11, 31),
         gte: new Date(year, 0, 1),
       },
@@ -116,7 +116,39 @@ export async function fetchCheatMealsByYearGroupedByMonth({
 
   const hashTable: { [key: number]: typeof data } = {};
   for (const item of data) {
-    const date = new Date(item.createdAt);
+    const date = new Date(item.date);
+    const month = date.getUTCMonth();
+    if (!hashTable[month]) {
+      hashTable[month] = [item];
+      continue;
+    }
+
+    hashTable[month].push(item);
+  }
+
+  return hashTable;
+}
+
+export async function fetchGymChecksByYearGroupedByMonth({
+  id,
+  year = new Date().getFullYear(),
+}: {
+  id: string;
+  year: number;
+}) {
+  const data = await prisma.gymCheck.findMany({
+    where: {
+      userId: id,
+      date: {
+        lte: new Date(year, 11, 31),
+        gte: new Date(year, 0, 1),
+      },
+    },
+  });
+
+  const hashTable: { [key: number]: typeof data } = {};
+  for (const item of data) {
+    const date = new Date(item.date);
     const month = date.getUTCMonth();
     if (!hashTable[month]) {
       hashTable[month] = [item];

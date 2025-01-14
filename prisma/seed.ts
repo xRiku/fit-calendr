@@ -7,27 +7,51 @@ const userData: Prisma.UserCreateInput = {
   email: "example@gmail.com",
   name: "John Doe",
   hashedPassword: "",
+  gymChecks: {
+    create: [
+      {
+        description: "Academia 1",
+        date: new Date("2025-01-02T00:00:00"),
+      },
+      {
+        description: "Academia 2",
+        date: new Date("2025-01-03T00:00:00"),
+      },
+      {
+        description: "Academia 3",
+        date: new Date("2025-01-06T00:00:00"),
+      },
+      {
+        description: "Academia 4",
+        date: new Date("2025-01-07T00:00:00"),
+      },
+      {
+        description: "Academia 5",
+        date: new Date("2025-01-08T00:00:00"),
+      },
+    ],
+  },
   cheatMeals: {
     create: [
       {
-        name: "Academia 1",
-        createdAt: new Date("2025-01-02T00:00:00"),
+        name: "Chipotle",
+        date: new Date("2025-04-02T00:00:00"),
       },
       {
-        name: "Academia 2",
-        createdAt: new Date("2025-01-03T00:00:00"),
+        name: "Mcdonalds",
+        date: new Date("2025-01-09T00:00:00"),
       },
       {
-        name: "Academia 3",
-        createdAt: new Date("2025-01-06T00:00:00"),
+        name: "Chicken popcorn",
+        date: new Date("2025-03-23T00:00:00"),
       },
       {
-        name: "Academia 4",
-        createdAt: new Date("2025-01-07T00:00:00"),
+        name: "Hot dot",
+        date: new Date("2025-01-07T00:00:00"),
       },
       {
-        name: "Academia 5",
-        createdAt: new Date("2025-01-08T00:00:00"),
+        name: "Hamburg",
+        date: new Date("2025-08-08T00:00:00"),
       },
     ],
   },

@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  modifiersArray?: Date[];
+  gymModifiersArray?: Date[];
+  cheatMealModifiersArray?: Date[];
 };
 
 function Calendar({
@@ -17,7 +18,8 @@ function Calendar({
   showOutsideDays = true,
   disableNavigation = false,
   defaultMonth,
-  modifiersArray,
+  gymModifiersArray,
+  cheatMealModifiersArray,
   ...props
 }: CalendarProps) {
   return (
@@ -26,11 +28,10 @@ function Calendar({
       className={cn("p-3", className)}
       disableNavigation={disableNavigation}
       defaultMonth={defaultMonth}
-      modifiers={
-        modifiersArray && {
-          gym: modifiersArray,
-        }
-      }
+      modifiers={{
+        ...(gymModifiersArray && { gym: gymModifiersArray }),
+        ...(cheatMealModifiersArray && { cheatMeal: cheatMealModifiersArray }),
+      }}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -77,14 +78,14 @@ function Calendar({
           return (
             <div className="flex flex-col items-center justify-center">
               <p className="absolute">{date.getDate()}</p>
-              {activeModifiers.gym && (
-                <div className="relative top-3 flex items-center justify-center gap-1">
+              <div className="relative top-3 flex items-center justify-center gap-1">
+                {activeModifiers.gym && (
                   <span className="w-1 h-1 rounded-full bg-primary" />
-                  {date.getDate() % 2 === 0 && date.getDate() % 3 === 0 && (
-                    <span className="w-1 h-1 rounded-full bg-secondary" />
-                  )}
-                </div>
-              )}
+                )}
+                {activeModifiers.cheatMeal && (
+                  <span className="w-1 h-1 rounded-full bg-secondary" />
+                )}
+              </div>
             </div>
           );
         },
