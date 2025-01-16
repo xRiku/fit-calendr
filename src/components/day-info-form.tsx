@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { addDayInfo } from "@/actions/actions";
+import { addDayInfo, updateDayInfo } from "@/actions/actions";
 import { useModalStore } from "@/stores/day-info-modal";
 
 const formSchema = z.object({
@@ -49,9 +49,12 @@ export default function DayInfoForm() {
           }
 
           if (dayInfoType === "edit") {
-            // if (selectedDayInfo) {
-            //   await updateCheatMeal({ id: selectedDayInfo.id, formData });
-            // }
+            await updateDayInfo({
+              cheatMealId: selectedDayInfo?.cheatMeal?.id,
+              gymCheckId: selectedDayInfo?.gymCheck?.id,
+              formData,
+              date: selectedDayInfo?.date ?? new Date(),
+            });
           }
 
           toggleDayInfoModalState();
@@ -60,12 +63,12 @@ export default function DayInfoForm() {
       >
         <FormField
           control={form.control}
-          name="cheatMealName"
+          name="workoutDescription"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="font-bold">Cheat meal name</FormLabel>
+              <FormLabel className="font-bold">Workout description</FormLabel>
               <FormControl>
-                <Input placeholder="e.g Hamburger" {...field} />
+                <Input placeholder="e.g Chest workout" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,12 +76,12 @@ export default function DayInfoForm() {
         />
         <FormField
           control={form.control}
-          name="workoutDescription"
+          name="cheatMealName"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="font-bold">Workout description</FormLabel>
+              <FormLabel className="font-bold">Cheat meal name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g Chest workout" {...field} />
+                <Input placeholder="e.g Hamburger" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -24,15 +24,16 @@ function Calendar({
   cheatMealModifiersArray,
   ...props
 }: CalendarProps) {
-  const { toggleDayInfoModalState, setSelectedDayInfo } = useModalStore();
+  const { toggleDayInfoModalState, setSelectedDayInfo, dayInfoType } =
+    useModalStore();
 
   const handleClickOnDayCell = (date: Date) => {
     const gymCheck = gymModifiersArray?.find((item) => {
-      return item.date === date;
+      return item.date.getTime() === date.getTime();
     });
 
     const cheatMeal = cheatMealModifiersArray?.find((item) => {
-      return item.date === date;
+      return item.date.getTime() === date.getTime();
     });
 
     setSelectedDayInfo({
@@ -41,7 +42,7 @@ function Calendar({
       cheatMeal,
     });
 
-    toggleDayInfoModalState();
+    toggleDayInfoModalState(gymCheck || cheatMeal ? "edit" : "create");
   };
 
   return (
