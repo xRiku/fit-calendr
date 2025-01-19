@@ -6,6 +6,10 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function addDayInfo({
   formData,
   date,
@@ -19,8 +23,12 @@ export async function addDayInfo({
     return;
   }
 
+  let cheatMealResponse = undefined;
+  let gymCheckResponse = undefined;
+  await sleep(2000);
+
   if (formData.get("cheatMealName")) {
-    await prisma.cheatMeal.create({
+    cheatMealResponse = await prisma.cheatMeal.create({
       data: {
         name: formData.get("cheatMealName") as string,
         date: date,
@@ -34,7 +42,7 @@ export async function addDayInfo({
   }
 
   if (formData.get("workoutDescription")) {
-    await prisma.gymCheck.create({
+    gymCheckResponse = await prisma.gymCheck.create({
       data: {
         description: formData.get("workoutDescription") as string,
         date,
@@ -48,6 +56,10 @@ export async function addDayInfo({
   }
 
   revalidatePath("/app/dashboard", "page");
+  return {
+    cheatMealResponse,
+    gymCheckResponse,
+  };
 }
 
 export async function updateCheatMealInfo({
@@ -73,7 +85,6 @@ export async function updateCheatMealInfo({
         },
       },
     });
-    return;
   }
 
   if (cheatMealId) {
@@ -92,16 +103,14 @@ export async function updateCheatMealInfo({
       );
     }
     if (cheatMealName === "") {
-      console.log("cheatMealId", cheatMealId);
-      await prisma.cheatMeal.delete({
+      return await prisma.cheatMeal.delete({
         where: {
           id: cheatMealId,
         },
       });
-      return;
     }
 
-    await prisma.cheatMeal.update({
+    return await prisma.cheatMeal.update({
       data: {
         name: cheatMealName,
       },
@@ -124,7 +133,7 @@ export async function updateGymCheckInfo({
   date: Date;
 }) {
   if (!gymCheckId && workoutDescription !== "") {
-    await prisma.gymCheck.create({
+    return await prisma.gymCheck.create({
       data: {
         description: workoutDescription as string,
         date: date,
@@ -135,7 +144,6 @@ export async function updateGymCheckInfo({
         },
       },
     });
-    return;
   }
 
   if (gymCheckId) {
@@ -154,14 +162,13 @@ export async function updateGymCheckInfo({
       );
     }
     if (workoutDescription === "") {
-      await prisma.gymCheck.delete({
+      return await prisma.gymCheck.delete({
         where: {
           id: gymCheckId,
         },
       });
-      return;
     }
-    await prisma.gymCheck.update({
+    return await prisma.gymCheck.update({
       data: {
         description: workoutDescription,
       },
@@ -175,12 +182,14 @@ export async function updateGymCheckInfo({
 export async function updateDayInfo({
   gymCheckId,
   cheatMealId,
-  formData,
+  cheatMealName,
+  workoutDescription,
   date,
 }: {
   gymCheckId?: string;
   cheatMealId?: string;
-  formData: FormData;
+  cheatMealName?: string;
+  workoutDescription?: string;
   date: Date;
 }) {
   const session = await auth();
@@ -189,11 +198,12 @@ export async function updateDayInfo({
     return;
   }
 
-  const cheatMealName = formData.get("cheatMealName") as string;
-  const workoutDescription = formData.get("workoutDescription") as string;
+  let cheatMealResponse = undefined;
+  let gymCheckResponse = undefined;
+  await sleep(2000);
 
   if (cheatMealName !== undefined) {
-    await updateCheatMealInfo({
+    cheatMealResponse = await updateCheatMealInfo({
       userId: session.user.id,
       cheatMealId,
       cheatMealName,
@@ -202,7 +212,7 @@ export async function updateDayInfo({
   }
 
   if (workoutDescription !== undefined) {
-    await updateGymCheckInfo({
+    gymCheckResponse = await updateGymCheckInfo({
       userId: session.user.id,
       gymCheckId,
       workoutDescription,
@@ -211,6 +221,11 @@ export async function updateDayInfo({
   }
 
   revalidatePath("/app/dashboard", "page");
+
+  return {
+    cheatMealResponse,
+    gymCheckResponse,
+  };
 }
 
 export async function deleteCheatMeal(id: string) {

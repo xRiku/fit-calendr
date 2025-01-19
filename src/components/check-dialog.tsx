@@ -38,28 +38,6 @@ export default function CheckDialog() {
           </DialogDescription>
         </DialogHeader>
         <DayInfoForm />
-        <DialogFooter className="flex sm:justify-center gap-4">
-          <DialogClose asChild>
-            <Button variant="outline" className="w-1/4">
-              Cancel
-            </Button>
-          </DialogClose>
-          <Button
-            onClick={() =>
-              toast("Cheat meal added", {
-                action: {
-                  label: "Undo",
-                  onClick: () => console.log("Undo"),
-                },
-              })
-            }
-            form="day-info-form"
-            type="submit"
-            className="w-1/4"
-          >
-            Save
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
