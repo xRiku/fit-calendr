@@ -267,16 +267,20 @@ export async function getCheatMeals() {
   return data;
 }
 
-export async function fetchCheatMealsByYearGroupedByMonth({
-  id,
-  year = new Date().getFullYear(),
-}: {
-  id: string;
-  year: number;
+export async function fetchCheatMealsByYearGroupedByMonth(params?: {
+  year?: number;
 }) {
+  const { year = new Date().getFullYear() } = params || {};
+
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/signin");
+  }
+
   const data = await prisma.cheatMeal.findMany({
     where: {
-      userId: id,
+      userId: session.user.id,
       date: {
         lte: new Date(year, 11, 31),
         gte: new Date(year, 0, 1),
@@ -296,22 +300,26 @@ export async function fetchCheatMealsByYearGroupedByMonth({
     hashTable[month].push(item);
   }
 
-  return hashTable;
+  return { hashTable, count: data.length };
 }
 
-export async function fetchGymChecksByYearGroupedByMonth({
-  id,
-  year = new Date().getFullYear(),
-}: {
-  id: string;
-  year: number;
+export async function fetchGymChecksByYearGroupedByMonth(params?: {
+  year?: number;
 }) {
+  const { year = new Date().getFullYear() } = params || {};
+  const session = await auth();
+
+  await sleep(2000);
+  if (!session) {
+    redirect("/auth/signin");
+  }
+
   const data = await prisma.gymCheck.findMany({
     where: {
-      userId: id,
+      userId: session.user.id,
       date: {
-        lte: new Date(year, 11, 31),
-        gte: new Date(year, 0, 1),
+        lte: new Date(year ?? new Date().getFullYear(), 11, 31),
+        gte: new Date(year ?? new Date().getFullYear(), 0, 1),
       },
     },
   });
@@ -328,7 +336,29 @@ export async function fetchGymChecksByYearGroupedByMonth({
     hashTable[month].push(item);
   }
 
-  return hashTable;
+  return { hashTable, count: data.length };
+}
+
+export async function getLastCheatMeal() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/signin");
+  }
+  const data = prisma.cheatMeal.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        lte: new Date(),
+      },
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 1,
+  });
+
+  return data;
 }
 
 // Auth

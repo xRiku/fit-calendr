@@ -24,8 +24,7 @@ function Calendar({
   cheatMealModifiersArray,
   ...props
 }: CalendarProps) {
-  const { toggleDayInfoModalState, setSelectedDayInfo, dayInfoType } =
-    useModalStore();
+  const { toggleDayInfoModalState, setSelectedDayInfo } = useModalStore();
 
   const handleClickOnDayCell = (date: Date) => {
     const gymCheck = gymModifiersArray?.find((item) => {

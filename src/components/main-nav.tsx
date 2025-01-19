@@ -9,6 +9,14 @@ export default function MainNav() {
   return (
     <nav className="flex gap-10 items-center">
       <Link
+        href="/app/calendar"
+        className={`${
+          pathname === "/app/calendar" ? "underline" : ""
+        } underline-offset-4 decoration-primary`}
+      >
+        Calendar
+      </Link>
+      <Link
         href="/app/dashboard"
         className={`${
           pathname === "/app/dashboard" ? "underline" : ""
