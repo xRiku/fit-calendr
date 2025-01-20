@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signInWithCredentials } from "@/actions/actions";
+import { useActionState } from "react";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -20,7 +21,7 @@ type SignInFormSchema = z.infer<typeof signInFormSchema>;
 export function SignInForm() {
   const {
     register,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -29,15 +30,14 @@ export function SignInForm() {
     },
   });
 
-  async function handleSignIn(formData: FormData) {
+  async function handleSignIn(_: unknown, formData: FormData) {
     await signInWithCredentials(formData);
   }
 
+  const [, formAction, isPending] = useActionState(handleSignIn, null);
+
   return (
-    <form
-      action={async (formData) => await handleSignIn(formData)}
-      className="space-y-4"
-    >
+    <form action={formAction} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
         <Input id="email" type="email" {...register("email")} />
@@ -60,8 +60,8 @@ export function SignInForm() {
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? (
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <LogIn className="mr-2 h-4 w-4" />
