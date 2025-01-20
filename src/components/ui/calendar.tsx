@@ -112,12 +112,16 @@ function Calendar({
             <Button
               variant="ghost"
               asChild
-              onClick={() => handleClickOnDayCell(date)}
+              onClick={() => {
+                if (!activeModifiers.disabled) {
+                  handleClickOnDayCell(date);
+                }
+              }}
             >
               <div
                 className={`flex flex-col items-center justify-center ${
                   activeModifiers.disabled
-                    ? "hover:pointer-events-none"
+                    ? "hover:cursor-default pointer-events-none"
                     : "hover:cursor-pointer"
                 }`}
               >
