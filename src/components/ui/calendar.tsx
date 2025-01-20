@@ -49,6 +49,9 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       disableNavigation={disableNavigation}
+      disabled={{
+        after: new Date(),
+      }}
       defaultMonth={defaultMonth}
       modifiers={{
         ...(gymModifiersArray && {
