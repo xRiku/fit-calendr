@@ -5,3 +5,10 @@ declare module "next-auth" {
     user: User;
   }
 }
+
+declare module "@auth/core/jwt" {
+  interface JWT {
+    userId: string;
+    email: string;
+  }
+}

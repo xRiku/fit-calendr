@@ -25,7 +25,6 @@ export async function addDayInfo({
 
   let cheatMealResponse = undefined;
   let gymCheckResponse = undefined;
-  await sleep(2000);
 
   if (formData.get("cheatMealName")) {
     cheatMealResponse = await prisma.cheatMeal.create({
@@ -55,7 +54,7 @@ export async function addDayInfo({
     });
   }
 
-  revalidatePath("/app/dashboard", "page");
+  revalidatePath("/app/calendar", "page");
   return {
     cheatMealResponse,
     gymCheckResponse,
@@ -200,7 +199,6 @@ export async function updateDayInfo({
 
   let cheatMealResponse = undefined;
   let gymCheckResponse = undefined;
-  await sleep(2000);
 
   if (cheatMealName !== undefined) {
     cheatMealResponse = await updateCheatMealInfo({
@@ -220,7 +218,7 @@ export async function updateDayInfo({
     });
   }
 
-  revalidatePath("/app/dashboard", "page");
+  revalidatePath("/app/calendar", "page");
 
   return {
     cheatMealResponse,
@@ -309,7 +307,6 @@ export async function fetchGymChecksByYearGroupedByMonth(params?: {
   const { year = new Date().getFullYear() } = params || {};
   const session = await auth();
 
-  await sleep(2000);
   if (!session) {
     redirect("/auth/signin");
   }
@@ -373,7 +370,6 @@ export async function logOut() {
 }
 
 export async function createUser(formData: FormData) {
-  console.log(formData);
   const hashedPassword = await bcrypt.hash(
     formData.get("password") as string,
     10

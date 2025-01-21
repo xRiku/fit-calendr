@@ -2,6 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +11,10 @@ export function GoogleSignInButton() {
 
   async function handleSignIn() {
     setLoading(true);
+
+    await signIn("google", {
+      redirectTo: "/app/dashboard",
+    });
   }
 
   return (
