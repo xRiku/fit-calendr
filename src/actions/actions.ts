@@ -6,10 +6,6 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export async function addDayInfo({
   formData,
   date,
@@ -267,7 +263,10 @@ export async function getCheatMeals() {
 
 export async function fetchCheatMealsByYearGroupedByMonth(params?: {
   year?: number;
-}) {
+}): Promise<{
+  hashTable: { [key: number]: typeof data };
+  count: number;
+}> {
   const { year = new Date().getFullYear() } = params || {};
 
   const session = await auth();
@@ -303,7 +302,10 @@ export async function fetchCheatMealsByYearGroupedByMonth(params?: {
 
 export async function fetchGymChecksByYearGroupedByMonth(params?: {
   year?: number;
-}) {
+}): Promise<{
+  hashTable: { [key: number]: typeof data };
+  count: number;
+}> {
   const { year = new Date().getFullYear() } = params || {};
   const session = await auth();
 

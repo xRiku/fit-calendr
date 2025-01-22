@@ -5,13 +5,57 @@ import { Suspense } from "react";
 
 export default async function GymChecksThisYearCard() {
   async function CardData() {
-    const gymChecksGroupedByMonth: { [key: string]: any } =
-      await fetchGymChecksByYearGroupedByMonth();
+    const gymChecksGroupedByMonth = await fetchGymChecksByYearGroupedByMonth();
+
+    const getDiffFromLastMonth = async () => {
+      const thisYear = gymChecksGroupedByMonth.count || 0;
+      if (thisYear === 0) {
+        return 0;
+      }
+
+      const lastYearGymChecksGroupedByMonth =
+        await fetchGymChecksByYearGroupedByMonth({
+          year: new Date().getFullYear() - 1,
+        });
+      const prevYear = lastYearGymChecksGroupedByMonth?.count || 0;
+
+      if (prevYear === 0) {
+        return 0;
+      }
+
+      return (thisYear / prevYear - 1) * 100;
+    };
+
+    const diffFromLastMonth = await getDiffFromLastMonth();
 
     return (
-      <span className="text-2xl font-bold">
-        {gymChecksGroupedByMonth.count}
-      </span>
+      <>
+        {gymChecksGroupedByMonth ? (
+          <>
+            <span className="text-2xl font-bold">
+              {gymChecksGroupedByMonth.count || 0}
+            </span>
+            {diffFromLastMonth !== 0 && (
+              <p className="text-xs text-muted-foreground">
+                {diffFromLastMonth > 0 ? "Up by " : "Down by "}
+                <span
+                  className={
+                    diffFromLastMonth > 0 ? "text-emerald-500" : "text-red-500"
+                  }
+                >
+                  {diffFromLastMonth > 0
+                    ? `+${diffFromLastMonth.toFixed(1)}`
+                    : diffFromLastMonth.toFixed(1)}
+                  %
+                </span>{" "}
+                this year
+              </p>
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+      </>
     );
   }
 
@@ -23,32 +67,6 @@ export default async function GymChecksThisYearCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
-        {/* {monthReceipt ? (
-          <>
-            <span className="text-2xl font-bold">
-              {monthReceipt.receipt.toLocaleString('pt-BR', {
-                currency: 'BRL',
-                style: 'currency',
-              })}
-            </span>
-            <p className="text-xs text-muted-foreground">
-              <span
-                className={
-                  monthReceipt.diffFromLastMonth > 0
-                    ? 'text-emerald-500'
-                    : 'text-red-500'
-                }
-              >
-                {monthReceipt.diffFromLastMonth > 0
-                  ? `+${monthReceipt.diffFromLastMonth}`
-                  : monthReceipt.diffFromLastMonth}
-                %
-              </span>{' '}
-              em relação ao mês passado
-            </p>
-          </>
-        ) : (
-          )} */}
         <Suspense fallback={<CardSkeleton />}>
           <CardData />
         </Suspense>
