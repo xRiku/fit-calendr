@@ -25,6 +25,9 @@ export default async function GymChecksThisMonthCard() {
             });
           prevMonth =
             prevYearGymChecksGroupedByMonth.hashTable[11]?.length || 0;
+          if (prevMonth === 0) {
+            return 0;
+          }
           return (thisMonth / prevMonth - 1) * 100;
         }
 
@@ -38,7 +41,7 @@ export default async function GymChecksThisMonthCard() {
 
     return (
       <>
-        {gymChecksGroupedByMonth ? (
+        {gymChecksGroupedByMonth && (
           <>
             <span className="text-2xl font-bold">
               {gymChecksGroupedByMonth.hashTable[new Date().getMonth()]
@@ -61,8 +64,6 @@ export default async function GymChecksThisMonthCard() {
               </p>
             )}
           </>
-        ) : (
-          <></>
         )}
       </>
     );

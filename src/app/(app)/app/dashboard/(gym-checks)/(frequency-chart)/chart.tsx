@@ -1,18 +1,10 @@
 "use client";
 
-import { Database, TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
+import { CardContent, CardFooter } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -42,12 +34,45 @@ export function Chart() {
     async function fetchData() {
       const data = await fetchGymChecksByYearGroupedByMonth();
 
-      const fittedChartData = Object.keys(data.hashTable).map((value) => {
-        return {
-          month: format(new Date(1, Number.parseInt(value)), "LLLL"),
-          gymCheck: data.hashTable[value].length,
-        };
-      });
+      const lastMonthNumber = Number.parseInt(
+        Object.keys(data.hashTable)[Object.keys(data.hashTable).length - 1]
+      );
+
+      const fittedChartData = Array.from({ length: lastMonthNumber + 1 }).map(
+        (_, index) => {
+          return {
+            month: format(new Date(1, index), "LLLL"),
+            gymCheck: data.hashTable[index]?.length || 0,
+          };
+        }
+      );
+
+      console.log(fittedChartData);
+
+      // const fittedChartData = Object.keys(data.hashTable).map(
+      //   (value: string) => {
+      //     return {
+      //       month: format(new Date(1, Number.parseInt(value)), "LLLL"),
+      //       gymCheck: data.hashTable[value].length,
+      //     };
+      //   }
+      // );
+
+      // const filledChartData = Array.from({ length: lastMonthNumber + 1 }).map(
+      //   (_, index) => {
+      //     const filteredMonthLabel =  fittedChartData.find(() => {
+
+      //     })
+      //     if (fittedChartData[format(new Date(1, index), "LLLL")]) {
+      //       return fittedChartData[format(new Date(1, index), "LLLL")];
+      //     }
+
+      //     return {
+      //       month: format(new Date(1, index), "LLLL"),
+      //       gymCheck: 0,
+      //     };
+      //   }
+      // );
 
       setChartData(fittedChartData);
       setLoading(false);
@@ -64,7 +89,40 @@ export function Chart() {
     <>
       <CardContent className="h-[300px]">
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <AreaChart
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              top: 20,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Bar
+              barSize={100}
+              dataKey="gymCheck"
+              fill="var(--primary)"
+              radius={4}
+            >
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+          </BarChart>
+          {/* <AreaChart
             accessibilityLayer
             data={chartData}
             margin={{
@@ -91,15 +149,12 @@ export function Chart() {
               fillOpacity={0.4}
               stroke="var(--primary)"
             />
-          </AreaChart>
+          </AreaChart> */}
         </ChartContainer>
       </CardContent>
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
-            {/* <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div> */}
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
               {chartData.length === 1 &&
                 `${chartData[0].month}

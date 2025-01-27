@@ -303,7 +303,7 @@ export async function fetchCheatMealsByYearGroupedByMonth(params?: {
 export async function fetchGymChecksByYearGroupedByMonth(params?: {
   year?: number;
 }): Promise<{
-  hashTable: { [key: number]: typeof data };
+  hashTable: { [key: string]: typeof data };
   count: number;
 }> {
   const { year = new Date().getFullYear() } = params || {};
