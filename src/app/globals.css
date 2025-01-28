@@ -7,6 +7,36 @@
     --radius: 0.5rem;
     --primary: #2adb7a;
     --secondary: #ff9e2c;
+    --foreground: #0e0e0e;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    /* --chart-1: 347 77% 50%;
+    --chart-2: 349 77% 62%;
+    --chart-3: 350 80% 72%;
+    --chart-4: 351 83% 82%;
+    --chart-5: 352 83% 91%; */
+    --chart-1: 212 97% 53%;
+    --chart-2: 347 77% 50%;
+    --chart-3: 56 89% 57%;
+    /* --chart-1: 29 94% 38%;
+    --chart-2: 30 97% 45%;
+    --chart-3: 31 97% 52%; */
+    --chart-4: 32 100% 59%; /* true color */
+    --chart-5: 147 71% 51%;
+    /* --chart-5: 33 100% 66%; */
+    --chart-6: 34 100% 72%;
+    --chart-7: 35 100% 79%;
+    /* --chart-5: 36 100% 83%;
+    --chart-2: 30 97% 45%;
+    --chart-3: 31 97% 52%;
+    --chart-4: 32 100% 59%;
+    --chart-5: 33 100% 66%; */
+  }
+
+  .dark {
+    --primary: #2adb7a;
+    --foreground: #f5f5f5;
   }
 }
 

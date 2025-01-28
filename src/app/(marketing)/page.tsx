@@ -6,7 +6,7 @@ export default function MarketingPage() {
       <section className="block sm:hidden ">
         <H1 className="text-[28px] leading-7">
           Simplify your fitness journey: <br /> log{" "}
-          <span className="decoration-dashed underline decoration-[#2ADB7A]">
+          <span className="decoration-dashed underline decoration-primary">
             workouts
           </span>{" "}
           and treats!
@@ -15,7 +15,7 @@ export default function MarketingPage() {
       <section className="hidden sm:block">
         <H1>
           Simplify your fitness journey: <br /> log{" "}
-          <span className="decoration-dashed underline decoration-[#2ADB7A]">
+          <span className="decoration-dashed underline decoration-primary">
             workouts
           </span>{" "}
           and treats!

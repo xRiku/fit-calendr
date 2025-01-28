@@ -47,33 +47,6 @@ export function Chart() {
         }
       );
 
-      console.log(fittedChartData);
-
-      // const fittedChartData = Object.keys(data.hashTable).map(
-      //   (value: string) => {
-      //     return {
-      //       month: format(new Date(1, Number.parseInt(value)), "LLLL"),
-      //       gymCheck: data.hashTable[value].length,
-      //     };
-      //   }
-      // );
-
-      // const filledChartData = Array.from({ length: lastMonthNumber + 1 }).map(
-      //   (_, index) => {
-      //     const filteredMonthLabel =  fittedChartData.find(() => {
-
-      //     })
-      //     if (fittedChartData[format(new Date(1, index), "LLLL")]) {
-      //       return fittedChartData[format(new Date(1, index), "LLLL")];
-      //     }
-
-      //     return {
-      //       month: format(new Date(1, index), "LLLL"),
-      //       gymCheck: 0,
-      //     };
-      //   }
-      // );
-
       setChartData(fittedChartData);
       setLoading(false);
     }
@@ -114,48 +87,15 @@ export function Chart() {
               fill="var(--primary)"
               radius={4}
             >
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
+              <LabelList position="top" offset={12} fontSize={12} />
             </Bar>
           </BarChart>
-          {/* <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-            <Area
-              dataKey="gymCheck"
-              type="natural"
-              fill="var(--primary)"
-              fillOpacity={0.4}
-              stroke="var(--primary)"
-            />
-          </AreaChart> */}
         </ChartContainer>
       </CardContent>
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+            <div className="flex items-center gap-2 leading-none">
               {chartData.length === 1 &&
                 `${chartData[0].month}
                 ${new Date().getFullYear()}`}

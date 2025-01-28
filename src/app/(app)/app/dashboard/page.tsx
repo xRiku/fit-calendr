@@ -3,6 +3,7 @@ import GymChecksThisMonthCard from "./(gym-checks)/gym-checks-this-month-card";
 import CheatMealsThisMonthCard from "./(cheat-meals)/cheat-meals-this-week-card";
 import DaysSinceLastCheatMealCard from "./(cheat-meals)/days-since-last-cheat-meal-card";
 import { FrequencyChart } from "./(gym-checks)/(frequency-chart)/frequency-chart";
+import { WeekdayChart } from "./(cheat-meals)/(weekday-chart)/weekday-chart";
 
 export default async function DashboardPage() {
   return (
@@ -18,6 +19,7 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-9 gap-4">
         <FrequencyChart />
+        <WeekdayChart />
       </div>
     </main>
   );
