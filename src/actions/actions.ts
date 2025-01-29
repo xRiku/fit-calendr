@@ -376,7 +376,7 @@ export async function createUser(formData: FormData) {
     formData.get("password") as string,
     10
   );
-  await prisma.user.create({
+  return await prisma.user.create({
     data: {
       email: formData.get("email") as string,
       name: formData.get("name") as string,

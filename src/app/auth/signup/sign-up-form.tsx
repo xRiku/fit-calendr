@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createUser } from "@/actions/actions";
+import { createUser, signInWithCredentials } from "@/actions/actions";
 
 const signUpFormSchema = z
   .object({
@@ -44,7 +44,10 @@ export function SignUpForm() {
   return (
     <form
       action={async (formData) => {
-        await createUser(formData);
+        const user = await createUser(formData);
+        if (user) {
+          await signInWithCredentials(formData);
+        }
       }}
       className="space-y-4"
     >
