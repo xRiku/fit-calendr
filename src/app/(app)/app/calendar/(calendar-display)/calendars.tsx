@@ -15,11 +15,6 @@ export default async function Calendars() {
   );
 
   return Array.from({ length: 12 }).map((_, i) => {
-    console.log(
-      add(new Date(2025, 0, 15), {
-        months: i,
-      })
-    );
     return (
       <Calendar
         key={`calendar-${i}`}
