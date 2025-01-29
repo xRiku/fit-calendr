@@ -15,6 +15,7 @@ export default async function Calendars() {
   );
 
   return Array.from({ length: 12 }).map((_, i) => {
+    console.log(i);
     return (
       <Calendar
         key={`calendar-${i}`}
