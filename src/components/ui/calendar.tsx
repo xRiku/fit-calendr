@@ -55,12 +55,12 @@ function Calendar({
       defaultMonth={defaultMonth}
       modifiers={{
         ...(gymModifiersArray && {
-          gym: gymModifiersArray?.map((item, i) => {
+          gym: gymModifiersArray?.map((item) => {
             return item.date;
           }),
         }),
         ...(cheatMealModifiersArray && {
-          cheatMeal: cheatMealModifiersArray?.map((item, i) => {
+          cheatMeal: cheatMealModifiersArray?.map((item) => {
             return item.date;
           }),
         }),

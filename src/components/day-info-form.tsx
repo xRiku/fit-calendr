@@ -21,21 +21,21 @@ import { useModalStore } from "@/stores/day-info-modal";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 
-const SuccessIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-    height="20"
-    width="20"
-  >
-    <path
-      fillRule="evenodd"
-      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
+// const SuccessIcon = () => (
+//   <svg
+//     xmlns="http://www.w3.org/2000/svg"
+//     viewBox="0 0 20 20"
+//     fill="currentColor"
+//     height="20"
+//     width="20"
+//   >
+//     <path
+//       fillRule="evenodd"
+//       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+//       clipRule="evenodd"
+//     />
+//   </svg>
+// );
 
 const formSchema = z.object({
   cheatMealName: z.string().max(50).optional(),
@@ -67,7 +67,7 @@ export default function DayInfoForm() {
               }),
               {
                 loading: "Adding day info...",
-                success: (data) => {
+                success: () => {
                   return "Day info added";
                   // const { cheatMealResponse, gymCheckResponse } = data;
 
@@ -113,7 +113,7 @@ export default function DayInfoForm() {
               }),
               {
                 loading: "Editing day info...",
-                success: (data) => {
+                success: () => {
                   return "Day info updated";
                   // const { cheatMealResponse, gymCheckResponse } = data;
 

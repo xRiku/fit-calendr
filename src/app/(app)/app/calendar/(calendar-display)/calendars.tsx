@@ -2,16 +2,13 @@ import {
   fetchCheatMealsByYearGroupedByMonth,
   fetchGymChecksByYearGroupedByMonth,
 } from "@/actions/actions";
-import H1 from "@/components/h1";
 import { Calendar } from "@/components/ui/calendar";
 import { add } from "date-fns";
 
 export default async function Calendars() {
-  const cheatMealsGroupedByMonthPromise: { [key: string]: any } =
-    fetchCheatMealsByYearGroupedByMonth();
+  const cheatMealsGroupedByMonthPromise = fetchCheatMealsByYearGroupedByMonth();
 
-  const gymChecksGroupedByMonthPromise: { [key: string]: any } =
-    fetchGymChecksByYearGroupedByMonth();
+  const gymChecksGroupedByMonthPromise = fetchGymChecksByYearGroupedByMonth();
 
   const [cheatMealsGroupedByMonth, gymChecksGroupedByMonth] = await Promise.all(
     [cheatMealsGroupedByMonthPromise, gymChecksGroupedByMonthPromise]
