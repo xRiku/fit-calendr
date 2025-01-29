@@ -9,8 +9,8 @@ const onest = Onest({
 });
 
 export const metadata: Metadata = {
-  title: "Cheat Meal Tracker",
-  description: "Track your weekly cheat meals",
+  title: "FitCalendr",
+  description: "Track your gym frequency and cheat meals",
 };
 
 export default function RootLayout({
