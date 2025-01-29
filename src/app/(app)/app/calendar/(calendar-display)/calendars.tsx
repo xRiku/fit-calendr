@@ -15,13 +15,17 @@ export default async function Calendars() {
   );
 
   return Array.from({ length: 12 }).map((_, i) => {
-    console.log(i);
+    console.log(
+      add(new Date(2025, 0, 15), {
+        months: i,
+      })
+    );
     return (
       <Calendar
         key={`calendar-${i}`}
         disableNavigation
         showOutsideDays={false}
-        defaultMonth={add(new Date(2025, 0, 1), {
+        defaultMonth={add(new Date(2025, 0, 15), {
           months: i,
         })}
         cheatMealModifiersArray={cheatMealsGroupedByMonth.hashTable[i]}
