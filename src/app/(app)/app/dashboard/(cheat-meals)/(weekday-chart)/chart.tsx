@@ -1,78 +1,118 @@
 "use client";
 
-import * as React from "react";
-import { TrendingUp } from "lucide-react";
-import { Label, LabelList, Pie, PieChart } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
+import { CardContent } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  // { weekday: "monday", cheatMeals: 11, fill: "var(--color-monday)" },
-  // { weekday: "tuesday", cheatMeals: 4, fill: "var(--color-tuesday)" },
-  // { weekday: "wednesday", cheatMeals: 9, fill: "var(--color-wednesday)" },
-  { weekday: "thursday", cheatMeals: 3, fill: "var(--color-thursday)" },
-  { weekday: "friday", cheatMeals: 20, fill: "var(--color-friday)" },
-  { weekday: "saturday", cheatMeals: 43, fill: "var(--color-saturday)" },
-  { weekday: "sunday", cheatMeals: 33, fill: "var(--color-sunday)" },
-  { weekday: "others", cheatMeals: 30, fill: "var(--color-others)" },
-];
+import type { ChartConfig } from "@/components/ui/chart";
+import { useEffect, useMemo, useState } from "react";
+import { fetchCheatMealsByYearGroupedByMonth } from "@/actions/actions";
+import { format } from "date-fns";
+import { ChartSkeleton } from "./chart-skeleton";
 
-const chartConfig = {
-  cheatMeals: {
-    label: "Cheat Meals",
-  },
-  // monday: {
-  //   label: "Monday",
-  //   color: "hsl(var(--chart-1))",
-  // },
-  // tuesday: {
-  //   label: "Tuesday",
-  //   color: "hsl(var(--chart-2))",
-  // },
-  // wednesday: {
-  //   label: "Wednesday",
-  //   color: "hsl(var(--chart-3))",
-  // },
-  others: {
-    label: "Others",
-    color: "hsl(var(--chart-1))",
-  },
-  thursday: {
-    label: "Thursday",
-    color: "hsl(var(--chart-2))",
-  },
-  friday: {
-    label: "Friday",
-    color: "hsl(var(--chart-3))",
-  },
-  saturday: {
-    label: "Saturday",
-    color: "hsl(var(--chart-4))",
-  },
-  sunday: {
-    label: "Sunday",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
+type ChartData = {
+  weekday: string;
+  cheatMeals: number;
+};
 
 export function Chart() {
-  const totalCheatMeals = React.useMemo(() => {
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const chartConfig = {
+    cheatMeals: {
+      label: "Cheat Meals",
+    },
+    ...chartData.reduce(
+      (
+        acc: { [key: string]: { label: string; color: string } },
+        item,
+        index
+      ) => {
+        acc[item.weekday] = {
+          label: item.weekday,
+          color: `hsl(var(--chart-${index + 1}))`,
+        };
+        return acc;
+      },
+      {}
+    ),
+  } satisfies ChartConfig;
+
+  const totalCheatMeals = useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.cheatMeals, 0);
+  }, [chartData]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { hashTable } = await fetchCheatMealsByYearGroupedByMonth();
+
+      const weekdaysTable: { [key: string]: number } = {};
+      for (const cheatMeal of Object.values(hashTable).flat()) {
+        const weekday = format(cheatMeal.date, "eeee");
+        if (weekdaysTable[weekday]) {
+          weekdaysTable[weekday] += 1;
+        } else {
+          weekdaysTable[weekday] = 1;
+        }
+      }
+
+      const lowestCheatMealWeekdays = [];
+      let i = Object.keys(weekdaysTable).length;
+      let totalOthersSum = 0;
+      while (i > 4) {
+        const minWeekday = getWeekdayWithLowestValue(weekdaysTable);
+        if (minWeekday) {
+          lowestCheatMealWeekdays.push(minWeekday);
+          totalOthersSum += weekdaysTable[minWeekday];
+          delete weekdaysTable[minWeekday];
+        }
+
+        i -= 1;
+        if (i === 4) {
+          weekdaysTable.Others = totalOthersSum;
+        }
+      }
+
+      const fittedChartData = Object.entries(weekdaysTable).map(
+        ([weekday, cheatMeals]) => {
+          return {
+            weekday,
+            cheatMeals: cheatMeals,
+            fill: `var(--color-${weekday})`,
+          };
+        }
+      );
+
+      setChartData(fittedChartData);
+      setLoading(false);
+    }
+
+    fetchData();
   }, []);
+
+  function getWeekdayWithLowestValue(weekdays: { [weekday: string]: number }) {
+    let lowestKey = null;
+    let lowestValue = Number.POSITIVE_INFINITY;
+
+    for (const [key, value] of Object.entries(weekdays)) {
+      if (value < lowestValue) {
+        lowestValue = value;
+        lowestKey = key;
+      }
+    }
+
+    return lowestKey;
+  }
+
+  if (loading) {
+    return <ChartSkeleton />;
+  }
 
   return (
     <>
@@ -143,14 +183,6 @@ export function Chart() {
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        {/* <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div> */}
-      </CardFooter>
     </>
   );
 }
