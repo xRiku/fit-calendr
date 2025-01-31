@@ -6,7 +6,7 @@ import CalendarSkeleton from "./(calendar-display)/calendar-skeleton";
 export default async function CalendarPage() {
   return (
     <>
-      <H1 className="mb-8">Calendar</H1>
+      <H1 className="sm:mb-8">Calendar</H1>
       <div className="flex flex-col">
         <div className="flex items-center">
           <span className="h-2 w-2 mr-2 rounded-xl bg-primary" /> Gym

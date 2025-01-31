@@ -7,7 +7,7 @@ export default function MainNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-10 items-center">
+    <nav className="flex gap-4 sm:gap-10 items-center">
       <Link
         href="/app/calendar"
         className={`${
