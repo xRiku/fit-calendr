@@ -5,7 +5,7 @@ import DayInfoForm from "./day-info-form";
 import { useModalStore } from "@/stores/day-info-modal";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
-export default function CheckDialog() {
+export default function DayInfoDialog() {
   const {
     dayInfoModalState,
     toggleDayInfoModalState,

@@ -184,7 +184,23 @@ export default function DayInfoForm() {
           )}
         />
       </form>
-      <div className="flex sm:justify-center gap-4">
+      <div className="flex flex-col w-full sm:hidden gap-2 mt-4 pb-4">
+        <Button
+          type="submit"
+          disabled={
+            !Object.values(form.getValues()).some((value) => {
+              return value.length > 0;
+            }) && dayInfoType === "create"
+          }
+          form="day-info-form"
+        >
+          Save
+        </Button>
+        <Button variant="outline" onClick={() => toggleDayInfoModalState()}>
+          Cancel
+        </Button>
+      </div>
+      <div className="hidden sm:flex sm:justify-center gap-4">
         <Button
           variant="outline"
           className="w-1/4"
