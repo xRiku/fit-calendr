@@ -26,14 +26,14 @@ export default async function DashboardPage({
         <SelectCheckOptions selected={selected} />
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="flex flex-col sm:grid sm:grid-cols-4 gap-4">
         <CheckOptionThisYearCard selected={selected} />
         <CheckOptionAveragePerMonthCard selected={selected} />
         <CheckOptionThisMonthCard selected={selected} />
         <DaysSinceLastCheckOptionCard selected={selected} />
       </div>
 
-      <div className="grid grid-cols-9 gap-4">
+      <div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
         <FrequencyChart />
         <WeekdayChart />
       </div>
