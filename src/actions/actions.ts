@@ -360,6 +360,28 @@ export async function getLastCheatMeal() {
   return data;
 }
 
+export async function getLastGymWorkout() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/signin");
+  }
+  const data = prisma.gymCheck.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        lte: new Date(),
+      },
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 1,
+  });
+
+  return data;
+}
+
 // Auth
 
 export async function signInWithCredentials(data: FormData) {

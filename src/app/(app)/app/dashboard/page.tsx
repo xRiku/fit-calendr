@@ -1,11 +1,10 @@
-import GymChecksThisYearCard from "./(gym-checks)/gym-checks-this-year-card";
-import DaysSinceLastCheatMealCard from "./(cheat-meals)/days-since-last-cheat-meal-card";
 import { FrequencyChart } from "./(gym-checks)/(frequency-chart)/frequency-chart";
 import { WeekdayChart } from "./(cheat-meals)/(weekday-chart)/weekday-chart";
 import SelectCheckOptions from "@/components/select-check-options";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
 import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
+import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 
 export type DashBoardPageProps = {
   searchParams: Promise<{
@@ -29,11 +28,9 @@ export default async function DashboardPage({
 
       <div className="grid grid-cols-4 gap-4">
         <CheckOptionThisYearCard selected={selected} />
-        {/* <GymChecksThisMonthCard /> */}
         <CheckOptionAveragePerMonthCard selected={selected} />
-        {/* <CheatMealsThisMonthCard /> */}
         <CheckOptionThisMonthCard selected={selected} />
-        <DaysSinceLastCheatMealCard />
+        <DaysSinceLastCheckOptionCard selected={selected} />
       </div>
 
       <div className="grid grid-cols-9 gap-4">

@@ -1,30 +1,50 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { CardSkeleton } from "../card-skeleton";
-import { getLastCheatMeal } from "@/actions/actions";
+import { CardSkeleton } from "./card-skeleton";
+import { getLastCheatMeal, getLastGymWorkout } from "@/actions/actions";
 import { Suspense } from "react";
 import { differenceInDays } from "date-fns";
 
-export default async function DaysSinceLastCheatMealCard() {
+const options: {
+  [key: string]: { title: string; fetchCall: unknown };
+} = {
+  "gym-workout": {
+    title: "Days since last gym workout",
+    fetchCall: getLastGymWorkout,
+  },
+  "cheat-meal": {
+    title: "Days since last cheat meal",
+    fetchCall: getLastCheatMeal,
+  },
+};
+
+export default async function DaysSinceLastCheckOptionCard({
+  selected,
+}: {
+  selected: string;
+}) {
   async function CardData() {
-    const lastCheatMeal = await getLastCheatMeal();
+    const lastCheckOption = await options[selected].fetchCall();
+    // const lastCheatMeal = await getLastCheatMeal();
 
-    let daysSinceLastCheatMeal = 0;
+    let daysSinceLastCheckOption = 0;
 
-    if (lastCheatMeal.length) {
-      daysSinceLastCheatMeal = differenceInDays(
+    if (lastCheckOption.length) {
+      daysSinceLastCheckOption = differenceInDays(
         new Date().getTime(),
-        lastCheatMeal[0].date.getTime() || new Date()
+        lastCheckOption[0].date.getTime() || new Date()
       );
     }
 
-    return <span className="text-2xl font-bold">{daysSinceLastCheatMeal}</span>;
+    return (
+      <span className="text-2xl font-bold">{daysSinceLastCheckOption}</span>
+    );
   }
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-base font-semibold">
-          Days since last cheat meal
+          {options[selected].title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
