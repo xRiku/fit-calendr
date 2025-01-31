@@ -15,7 +15,7 @@ export default async function CalendarPage() {
           <span className="h-2 w-2 mr-2 rounded-xl bg-secondary" /> Cheat Meal
         </div>
       </div>
-      <div className="w-full flex items-start justify-start flex-wrap">
+      <div className="w-full flex items-start md:justify-start justify-center flex-wrap">
         <Suspense
           fallback={Array.from({ length: 12 }).map((item, index) => (
             <CalendarSkeleton key={`calendar-skeleton-${index}`} />
