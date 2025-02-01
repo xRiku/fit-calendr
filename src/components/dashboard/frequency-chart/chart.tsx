@@ -10,29 +10,47 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import { fetchGymChecksByYearGroupedByMonth } from "@/actions/actions";
+import {
+  fetchCheatMealsByYearGroupedByMonth,
+  fetchGymChecksByYearGroupedByMonth,
+} from "@/actions/actions";
 import { format } from "date-fns";
 import { ChartSkeleton } from "./chart-skeleton";
 
-const chartConfig = {
-  gymCheck: {
-    label: "Gym workouts",
-    color: "hsl(var(--primary))",
-  },
-} satisfies ChartConfig;
-
 type ChartData = {
   month: string;
-  gymCheck: number;
+  checkOption: number;
 };
 
-export function Chart() {
+const options: {
+  [key: string]: { title: string; fetchCall: unknown; color?: string };
+} = {
+  "gym-workout": {
+    title: "Gym workouts (year)",
+    fetchCall: fetchGymChecksByYearGroupedByMonth,
+    color: "var(--primary)",
+  },
+  "cheat-meal": {
+    title: "Cheat meals (year)",
+    fetchCall: fetchCheatMealsByYearGroupedByMonth,
+    color: "var(--secondary)",
+  },
+};
+
+export function Chart({ selected }: { selected: string }) {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
+  const chartConfig = {
+    checkOption: {
+      label: options[selected].title,
+      color: `hsl(${options[selected].color})`,
+    },
+  } satisfies ChartConfig;
+
   useEffect(() => {
     async function fetchData() {
-      const data = await fetchGymChecksByYearGroupedByMonth();
+      const data = await options[selected].fetchCall();
 
       const lastMonthNumber = Number.parseInt(
         Object.keys(data.hashTable)[Object.keys(data.hashTable).length - 1]
@@ -42,7 +60,7 @@ export function Chart() {
         (_, index) => {
           return {
             month: format(new Date(1, index), "LLLL"),
-            gymCheck: data.hashTable[index]?.length || 0,
+            checkOption: data.hashTable[index]?.length || 0,
           };
         }
       );
@@ -52,7 +70,7 @@ export function Chart() {
     }
 
     fetchData();
-  }, []);
+  }, [selected]);
 
   if (loading) {
     return <ChartSkeleton />;
@@ -83,8 +101,8 @@ export function Chart() {
             />
             <Bar
               barSize={100}
-              dataKey="gymCheck"
-              fill="var(--primary)"
+              dataKey="checkOption"
+              fill={options[selected].color}
               radius={4}
             >
               <LabelList position="top" offset={12} fontSize={12} />

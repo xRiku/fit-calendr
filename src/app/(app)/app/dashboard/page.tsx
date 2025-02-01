@@ -1,10 +1,10 @@
-import { FrequencyChart } from "./(gym-checks)/(frequency-chart)/frequency-chart";
 import { WeekdayChart } from "./(cheat-meals)/(weekday-chart)/weekday-chart";
 import SelectCheckOptions from "@/components/select-check-options";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
 import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
+import { FrequencyChart } from "@/components/dashboard/frequency-chart";
 
 export type DashBoardPageProps = {
   searchParams: Promise<{
@@ -34,7 +34,7 @@ export default async function DashboardPage({
       </div>
 
       <div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
-        <FrequencyChart />
+        <FrequencyChart selected={selected} />
         <WeekdayChart />
       </div>
     </main>

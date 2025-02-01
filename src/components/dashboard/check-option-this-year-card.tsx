@@ -8,7 +8,7 @@ import { Suspense } from "react";
 
 const options: { [key: string]: { title: string; fetchCall: unknown } } = {
   "gym-workout": {
-    title: "Gym checks (year)",
+    title: "Gym workouts (year)",
     fetchCall: fetchGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {

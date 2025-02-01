@@ -10,7 +10,7 @@ const options: {
   [key: string]: { title: string; fetchCall: unknown };
 } = {
   "gym-workout": {
-    title: "Average gym checks (month)",
+    title: "Average gym workouts (month)",
     fetchCall: fetchGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
