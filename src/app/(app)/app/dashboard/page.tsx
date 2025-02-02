@@ -1,10 +1,10 @@
-import { WeekdayChart } from "./(cheat-meals)/(weekday-chart)/weekday-chart";
 import SelectCheckOptions from "@/components/select-check-options";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
 import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
+import { WeekdayChart } from "@/components/dashboard/weekday-chart";
 
 export type DashBoardPageProps = {
   searchParams: Promise<{
@@ -17,7 +17,6 @@ export default async function DashboardPage({
 }: DashBoardPageProps) {
   const params = await searchParams;
   const selected = params.selected ?? "gym-workout";
-  console.log(selected);
 
   return (
     <main className="flex flex-col gap-4">
@@ -35,7 +34,7 @@ export default async function DashboardPage({
 
       <div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
         <FrequencyChart selected={selected} />
-        <WeekdayChart />
+        <WeekdayChart selected={selected} />
       </div>
     </main>
   );
