@@ -25,7 +25,7 @@ export default async function DashboardPage({
         <SelectCheckOptions selected={selected} />
       </div>
 
-      <div className="flex flex-col sm:grid sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <CheckOptionThisYearCard selected={selected} />
         <CheckOptionAveragePerMonthCard selected={selected} />
         <CheckOptionThisMonthCard selected={selected} />

@@ -25,7 +25,13 @@ type ChartData = {
 };
 
 const options: {
-  [key: string]: { title: string; fetchCall: unknown; color?: string };
+  [key: string]: {
+    title: string;
+    fetchCall: () => Promise<{
+      hashTable: { [key: string]: { date: Date }[] };
+    }>;
+    color?: string;
+  };
 } = {
   "gym-workout": {
     title: "Gym workouts",
@@ -73,7 +79,7 @@ export function Chart({ selected }: { selected: string }) {
 
       const weekdaysTable: { [key: string]: number } = {};
       for (const checkOption of Object.values(hashTable).flat()) {
-        const weekday = format(checkOption.date, "eeee");
+        const weekday = format((checkOption as { date: Date }).date, "eeee");
         if (weekdaysTable[weekday]) {
           weekdaysTable[weekday] += 1;
         } else {
@@ -134,74 +140,74 @@ export function Chart({ selected }: { selected: string }) {
   }
 
   return (
-    <>
-      <CardContent className="h-[300px]">
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={chartData}
-              dataKey="checkOption"
-              nameKey="weekday"
-              innerRadius={60}
-              strokeWidth={1}
-              labelLine={true}
-              label={({ payload, ...props }) => {
-                return (
-                  <text
-                    cx={props.cx}
-                    cy={props.cy}
-                    x={props.x}
-                    y={props.y}
-                    textAnchor={props.textAnchor}
-                    dominantBaseline={props.dominantBaseline}
-                    fill="var(--foreground)"
-                  >
-                    {payload.checkOption}
-                  </text>
-                );
-              }}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
+    <CardContent className="h-[300px]">
+      <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <PieChart>
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel />}
+          />
+          <Pie
+            data={chartData}
+            dataKey="checkOption"
+            nameKey="weekday"
+            innerRadius={60}
+            strokeWidth={1}
+            animationEasing="ease-out"
+            animationDuration={1000}
+            labelLine={true}
+            label={({ payload, ...props }) => {
+              return (
+                <text
+                  cx={props.cx}
+                  cy={props.cy}
+                  x={props.x}
+                  y={props.y}
+                  textAnchor={props.textAnchor}
+                  dominantBaseline={props.dominantBaseline}
+                  fill="var(--foreground)"
+                >
+                  {payload.checkOption}
+                </text>
+              );
+            }}
+          >
+            <Label
+              content={({ viewBox }) => {
+                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  return (
+                    <text
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                        className="fill-foreground text-3xl font-bold"
                       >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalCheckOption.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-foreground"
-                        >
-                          {options[selected].title}
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-            <ChartLegend
-              content={<ChartLegendContent nameKey="weekday" />}
-              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                        {totalCheckOption.toLocaleString()}
+                      </tspan>
+                      <tspan
+                        x={viewBox.cx}
+                        y={(viewBox.cy || 0) + 24}
+                        className="fill-foreground"
+                      >
+                        {options[selected].title}
+                      </tspan>
+                    </text>
+                  );
+                }
+              }}
             />
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
-    </>
+          </Pie>
+          <ChartLegend
+            content={<ChartLegendContent nameKey="weekday" />}
+            className="h-12 -translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+          />
+        </PieChart>
+      </ChartContainer>
+    </CardContent>
   );
 }

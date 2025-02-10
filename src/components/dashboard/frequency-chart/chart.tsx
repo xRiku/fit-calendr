@@ -78,8 +78,11 @@ export function Chart({ selected }: { selected: string }) {
 
   return (
     <>
-      <CardContent className="h-[300px]">
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+      <CardContent className="h-[200px] sm:h-[300px]">
+        <ChartContainer
+          config={chartConfig}
+          className="h-[200px] sm:h-[300px] w-full"
+        >
           <BarChart
             accessibilityLayer
             data={chartData}
@@ -95,10 +98,7 @@ export function Chart({ selected }: { selected: string }) {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar
               barSize={100}
               dataKey="checkOption"
