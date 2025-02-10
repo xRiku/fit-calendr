@@ -1,12 +1,12 @@
 "use server";
 
-import { auth, signIn, signOut } from "@/auth";
+// import { auth, signIn, signOut } from "@/auth";
+import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/db";
-import bcrypt from "bcryptjs";
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function addDayInfo({
+/* export async function addDayInfo({
   formData,
   date,
 }: {
@@ -241,25 +241,7 @@ export async function deleteCheatMeal(id: string) {
       id,
     },
   });
-}
-
-export async function getCheatMeals() {
-  const session = await auth();
-
-  if (!session) {
-    return;
-  }
-
-  const data = await prisma.cheatMeal.findMany({
-    where: {
-      userId: session.user?.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  return data;
-}
+} */
 
 export async function fetchCheatMealsByYearGroupedByMonth(params?: {
   year?: number;
@@ -269,15 +251,15 @@ export async function fetchCheatMealsByYearGroupedByMonth(params?: {
 }> {
   const { year = new Date().getFullYear() } = params || {};
 
-  const session = await auth();
+  const session = await authClient.getSession();
 
-  if (!session) {
+  if (!session.data) {
     redirect("/auth/signin");
   }
 
   const data = await prisma.cheatMeal.findMany({
     where: {
-      userId: session.user.id,
+      userId: session.data.user.id,
       date: {
         lte: new Date(year, 11, 31),
         gte: new Date(year, 0, 1),
@@ -307,15 +289,15 @@ export async function fetchGymChecksByYearGroupedByMonth(params?: {
   count: number;
 }> {
   const { year = new Date().getFullYear() } = params || {};
-  const session = await auth();
+  const session = await authClient.getSession();
 
-  if (!session) {
+  if (!session.data) {
     redirect("/auth/signin");
   }
 
   const data = await prisma.gymCheck.findMany({
     where: {
-      userId: session.user.id,
+      userId: session.data.user.id,
       date: {
         lte: new Date(year ?? new Date().getFullYear(), 11, 31),
         gte: new Date(year ?? new Date().getFullYear(), 0, 1),
@@ -338,58 +320,61 @@ export async function fetchGymChecksByYearGroupedByMonth(params?: {
   return { hashTable, count: data.length };
 }
 
-export async function getLastCheatMeal() {
-  const session = await auth();
+// export async function getLastCheatMeal() {
+//   const session = await auth();
 
-  if (!session) {
-    redirect("/auth/signin");
-  }
-  const data = prisma.cheatMeal.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        lte: new Date(),
-      },
-    },
-    orderBy: {
-      date: "desc",
-    },
-    take: 1,
-  });
+//   if (!session) {
+//     redirect("/auth/signin");
+//   }
+//   const data = prisma.cheatMeal.findMany({
+//     where: {
+//       userId: session.user.id,
+//       date: {
+//         lte: new Date(),
+//       },
+//     },
+//     orderBy: {
+//       date: "desc",
+//     },
+//     take: 1,
+//   });
 
-  return data;
-}
+//   return data;
+// }
 
-export async function getLastGymWorkout() {
-  const session = await auth();
+// export async function getLastGymWorkout() {
+//   const session = await auth();
 
-  if (!session) {
-    redirect("/auth/signin");
-  }
-  const data = prisma.gymCheck.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        lte: new Date(),
-      },
-    },
-    orderBy: {
-      date: "desc",
-    },
-    take: 1,
-  });
+//   if (!session) {
+//     redirect("/auth/signin");
+//   }
+//   const data = prisma.gymCheck.findMany({
+//     where: {
+//       userId: session.user.id,
+//       date: {
+//         lte: new Date(),
+//       },
+//     },
+//     orderBy: {
+//       date: "desc",
+//     },
+//     take: 1,
+//   });
 
-  return data;
-}
+//   return data;
+// }
 
 // Auth
 
 export async function signInWithCredentials(data: FormData) {
   const authData = Object.fromEntries(data.entries());
-  await signIn("credentials", { redirectTo: "/app/dashboard", ...authData });
+  await authClient.emailOtp.sendVerificationOtp({
+    email: authData.email as string,
+    type: "sign-in",
+  });
 }
 
-export async function logOut() {
+/* export async function logOut() {
   await signOut({ redirectTo: "/auth/signin" });
 }
 
@@ -415,3 +400,4 @@ export async function checkAuth() {
 
   return session;
 }
+ */

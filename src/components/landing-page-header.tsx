@@ -6,7 +6,7 @@ export default function LandingPageHeader() {
   return (
     <Header>
       <Button asChild variant="default">
-        <Link href="/auth/signin">Login</Link>
+        <Link href="/auth/sign-in">Login</Link>
       </Button>
     </Header>
   );

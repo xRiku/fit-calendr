@@ -1,4 +1,10 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
 
 import { Separator } from "@/components/ui/separator";
 import { GoogleSignInButton } from "./google-sign-in-button";
@@ -8,10 +14,13 @@ import { SignInForm } from "./sign-in-form";
 export default function SignInPage() {
   return (
     <Card>
-      <CardHeader className="text-center">
+      <CardHeader>
         <CardTitle className="text-xl font-semibold tracking-tight">
-          Get Started
+          Login to FitCalendr
         </CardTitle>
+        <CardDescription>
+          Add day info to keep track of your fit habits.
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         <SignInForm />
@@ -21,12 +30,12 @@ export default function SignInPage() {
           <Separator className="w-2/5" />
         </div>
         <GoogleSignInButton />
-        <div className="text-center text-sm">
+        {/* <div className="text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link href="/auth/signup" className="underline underline-offset-4">
             Sign up
           </Link>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

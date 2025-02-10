@@ -1,30 +1,26 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  // dev
-  // provider = "sqlite"
-  
-  // prod
-  provider = "postgresql"
-  directUrl = env("DIRECT_URL")
   url      = env("DATABASE_URL")
+  // dev
+  provider = "sqlite"
+  // prod
+  // provider = "postgresql"
+  // directUrl = env("DIRECT_URL")
 }
 
-
 model GymCheck {
-  id String @id @default(cuid())
+  id          String   @id @default(cuid())
   description String
-  date DateTime
+  date        DateTime
 
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   userId String
-
 
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -32,31 +28,79 @@ model GymCheck {
   @@map("gym_checks")
 }
 
-
 model CheatMeal {
-  id String @id @default(cuid())
-  name String
-  date DateTime
-  
-  user User @relation(fields: [userId], references: [id])
+  id     String   @id @default(cuid())
+  name   String
+  date   DateTime
+  user   User     @relation(fields: [userId], references: [id])
   userId String
 
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
+
   @@map("cheat_meals")
 }
 
 model User {
-  id String @id @default(cuid())
-  email String @unique
+  id             String      @id @default(cuid())
+  email          String      @unique
   hashedPassword String?
-  name String 
-
-  cheatMeals CheatMeal[]
-  gymChecks GymCheck[]
+  name           String
+  cheatMeals     CheatMeal[]
+  gymChecks      GymCheck[]
 
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
+  emailVerified Boolean @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
   @@map("users")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }

@@ -1,0 +1,26 @@
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { emailOTP } from "better-auth/plugins";
+import prisma from "./db";
+import { env } from "@/env";
+
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "sqlite", // or "mysql", "postgresql", ...etc
+  }),
+  plugins: [
+    emailOTP({
+      async sendVerificationOTP({ email }) {
+        await fetch(`${env.BETTER_AUTH_URL}/api/send`, {
+          method: "POST",
+          body: JSON.stringify({
+            email: email,
+          }),
+          headers: new Headers({
+            "Content-Type": "application/json",
+          }),
+        });
+      },
+    }),
+  ],
+});

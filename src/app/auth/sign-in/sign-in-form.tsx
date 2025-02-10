@@ -8,25 +8,23 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signInWithCredentials } from "@/actions/actions";
 import { useActionState } from "react";
+import { signInWithCredentials } from "@/actions/actions";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
 });
 
 type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
   const {
-    register,
     formState: { errors },
+    register,
   } = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -40,22 +38,16 @@ export function SignInForm() {
     <form action={formAction} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">E-mail</Label>
-        <Input id="email" type="email" {...register("email")} />
+        <Input
+          placeholder="Enter email address"
+          id="email"
+          type="email"
+          {...register("email")}
+        />
 
         {errors.email && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
             {errors.email.message}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register("password")} />
-
-        {errors.password && (
-          <p className="text-sm font-medium text-red-500 dark:text-red-400">
-            {errors.password.message}
           </p>
         )}
       </div>
@@ -66,7 +58,7 @@ export function SignInForm() {
         ) : (
           <LogIn className="mr-2 h-4 w-4" />
         )}
-        Sign in
+        Continue
       </Button>
     </form>
   );
