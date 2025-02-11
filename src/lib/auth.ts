@@ -13,6 +13,7 @@ export const auth = betterAuth({
     nextCookies(),
     emailOTP({
       async sendVerificationOTP({ email, otp }) {
+        console.log(env.BETTER_AUTH_URL);
         await fetch(`${env.BETTER_AUTH_URL}/api/send`, {
           method: "POST",
           body: JSON.stringify({

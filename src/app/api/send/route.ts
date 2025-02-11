@@ -1,14 +1,15 @@
 import { EmailTemplate } from "@/components/email-template";
+import { env } from "@/env";
 import type { NextRequest } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
   try {
     const body = await new Response(req.body).json();
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
+      from: "FitCalendr <onboarding@resend.dev>",
       to: [body.email],
       subject: "FitCalendr",
       react: EmailTemplate({
