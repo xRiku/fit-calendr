@@ -23,7 +23,13 @@ type ChartData = {
 };
 
 const options: {
-  [key: string]: { title: string; fetchCall: unknown; color?: string };
+  [key: string]: {
+    title: string;
+    fetchCall:
+      | typeof fetchGymChecksByYearGroupedByMonth
+      | typeof fetchCheatMealsByYearGroupedByMonth;
+    color?: string;
+  };
 } = {
   "gym-workout": {
     title: "Gym workouts (year)",

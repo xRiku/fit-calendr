@@ -19,10 +19,11 @@
 //   ],
 // };
 
-import { type NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth";
+import { NextResponse } from "next/server";
+// import { type NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function middleware() {
+  // export async function middleware(request: NextRequest) {
   // const sessionCookie = getSessionCookie(request); // Optionally pass config as the second argument if cookie name or prefix is customized.
   // if (!sessionCookie) {
   //   return NextResponse.redirect(new URL("/", request.url));

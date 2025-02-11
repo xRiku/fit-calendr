@@ -6,7 +6,14 @@ import {
 } from "@/actions/actions";
 import { Suspense } from "react";
 
-const options: { [key: string]: { title: string; fetchCall: unknown } } = {
+const options: {
+  [key: string]: {
+    title: string;
+    fetchCall:
+      | typeof fetchGymChecksByYearGroupedByMonth
+      | typeof fetchCheatMealsByYearGroupedByMonth;
+  };
+} = {
   "gym-workout": {
     title: "Gym workouts (year)",
     fetchCall: fetchGymChecksByYearGroupedByMonth,

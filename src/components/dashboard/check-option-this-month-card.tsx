@@ -6,7 +6,14 @@ import {
   fetchGymChecksByYearGroupedByMonth,
 } from "@/actions/actions";
 
-const options: { [key: string]: { title: string; fetchCall: unknown } } = {
+const options: {
+  [key: string]: {
+    title: string;
+    fetchCall:
+      | typeof fetchGymChecksByYearGroupedByMonth
+      | typeof fetchCheatMealsByYearGroupedByMonth;
+  };
+} = {
   "gym-workout": {
     title: "Gym checks (month)",
     fetchCall: fetchGymChecksByYearGroupedByMonth,

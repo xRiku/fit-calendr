@@ -5,7 +5,10 @@ import { Suspense } from "react";
 import { differenceInDays } from "date-fns";
 
 const options: {
-  [key: string]: { title: string; fetchCall: unknown };
+  [key: string]: {
+    title: string;
+    fetchCall: typeof getLastGymWorkout | typeof getLastCheatMeal;
+  };
 } = {
   "gym-workout": {
     title: "Days since last gym workout",
@@ -24,7 +27,6 @@ export default async function DaysSinceLastCheckOptionCard({
 }) {
   async function CardData() {
     const lastCheckOption = await options[selected].fetchCall();
-    // const lastCheatMeal = await getLastCheatMeal();
 
     let daysSinceLastCheckOption = 0;
 

@@ -8,7 +8,6 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import { GoogleSignInButton } from "./google-sign-in-button";
-import Link from "next/link";
 import { SignInForm } from "./sign-in-form";
 
 export default function SignInPage() {
@@ -30,12 +29,6 @@ export default function SignInPage() {
           <Separator className="w-2/5" />
         </div>
         <GoogleSignInButton />
-        {/* <div className="text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/auth/signup" className="underline underline-offset-4">
-            Sign up
-          </Link>
-        </div> */}
       </CardContent>
     </Card>
   );

@@ -7,7 +7,12 @@ import {
 } from "@/actions/actions";
 
 const options: {
-  [key: string]: { title: string; fetchCall: unknown };
+  [key: string]: {
+    title: string;
+    fetchCall:
+      | typeof fetchGymChecksByYearGroupedByMonth
+      | typeof fetchCheatMealsByYearGroupedByMonth;
+  };
 } = {
   "gym-workout": {
     title: "Average gym workouts (month)",
@@ -60,7 +65,9 @@ export default function CheckOptionAveragePerMonthCard({
     // const diffFromLastMonth = await getDiffFromLastMonth();
 
     const lastestMonth =
-      Math.max(...Object.keys(checkOptionsGroupedByMonth.hashTable)) + 1;
+      Math.max(
+        ...Object.keys(checkOptionsGroupedByMonth.hashTable).map(Number)
+      ) + 1;
 
     return (
       <>
