@@ -7,13 +7,14 @@ import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
+    // provider: "sqlite",
     provider: "postgresql",
   }),
   plugins: [
     nextCookies(),
     emailOTP({
+      disableSignUp: true,
       async sendVerificationOTP({ email, otp }) {
-        console.log(env.BETTER_AUTH_URL);
         await fetch(`${env.BETTER_AUTH_URL}/api/send`, {
           method: "POST",
           body: JSON.stringify({

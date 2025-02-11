@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await new Response(req.body).json();
     const { data, error } = await resend.emails.send({
-      from: "FitCalendr <onboarding@resend.dev>",
+      from: "FitCalendr <fitcalendrbot@beamaia.com>",
       to: [body.email],
       subject: "FitCalendr",
       react: EmailTemplate({
