@@ -8,8 +8,13 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useActionState } from "react";
-import { signInWithCredentials } from "@/actions/actions";
+import { useActionState, useState } from "react";
+import { signInWithCredentials, verifyOtp } from "@/actions/actions";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -18,9 +23,12 @@ const signInFormSchema = z.object({
 type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
+  const [shouldShowOtpField, setShouldShowOtpField] = useState(false);
+
   const {
     formState: { errors },
     register,
+    getValues,
   } = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -29,10 +37,46 @@ export function SignInForm() {
   });
 
   async function handleSignIn(_: unknown, formData: FormData) {
-    await signInWithCredentials(formData);
+    await signInWithCredentials(formData.get("email") as string);
+    setShouldShowOtpField(true);
   }
 
   const [, formAction, isPending] = useActionState(handleSignIn, null);
+
+  const handleOnComplete = async (otp: string) => {
+    const { email } = getValues();
+    await verifyOtp(email, otp);
+  };
+
+  if (shouldShowOtpField) {
+    return (
+      <div className="flex flex-col space-y-4 items-center">
+        <InputOTP onComplete={handleOnComplete} maxLength={6}>
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
+          </InputOTPGroup>
+        </InputOTP>
+
+        <div className="flex space-x-2">
+          <span className="text-sm text-[#878787]">
+            Didn&apos;t receive the email?
+          </span>
+          <button
+            // onClick={() => setSent(false)}
+            type="button"
+            className="text-sm text-white underline font-medium"
+          >
+            Resend code
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className="space-y-4">

@@ -1,19 +1,23 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 // import { auth, signIn, signOut } from "@/auth";
 import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/db";
-// import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-/* export async function addDayInfo({
+export async function addDayInfo({
   formData,
   date,
 }: {
   formData: FormData;
   date: Date;
 }) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session) {
     return;
@@ -29,7 +33,7 @@ import { redirect } from "next/navigation";
         date: date,
         user: {
           connect: {
-            id: session.user?.id,
+            id: session.user.id,
           },
         },
       },
@@ -43,7 +47,7 @@ import { redirect } from "next/navigation";
         date,
         user: {
           connect: {
-            id: session.user?.id,
+            id: session.user.id,
           },
         },
       },
@@ -187,7 +191,9 @@ export async function updateDayInfo({
   workoutDescription?: string;
   date: Date;
 }) {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session) {
     return;
@@ -222,7 +228,7 @@ export async function updateDayInfo({
   };
 }
 
-export async function deleteCheatMeal(id: string) {
+/* export async function deleteCheatMeal(id: string) {
   const existingCheatMeal = await prisma.cheatMeal.findUnique({
     where: {
       id,
@@ -241,7 +247,7 @@ export async function deleteCheatMeal(id: string) {
       id,
     },
   });
-} */
+}  */
 
 export async function fetchCheatMealsByYearGroupedByMonth(params?: {
   year?: number;
@@ -251,15 +257,17 @@ export async function fetchCheatMealsByYearGroupedByMonth(params?: {
 }> {
   const { year = new Date().getFullYear() } = params || {};
 
-  const session = await authClient.getSession();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!session.data) {
+  if (!session) {
     redirect("/auth/signin");
   }
 
   const data = await prisma.cheatMeal.findMany({
     where: {
-      userId: session.data.user.id,
+      userId: session.user.id,
       date: {
         lte: new Date(year, 11, 31),
         gte: new Date(year, 0, 1),
@@ -289,15 +297,17 @@ export async function fetchGymChecksByYearGroupedByMonth(params?: {
   count: number;
 }> {
   const { year = new Date().getFullYear() } = params || {};
-  const session = await authClient.getSession();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!session.data) {
-    redirect("/auth/signin");
+  if (!session) {
+    redirect("/auth/sign-in");
   }
 
   const data = await prisma.gymCheck.findMany({
     where: {
-      userId: session.data.user.id,
+      userId: session.user.id,
       date: {
         lte: new Date(year ?? new Date().getFullYear(), 11, 31),
         gte: new Date(year ?? new Date().getFullYear(), 0, 1),
@@ -320,65 +330,82 @@ export async function fetchGymChecksByYearGroupedByMonth(params?: {
   return { hashTable, count: data.length };
 }
 
-// export async function getLastCheatMeal() {
-//   const session = await auth();
+export async function getLastCheatMeal() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-//   if (!session) {
-//     redirect("/auth/signin");
-//   }
-//   const data = prisma.cheatMeal.findMany({
-//     where: {
-//       userId: session.user.id,
-//       date: {
-//         lte: new Date(),
-//       },
-//     },
-//     orderBy: {
-//       date: "desc",
-//     },
-//     take: 1,
-//   });
+  if (!session) {
+    redirect("/auth/signin");
+  }
+  const data = prisma.cheatMeal.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        lte: new Date(),
+      },
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 1,
+  });
 
-//   return data;
-// }
+  return data;
+}
 
-// export async function getLastGymWorkout() {
-//   const session = await auth();
+export async function getLastGymWorkout() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-//   if (!session) {
-//     redirect("/auth/signin");
-//   }
-//   const data = prisma.gymCheck.findMany({
-//     where: {
-//       userId: session.user.id,
-//       date: {
-//         lte: new Date(),
-//       },
-//     },
-//     orderBy: {
-//       date: "desc",
-//     },
-//     take: 1,
-//   });
+  if (!session) {
+    redirect("/auth/signin");
+  }
+  const data = prisma.gymCheck.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        lte: new Date(),
+      },
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 1,
+  });
 
-//   return data;
-// }
+  return data;
+}
 
 // Auth
 
-export async function signInWithCredentials(data: FormData) {
-  const authData = Object.fromEntries(data.entries());
+export async function signInWithCredentials(email: string) {
   await authClient.emailOtp.sendVerificationOtp({
-    email: authData.email as string,
+    email: email,
     type: "sign-in",
   });
 }
 
-/* export async function logOut() {
-  await signOut({ redirectTo: "/auth/signin" });
+export async function verifyOtp(email: string, otp: string) {
+  await auth.api.signInEmailOTP({
+    body: {
+      email,
+      otp,
+    },
+  });
+
+  redirect("/app/dashboard");
 }
 
-export async function createUser(formData: FormData) {
+export async function logOut() {
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+  redirect("/auth/sign-in");
+}
+
+/* export async function createUser(formData: FormData) {
   const hashedPassword = await bcrypt.hash(
     formData.get("password") as string,
     10
@@ -400,4 +427,5 @@ export async function checkAuth() {
 
   return session;
 }
+ 
  */

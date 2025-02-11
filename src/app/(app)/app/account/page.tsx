@@ -1,10 +1,13 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 import SignOutButton from "./signout-button";
 import H1 from "@/components/h1";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function AccountPage() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session) {
     redirect("/sign-in");
