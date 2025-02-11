@@ -8,10 +8,10 @@ generator client {
 datasource db {
   url      = env("DATABASE_URL")
   // dev
-  provider = "sqlite"
+  // provider = "sqlite"
   // prod
-  // provider = "postgresql"
-  // directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  directUrl = env("DIRECT_URL")
 }
 
 model GymCheck {
