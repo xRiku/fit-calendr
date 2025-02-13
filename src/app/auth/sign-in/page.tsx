@@ -18,7 +18,7 @@ export default function SignInPage() {
           Login to FitCalendr
         </CardTitle>
         <CardDescription>
-          Add day info to keep track of your fit habits.
+          Add daily information to keep track of your healthy habits.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">

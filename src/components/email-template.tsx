@@ -8,6 +8,6 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   code,
 }) => (
   <div>
-    <h2>Your code is {code}</h2>
+    <p>Your verification code is {code}</p>
   </div>
 );

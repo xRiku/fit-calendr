@@ -8,13 +8,9 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { signInWithCredentials, verifyOtp } from "@/actions/actions";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+import { OTPInput } from "./otp-input"; // Import the new OTPInput component
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -23,7 +19,10 @@ const signInFormSchema = z.object({
 type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
-  const [shouldShowOtpField, setShouldShowOtpField] = useState(false);
+  const [shouldShowOtpField, setShouldShowOtpField] = useState(true);
+  const [otpCode, setOtpCode] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   const {
     formState: { errors },
@@ -36,45 +35,47 @@ export function SignInForm() {
     },
   });
 
-  async function handleSignIn(_: unknown, formData: FormData) {
-    await signInWithCredentials(formData.get("email") as string);
+  useEffect(() => {
+    if (hasError && otpCode.length !== 6) {
+      setHasError(false);
+    }
+  }, [hasError, otpCode]);
+
+  async function handleSignIn() {
+    setIsLoading(true);
+    const { email } = getValues();
+    await signInWithCredentials(email);
     setShouldShowOtpField(true);
+    setIsLoading(false);
   }
 
   const [, formAction, isPending] = useActionState(handleSignIn, null);
 
   const handleOnComplete = async (otp: string) => {
+    setIsLoading(false);
     const { email } = getValues();
-    await verifyOtp(email, otp);
+
+    try {
+      await verifyOtp(email, otp);
+    } catch (error) {
+      console.log(error);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (shouldShowOtpField) {
     return (
-      <div className="flex flex-col space-y-4 items-center">
-        <InputOTP onComplete={handleOnComplete} maxLength={6}>
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
-        </InputOTP>
-
-        <div className="flex space-x-2">
-          <span className="text-sm text-[#878787]">
-            Didn&apos;t receive the email?
-          </span>
-          <button
-            // onClick={() => setSent(false)}
-            type="button"
-            className="text-sm text-white underline font-medium"
-          >
-            Resend code
-          </button>
-        </div>
-      </div>
+      <OTPInput
+        otpCode={otpCode}
+        setOtpCode={setOtpCode}
+        handleOnComplete={handleOnComplete}
+        hasError={hasError}
+        // setHasError={setHasError}
+        isLoading={isLoading}
+        setShouldShowOtpField={setShouldShowOtpField}
+      />
     );
   }
 
