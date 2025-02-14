@@ -19,7 +19,7 @@ const signInFormSchema = z.object({
 type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
-  const [shouldShowOtpField, setShouldShowOtpField] = useState(true);
+  const [shouldShowOtpField, setShouldShowOtpField] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
