@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import { useEffect, useMemo, useState } from "react";
-import {
-  fetchCheatMealsByYearGroupedByMonth,
-  fetchGymChecksByYearGroupedByMonth,
-} from "@/actions/actions";
+
 import { format } from "date-fns";
 import { ChartSkeleton } from "./chart-skeleton";
+import {
+  fetchGymChecksByYearGroupedByMonth,
+  fetchCheatMealsByYearGroupedByMonth,
+} from "@/lib/server-utils";
 
 type ChartData = {
   weekday: string;

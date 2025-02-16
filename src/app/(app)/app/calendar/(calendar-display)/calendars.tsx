@@ -1,8 +1,8 @@
+import { Calendar } from "@/components/ui/calendar";
 import {
   fetchCheatMealsByYearGroupedByMonth,
   fetchGymChecksByYearGroupedByMonth,
-} from "@/actions/actions";
-import { Calendar } from "@/components/ui/calendar";
+} from "@/lib/server-utils";
 import { add } from "date-fns";
 
 export default async function Calendars() {

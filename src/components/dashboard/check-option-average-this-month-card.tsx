@@ -2,9 +2,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CardSkeleton } from "./card-skeleton";
 import { Suspense } from "react";
 import {
-  fetchCheatMealsByYearGroupedByMonth,
   fetchGymChecksByYearGroupedByMonth,
-} from "@/actions/actions";
+  fetchCheatMealsByYearGroupedByMonth,
+} from "@/lib/server-utils";
 
 const options: {
   [key: string]: {

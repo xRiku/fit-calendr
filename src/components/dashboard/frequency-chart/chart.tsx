@@ -9,43 +9,59 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useEffect, useState } from "react";
-import {
-  fetchCheatMealsByYearGroupedByMonth,
-  fetchGymChecksByYearGroupedByMonth,
-} from "@/actions/actions";
-import { format } from "date-fns";
-import { ChartSkeleton } from "./chart-skeleton";
+import { use } from "react";
 
-type ChartData = {
-  month: string;
-  checkOption: number;
-};
+import { format } from "date-fns";
 
 const options: {
   [key: string]: {
     title: string;
-    fetchCall:
-      | typeof fetchGymChecksByYearGroupedByMonth
-      | typeof fetchCheatMealsByYearGroupedByMonth;
     color?: string;
   };
 } = {
   "gym-workout": {
     title: "Gym workouts (year)",
-    fetchCall: fetchGymChecksByYearGroupedByMonth,
     color: "var(--primary)",
   },
   "cheat-meal": {
     title: "Cheat meals (year)",
-    fetchCall: fetchCheatMealsByYearGroupedByMonth,
     color: "var(--secondary)",
   },
 };
 
-export function Chart({ selected }: { selected: string }) {
-  const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<ChartData[]>([]);
+type ChartProps = {
+  selected: string;
+  fetchCallPromise: Promise<{
+    hashTable: {
+      [key: string]: {
+        id: string;
+        description?: string;
+        name?: string;
+        date: Date;
+        userId: string;
+        updatedAt: Date;
+        createdAt: Date;
+      }[];
+    };
+    count: number;
+  }>;
+};
+
+export function Chart({ selected, fetchCallPromise }: ChartProps) {
+  const data = use(fetchCallPromise);
+
+  const lastMonthNumber = Number.parseInt(
+    Object.keys(data.hashTable)[Object.keys(data.hashTable).length - 1]
+  );
+
+  const chartData = Array.from({ length: lastMonthNumber + 1 }).map(
+    (_, index) => {
+      return {
+        month: format(new Date(1, index), "LLLL"),
+        checkOption: data.hashTable[index]?.length || 0,
+      };
+    }
+  );
 
   const chartConfig = {
     checkOption: {
@@ -53,34 +69,6 @@ export function Chart({ selected }: { selected: string }) {
       color: `hsl(${options[selected].color})`,
     },
   } satisfies ChartConfig;
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = await options[selected].fetchCall();
-
-      const lastMonthNumber = Number.parseInt(
-        Object.keys(data.hashTable)[Object.keys(data.hashTable).length - 1]
-      );
-
-      const fittedChartData = Array.from({ length: lastMonthNumber + 1 }).map(
-        (_, index) => {
-          return {
-            month: format(new Date(1, index), "LLLL"),
-            checkOption: data.hashTable[index]?.length || 0,
-          };
-        }
-      );
-
-      setChartData(fittedChartData);
-      setLoading(false);
-    }
-
-    fetchData();
-  }, [selected]);
-
-  if (loading) {
-    return <ChartSkeleton />;
-  }
 
   return (
     <>
