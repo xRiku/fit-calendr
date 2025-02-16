@@ -11,44 +11,89 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
-import { useEffect, useMemo, useState } from "react";
+import { use } from "react";
 
 import { format } from "date-fns";
-import { ChartSkeleton } from "./chart-skeleton";
-import {
-  fetchGymChecksByYearGroupedByMonth,
-  fetchCheatMealsByYearGroupedByMonth,
-} from "@/lib/server-utils";
-
-type ChartData = {
-  weekday: string;
-  checkOption: number;
-};
 
 const options: {
   [key: string]: {
     title: string;
-    fetchCall: () => Promise<{
-      hashTable: { [key: string]: { date: Date }[] };
-    }>;
     color?: string;
   };
 } = {
   "gym-workout": {
     title: "Gym workouts",
-    fetchCall: fetchGymChecksByYearGroupedByMonth,
     color: "var(--primary)",
   },
   "cheat-meal": {
     title: "Cheat meals",
-    fetchCall: fetchCheatMealsByYearGroupedByMonth,
     color: "var(--secondary)",
   },
 };
 
-export function Chart({ selected }: { selected: string }) {
-  const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<ChartData[]>([]);
+type ChartProps = {
+  selected: string;
+  fetchCallPromise: Promise<{
+    hashTable: {
+      [key: string]: {
+        id: string;
+        description?: string;
+        name?: string;
+        date: Date;
+        userId: string;
+        updatedAt: Date;
+        createdAt: Date;
+      }[];
+    };
+    count: number;
+  }>;
+};
+
+export function Chart({ selected, fetchCallPromise }: ChartProps) {
+  const { hashTable } = use(fetchCallPromise);
+
+  const weekdaysTable: { [key: string]: number } = {};
+  for (const checkOption of Object.values(hashTable).flat()) {
+    const weekday = format((checkOption as { date: Date }).date, "eeee");
+    if (weekdaysTable[weekday]) {
+      weekdaysTable[weekday] += 1;
+    } else {
+      weekdaysTable[weekday] = 1;
+    }
+  }
+
+  const lowestCheatMealWeekdays = [];
+  let i = Object.keys(weekdaysTable).length;
+  let totalOthersSum = 0;
+  while (i > 4) {
+    const minWeekday = getWeekdayWithLowestValue(weekdaysTable);
+    if (minWeekday) {
+      lowestCheatMealWeekdays.push(minWeekday);
+      totalOthersSum += weekdaysTable[minWeekday];
+      delete weekdaysTable[minWeekday];
+    }
+
+    i -= 1;
+    if (i === 4) {
+      weekdaysTable.Others = totalOthersSum;
+    }
+  }
+
+  const chartData = Object.entries(weekdaysTable).map(
+    ([weekday, checkOption]) => {
+      return {
+        weekday,
+        checkOption: checkOption,
+        fill: `var(--color-${weekday})`,
+      };
+    }
+  );
+
+  const totalCheckOption = chartData.reduce(
+    (acc, curr) => acc + curr.checkOption,
+    0
+  );
+
   const chartConfig = {
     checkOption: {
       label: options[selected].title,
@@ -69,58 +114,58 @@ export function Chart({ selected }: { selected: string }) {
     ),
   } satisfies ChartConfig;
 
-  const totalCheckOption = useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.checkOption, 0);
-  }, [chartData]);
+  // const totalCheckOption = useMemo(() => {
+  //   return chartData.reduce((acc, curr) => acc + curr.checkOption, 0);
+  // }, [chartData]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const { hashTable } = await options[selected].fetchCall();
-      // const { hashTable } = await fetchCheatMealsByYearGroupedByMonth();
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const { hashTable } = await options[selected].fetchCall();
+  //     // const { hashTable } = await fetchCheatMealsByYearGroupedByMonth();
 
-      const weekdaysTable: { [key: string]: number } = {};
-      for (const checkOption of Object.values(hashTable).flat()) {
-        const weekday = format((checkOption as { date: Date }).date, "eeee");
-        if (weekdaysTable[weekday]) {
-          weekdaysTable[weekday] += 1;
-        } else {
-          weekdaysTable[weekday] = 1;
-        }
-      }
+  //     const weekdaysTable: { [key: string]: number } = {};
+  //     for (const checkOption of Object.values(hashTable).flat()) {
+  //       const weekday = format((checkOption as { date: Date }).date, "eeee");
+  //       if (weekdaysTable[weekday]) {
+  //         weekdaysTable[weekday] += 1;
+  //       } else {
+  //         weekdaysTable[weekday] = 1;
+  //       }
+  //     }
 
-      const lowestCheatMealWeekdays = [];
-      let i = Object.keys(weekdaysTable).length;
-      let totalOthersSum = 0;
-      while (i > 4) {
-        const minWeekday = getWeekdayWithLowestValue(weekdaysTable);
-        if (minWeekday) {
-          lowestCheatMealWeekdays.push(minWeekday);
-          totalOthersSum += weekdaysTable[minWeekday];
-          delete weekdaysTable[minWeekday];
-        }
+  //     const lowestCheatMealWeekdays = [];
+  //     let i = Object.keys(weekdaysTable).length;
+  //     let totalOthersSum = 0;
+  //     while (i > 4) {
+  //       const minWeekday = getWeekdayWithLowestValue(weekdaysTable);
+  //       if (minWeekday) {
+  //         lowestCheatMealWeekdays.push(minWeekday);
+  //         totalOthersSum += weekdaysTable[minWeekday];
+  //         delete weekdaysTable[minWeekday];
+  //       }
 
-        i -= 1;
-        if (i === 4) {
-          weekdaysTable.Others = totalOthersSum;
-        }
-      }
+  //       i -= 1;
+  //       if (i === 4) {
+  //         weekdaysTable.Others = totalOthersSum;
+  //       }
+  //     }
 
-      const fittedChartData = Object.entries(weekdaysTable).map(
-        ([weekday, checkOption]) => {
-          return {
-            weekday,
-            checkOption: checkOption,
-            fill: `var(--color-${weekday})`,
-          };
-        }
-      );
+  //     const fittedChartData = Object.entries(weekdaysTable).map(
+  //       ([weekday, checkOption]) => {
+  //         return {
+  //           weekday,
+  //           checkOption: checkOption,
+  //           fill: `var(--color-${weekday})`,
+  //         };
+  //       }
+  //     );
 
-      setChartData(fittedChartData);
-      setLoading(false);
-    }
+  //     setChartData(fittedChartData);
+  //     setLoading(false);
+  //   }
 
-    fetchData();
-  }, [selected]);
+  //   fetchData();
+  // }, [selected]);
 
   function getWeekdayWithLowestValue(weekdays: { [weekday: string]: number }) {
     let lowestKey = null;
@@ -136,9 +181,9 @@ export function Chart({ selected }: { selected: string }) {
     return lowestKey;
   }
 
-  if (loading) {
-    return <ChartSkeleton />;
-  }
+  // if (loading) {
+  //   return <ChartSkeleton />;
+  // }
 
   return (
     <CardContent className="h-[300px]">

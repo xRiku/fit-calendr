@@ -34,7 +34,7 @@ export default async function DashboardPage({
 
       <div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
         <FrequencyChart selected={selected} />
-        {/* <WeekdayChart selected={selected} /> */}
+        <WeekdayChart selected={selected} />
       </div>
     </main>
   );

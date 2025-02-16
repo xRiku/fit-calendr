@@ -36,7 +36,7 @@ const options: {
 
 export function FrequencyChart({ selected }: { selected: string }) {
   const fetchCallPromise = options[selected].fetchCall();
-  console.log(fetchCallPromise);
+
   return (
     <Card className="col-span-6">
       <CardHeader>
