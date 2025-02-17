@@ -7,10 +7,10 @@ export default function MainNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-4 sm:gap-10 items-center">
+    <nav className="flex gap-4 h-full sm:gap-10 items-center">
       <Link
         href="/app/calendar"
-        className={`${
+        className={`h-full flex items-center ${
           pathname === "/app/calendar" ? "underline" : ""
         } underline-offset-4 decoration-primary`}
       >
@@ -18,19 +18,11 @@ export default function MainNav() {
       </Link>
       <Link
         href="/app/dashboard"
-        className={`${
+        className={`h-full flex items-center ${
           pathname === "/app/dashboard" ? "underline" : ""
         } underline-offset-4 decoration-primary`}
       >
         Dashboard
-      </Link>
-      <Link
-        href="/app/account"
-        className={`${
-          pathname === "/app/account" ? "underline" : ""
-        } underline-offset-4 decoration-primary`}
-      >
-        Account
       </Link>
     </nav>
   );

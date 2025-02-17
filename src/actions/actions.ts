@@ -249,54 +249,6 @@ export async function updateDayInfo({
   });
 }  */
 
-export async function getLastCheatMeal() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    redirect("/auth/signin");
-  }
-  const data = prisma.cheatMeal.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        lte: new Date(),
-      },
-    },
-    orderBy: {
-      date: "desc",
-    },
-    take: 1,
-  });
-
-  return data;
-}
-
-export async function getLastGymWorkout() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    redirect("/auth/signin");
-  }
-  const data = prisma.gymCheck.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        lte: new Date(),
-      },
-    },
-    orderBy: {
-      date: "desc",
-    },
-    take: 1,
-  });
-
-  return data;
-}
-
 // Auth
 
 export async function signInWithCredentials(email: string) {
@@ -313,8 +265,6 @@ export async function verifyOtp(email: string, otp: string) {
       otp,
     },
   });
-
-  redirect("/app/dashboard");
 }
 
 export async function logOut() {

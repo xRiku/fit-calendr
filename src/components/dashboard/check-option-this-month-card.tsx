@@ -2,25 +2,25 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CardSkeleton } from "./card-skeleton";
 import { Suspense } from "react";
 import {
-  fetchGymChecksByYearGroupedByMonth,
-  fetchCheatMealsByYearGroupedByMonth,
+  getGymChecksByYearGroupedByMonth,
+  getCheatMealsByYearGroupedByMonth,
 } from "@/lib/server-utils";
 
 const options: {
   [key: string]: {
     title: string;
     fetchCall:
-      | typeof fetchGymChecksByYearGroupedByMonth
-      | typeof fetchCheatMealsByYearGroupedByMonth;
+      | typeof getGymChecksByYearGroupedByMonth
+      | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
   "gym-workout": {
     title: "Gym checks (month)",
-    fetchCall: fetchGymChecksByYearGroupedByMonth,
+    fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
     title: "Cheat meals (month)",
-    fetchCall: fetchCheatMealsByYearGroupedByMonth,
+    fetchCall: getCheatMealsByYearGroupedByMonth,
   },
 };
 
@@ -45,7 +45,7 @@ export default function CheckOptionThisMonthCard({
       if (prevMonth === 0) {
         if (new Date().getMonth() === 0) {
           const prevYearGymChecksGroupedByMonth =
-            await fetchGymChecksByYearGroupedByMonth({
+            await getGymChecksByYearGroupedByMonth({
               year: new Date().getFullYear() - 1,
             });
           prevMonth =

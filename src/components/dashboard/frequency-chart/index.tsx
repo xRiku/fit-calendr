@@ -7,8 +7,8 @@ import {
 
 import { Chart } from "./chart";
 import {
-  fetchCheatMealsByYearGroupedByMonth,
-  fetchGymChecksByYearGroupedByMonth,
+  getCheatMealsByYearGroupedByMonth,
+  getGymChecksByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { Suspense } from "react";
 import { ChartSkeleton } from "./chart-skeleton";
@@ -18,19 +18,19 @@ const options: {
     title: string;
     description: string;
     fetchCall:
-      | typeof fetchGymChecksByYearGroupedByMonth
-      | typeof fetchCheatMealsByYearGroupedByMonth;
+      | typeof getGymChecksByYearGroupedByMonth
+      | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
   "gym-workout": {
     title: "Gym Workout Frequency Chart",
     description: "Showing gym workout frequency for this year",
-    fetchCall: fetchGymChecksByYearGroupedByMonth,
+    fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
     title: "Cheat Meal Frequency Chart",
     description: "Showing cheat meal frequency for this year",
-    fetchCall: fetchCheatMealsByYearGroupedByMonth,
+    fetchCall: getCheatMealsByYearGroupedByMonth,
   },
 };
 

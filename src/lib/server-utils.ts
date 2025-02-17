@@ -4,55 +4,94 @@ import { headers } from "next/headers";
 import { auth } from "./auth";
 import { redirect } from "next/navigation";
 import prisma from "./db";
+import { cache } from "react";
 
-export async function fetchCheatMealsByYearGroupedByMonth(params?: {
-  year?: number;
-}): Promise<{
-  hashTable: { [key: string]: typeof data };
-  count: number;
-}> {
-  const { year = new Date().getFullYear() } = params || {};
+export const getCheatMealsByYearGroupedByMonth = cache(
+  async (params?: {
+    year?: number;
+  }): Promise<{
+    hashTable: { [key: string]: typeof data };
+    count: number;
+  }> => {
+    const { year = new Date().getFullYear() } = params || {};
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-  if (!session) {
-    redirect("/auth/signin");
-  }
-
-  const data = await prisma.cheatMeal.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        lte: new Date(year, 11, 31),
-        gte: new Date(year, 0, 1),
-      },
-    },
-  });
-
-  const hashTable: { [key: number]: typeof data } = {};
-  for (const item of data) {
-    const date = new Date(item.date);
-    const month = date.getUTCMonth();
-    if (!hashTable[month]) {
-      hashTable[month] = [item];
-      continue;
+    if (!session) {
+      redirect("/auth/signin");
     }
 
-    hashTable[month].push(item);
+    const data = await prisma.cheatMeal.findMany({
+      where: {
+        userId: session.user.id,
+        date: {
+          lte: new Date(year, 11, 31),
+          gte: new Date(year, 0, 1),
+        },
+      },
+    });
+
+    const hashTable: { [key: number]: typeof data } = {};
+    for (const item of data) {
+      const date = new Date(item.date);
+      const month = date.getUTCMonth();
+      if (!hashTable[month]) {
+        hashTable[month] = [item];
+        continue;
+      }
+
+      hashTable[month].push(item);
+    }
+
+    return { hashTable, count: data.length };
   }
+);
 
-  return { hashTable, count: data.length };
-}
+export const getGymChecksByYearGroupedByMonth = cache(
+  async (params?: {
+    year?: number;
+  }): Promise<{
+    hashTable: { [key: string]: typeof data };
+    count: number;
+  }> => {
+    const { year = new Date().getFullYear() } = params || {};
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-export async function fetchGymChecksByYearGroupedByMonth(params?: {
-  year?: number;
-}): Promise<{
-  hashTable: { [key: string]: typeof data };
-  count: number;
-}> {
-  const { year = new Date().getFullYear() } = params || {};
+    if (!session) {
+      redirect("/auth/sign-in");
+    }
+
+    const data = await prisma.gymCheck.findMany({
+      where: {
+        userId: session.user.id,
+        date: {
+          lte: new Date(year ?? new Date().getFullYear(), 11, 31),
+          gte: new Date(year ?? new Date().getFullYear(), 0, 1),
+        },
+      },
+    });
+
+    const hashTable: { [key: number]: typeof data } = {};
+    for (const item of data) {
+      const date = new Date(item.date);
+      const month = date.getUTCMonth();
+      if (!hashTable[month]) {
+        hashTable[month] = [item];
+        continue;
+      }
+
+      hashTable[month].push(item);
+    }
+
+    return { hashTable, count: data.length };
+  }
+);
+
+export const getLastCheatMeal = cache(async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -60,28 +99,123 @@ export async function fetchGymChecksByYearGroupedByMonth(params?: {
   if (!session) {
     redirect("/auth/sign-in");
   }
-
-  const data = await prisma.gymCheck.findMany({
+  const data = prisma.cheatMeal.findMany({
     where: {
       userId: session.user.id,
       date: {
-        lte: new Date(year ?? new Date().getFullYear(), 11, 31),
-        gte: new Date(year ?? new Date().getFullYear(), 0, 1),
+        lte: new Date(),
       },
     },
+    orderBy: {
+      date: "desc",
+    },
+    take: 1,
   });
 
-  const hashTable: { [key: number]: typeof data } = {};
-  for (const item of data) {
-    const date = new Date(item.date);
-    const month = date.getUTCMonth();
-    if (!hashTable[month]) {
-      hashTable[month] = [item];
-      continue;
-    }
+  return data;
+});
 
-    hashTable[month].push(item);
+export const getLastGymWorkout = cache(async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/auth/sign-in");
   }
+  const data = prisma.gymCheck.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        lte: new Date(),
+      },
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 1,
+  });
 
-  return { hashTable, count: data.length };
-}
+  return data;
+});
+
+// export async function getCheatMealsByYearGroupedByMonth(params?: {
+//   year?: number;
+// }): Promise<{
+//   hashTable: { [key: string]: typeof data };
+//   count: number;
+// }> {
+//   const { year = new Date().getFullYear() } = params || {};
+
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
+
+//   if (!session) {
+//     redirect("/auth/sign-in");
+//   }
+
+//   const data = await prisma.cheatMeal.findMany({
+//     where: {
+//       userId: session.user.id,
+//       date: {
+//         lte: new Date(year, 11, 31),
+//         gte: new Date(year, 0, 1),
+//       },
+//     },
+//   });
+
+//   const hashTable: { [key: number]: typeof data } = {};
+//   for (const item of data) {
+//     const date = new Date(item.date);
+//     const month = date.getUTCMonth();
+//     if (!hashTable[month]) {
+//       hashTable[month] = [item];
+//       continue;
+//     }
+
+//     hashTable[month].push(item);
+//   }
+
+//   return { hashTable, count: data.length };
+// }
+
+// export async function getGymChecksByYearGroupedByMonth(params?: {
+//   year?: number;
+// }): Promise<{
+//   hashTable: { [key: string]: typeof data };
+//   count: number;
+// }> {
+//   const { year = new Date().getFullYear() } = params || {};
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
+
+//   if (!session) {
+//     redirect("/auth/sign-in");
+//   }
+
+//   const data = await prisma.gymCheck.findMany({
+//     where: {
+//       userId: session.user.id,
+//       date: {
+//         lte: new Date(year ?? new Date().getFullYear(), 11, 31),
+//         gte: new Date(year ?? new Date().getFullYear(), 0, 1),
+//       },
+//     },
+//   });
+
+//   const hashTable: { [key: number]: typeof data } = {};
+//   for (const item of data) {
+//     const date = new Date(item.date);
+//     const month = date.getUTCMonth();
+//     if (!hashTable[month]) {
+//       hashTable[month] = [item];
+//       continue;
+//     }
+
+//     hashTable[month].push(item);
+//   }
+
+//   return { hashTable, count: data.length };
+// }

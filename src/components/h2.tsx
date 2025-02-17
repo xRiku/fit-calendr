@@ -7,5 +7,9 @@ export default function H2({
   children: string | React.ReactNode;
   className?: string;
 }) {
-  return <h1 className={cn("text-5xl font-bold", className)}>{children}</h1>;
+  return (
+    <h2 className={cn("text-3xl font-bold tracking-tight", className)}>
+      {children}
+    </h2>
+  );
 }

@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useActionState, useEffect, useState } from "react";
 import { signInWithCredentials, verifyOtp } from "@/actions/actions";
 import { OTPInput } from "./otp-input"; // Import the new OTPInput component
+import { redirect } from "next/navigation";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -62,6 +63,10 @@ export function SignInForm() {
       setHasError(true);
     } finally {
       setIsLoading(false);
+    }
+
+    if (!hasError) {
+      redirect("/app/dashboard");
     }
   };
 

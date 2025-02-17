@@ -3,25 +3,25 @@ import { CardSkeleton } from "./card-skeleton";
 
 import { Suspense } from "react";
 import {
-  fetchGymChecksByYearGroupedByMonth,
-  fetchCheatMealsByYearGroupedByMonth,
+  getGymChecksByYearGroupedByMonth,
+  getCheatMealsByYearGroupedByMonth,
 } from "@/lib/server-utils";
 
 const options: {
   [key: string]: {
     title: string;
     fetchCall:
-      | typeof fetchGymChecksByYearGroupedByMonth
-      | typeof fetchCheatMealsByYearGroupedByMonth;
+      | typeof getGymChecksByYearGroupedByMonth
+      | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
   "gym-workout": {
     title: "Gym workouts (year)",
-    fetchCall: fetchGymChecksByYearGroupedByMonth,
+    fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
     title: "Cheat meals (year)",
-    fetchCall: fetchCheatMealsByYearGroupedByMonth,
+    fetchCall: getCheatMealsByYearGroupedByMonth,
   },
 };
 
@@ -40,7 +40,7 @@ export default async function CheckOptionThisYearCard({
       }
 
       const lastYearGymChecksGroupedByMonth =
-        await fetchGymChecksByYearGroupedByMonth({
+        await getGymChecksByYearGroupedByMonth({
           year: new Date().getFullYear() - 1,
         });
       const prevYear = lastYearGymChecksGroupedByMonth?.count || 0;

@@ -5,6 +5,7 @@ import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-
 import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
 import { WeekdayChart } from "@/components/dashboard/weekday-chart";
+import H2 from "@/components/h2";
 
 export type DashBoardPageProps = {
   searchParams: Promise<{
@@ -21,7 +22,7 @@ export default async function DashboardPage({
   return (
     <main className="flex flex-col gap-4">
       <div className="flex gap-6">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <H2>Dashboard</H2>
         <SelectCheckOptions selected={selected} />
       </div>
 

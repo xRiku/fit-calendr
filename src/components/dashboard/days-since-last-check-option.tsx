@@ -1,8 +1,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CardSkeleton } from "./card-skeleton";
-import { getLastCheatMeal, getLastGymWorkout } from "@/actions/actions";
 import { Suspense } from "react";
 import { differenceInDays } from "date-fns";
+import { getLastCheatMeal, getLastGymWorkout } from "@/lib/server-utils";
 
 const options: {
   [key: string]: {

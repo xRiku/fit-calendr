@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/card";
 import { Chart } from "./chart";
 import {
-  fetchGymChecksByYearGroupedByMonth,
-  fetchCheatMealsByYearGroupedByMonth,
+  getGymChecksByYearGroupedByMonth,
+  getCheatMealsByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { Suspense } from "react";
 import { ChartSkeleton } from "./chart-skeleton";
@@ -16,17 +16,17 @@ const options: {
   [key: string]: {
     description: string;
     fetchCall:
-      | typeof fetchGymChecksByYearGroupedByMonth
-      | typeof fetchCheatMealsByYearGroupedByMonth;
+      | typeof getGymChecksByYearGroupedByMonth
+      | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
   "gym-workout": {
     description: "Showing gym workout frequency per weekday for this year",
-    fetchCall: fetchGymChecksByYearGroupedByMonth,
+    fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
     description: "Showing cheat meal frequency per weekday for this year",
-    fetchCall: fetchCheatMealsByYearGroupedByMonth,
+    fetchCall: getCheatMealsByYearGroupedByMonth,
   },
 };
 

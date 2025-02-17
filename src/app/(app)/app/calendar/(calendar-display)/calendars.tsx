@@ -1,14 +1,14 @@
 import { Calendar } from "@/components/ui/calendar";
 import {
-  fetchCheatMealsByYearGroupedByMonth,
-  fetchGymChecksByYearGroupedByMonth,
+  getCheatMealsByYearGroupedByMonth,
+  getGymChecksByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { add } from "date-fns";
 
 export default async function Calendars() {
-  const cheatMealsGroupedByMonthPromise = fetchCheatMealsByYearGroupedByMonth();
+  const cheatMealsGroupedByMonthPromise = getCheatMealsByYearGroupedByMonth();
 
-  const gymChecksGroupedByMonthPromise = fetchGymChecksByYearGroupedByMonth();
+  const gymChecksGroupedByMonthPromise = getGymChecksByYearGroupedByMonth();
 
   const [cheatMealsGroupedByMonth, gymChecksGroupedByMonth] = await Promise.all(
     [cheatMealsGroupedByMonthPromise, gymChecksGroupedByMonthPromise]
