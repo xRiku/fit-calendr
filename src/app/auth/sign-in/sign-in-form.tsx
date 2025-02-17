@@ -22,7 +22,7 @@ type SignInFormSchema = z.infer<typeof signInFormSchema>;
 export function SignInForm() {
   const [shouldShowOtpField, setShouldShowOtpField] = useState(false);
   const [otpCode, setOtpCode] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const {
@@ -43,17 +43,15 @@ export function SignInForm() {
   }, [hasError, otpCode]);
 
   async function handleSignIn() {
-    setIsLoading(true);
     const { email } = getValues();
     await signInWithCredentials(email);
     setShouldShowOtpField(true);
-    setIsLoading(false);
   }
 
   const [, formAction, isPending] = useActionState(handleSignIn, null);
 
   const handleOnComplete = async (otp: string) => {
-    setIsLoading(false);
+    setIsLoading(true);
     const { email } = getValues();
 
     try {

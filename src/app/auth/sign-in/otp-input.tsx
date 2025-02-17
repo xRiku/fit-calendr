@@ -42,6 +42,8 @@ export function OTPInput({
         </InputOTPGroup>
       </InputOTP>
 
+      {isLoading && <p>Loading...</p>}
+
       {hasError && (
         <span className="text-sm text-red-500 dark:text-red-900">
           Invalid OTP code. Try again
