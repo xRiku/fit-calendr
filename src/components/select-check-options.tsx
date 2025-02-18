@@ -8,11 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useTransition } from "react";
 
 export default function SelectCheckOptions({ selected }: { selected: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [isPending, startTransition] = useTransition();
 
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -22,19 +25,26 @@ export default function SelectCheckOptions({ selected }: { selected: string }) {
   };
 
   return (
-    <Select
-      defaultValue={selected}
-      onValueChange={(value: string) => {
-        router.push(`${pathname}?${createQueryString("selected", value)}`);
-      }}
-    >
-      <SelectTrigger className="w-[180px]">
-        <SelectValue defaultValue={selected} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="gym-workout">Gym workout</SelectItem>
-        <SelectItem value="cheat-meal">Cheat Meal</SelectItem>
-      </SelectContent>
-    </Select>
+    <div data-pending={isPending ? "" : undefined}>
+      <Select
+        defaultValue={selected}
+        disabled={isPending}
+        onValueChange={(value: string) => {
+          startTransition(() =>
+            router.push(`${pathname}?${createQueryString("selected", value)}`)
+          );
+        }}
+      >
+        <SelectTrigger className="w-[180px]" isLoading={isPending}>
+          <SelectValue defaultValue={selected} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="gym-workout" className="flex items-center">
+            Gym workout
+          </SelectItem>
+          <SelectItem value="cheat-meal">Cheat Meal</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

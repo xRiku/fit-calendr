@@ -273,28 +273,3 @@ export async function logOut() {
   });
   redirect("/auth/sign-in");
 }
-
-/* export async function createUser(formData: FormData) {
-  const hashedPassword = await bcrypt.hash(
-    formData.get("password") as string,
-    10
-  );
-  return await prisma.user.create({
-    data: {
-      email: formData.get("email") as string,
-      name: formData.get("name") as string,
-      hashedPassword,
-    },
-  });
-}
-
-export async function checkAuth() {
-  const session = await auth();
-  if (!session?.user) {
-    redirect("/login");
-  }
-
-  return session;
-}
- 
- */
