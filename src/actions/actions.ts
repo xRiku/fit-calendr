@@ -249,12 +249,41 @@ export async function updateDayInfo({
   });
 }  */
 
+export async function updateUserName({
+  name,
+  userId,
+}: {
+  name: string;
+  userId: string;
+}) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw Error(`User with id ${userId} doesn't exist`);
+  }
+
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name,
+    },
+  });
+}
+
 // Auth
 
 export async function signInWithCredentials(email: string) {
-  await authClient.emailOtp.sendVerificationOtp({
-    email: email,
-    type: "sign-in",
+  await auth.api.sendVerificationOTP({
+    body: {
+      email: email,
+      type: "sign-in",
+    },
   });
 }
 

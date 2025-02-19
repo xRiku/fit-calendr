@@ -9,14 +9,10 @@ export default async function LandingPageHeader() {
     headers: await headers(),
   });
 
-  if (!session) {
-    return;
-  }
-
   return (
     <Header>
       <Button asChild variant="default">
-        <Link href={`${session.user.id ? "/app/dashboard" : "/auth/sign-in"}`}>
+        <Link href={`${session?.user.id ? "/app/dashboard" : "/auth/sign-in"}`}>
           Login
         </Link>
       </Button>
