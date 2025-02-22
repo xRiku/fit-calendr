@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     reactCompiler: true,
+    staleTimes: {
+      dynamic: 30,
+    },
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
   },
 };
 
