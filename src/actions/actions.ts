@@ -2,7 +2,6 @@
 
 import { auth } from "@/lib/auth";
 // import { auth, signIn, signOut } from "@/auth";
-import { authClient } from "@/lib/auth-client";
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
