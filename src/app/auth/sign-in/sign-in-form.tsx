@@ -55,16 +55,18 @@ export function SignInForm() {
     const { email } = getValues();
 
     try {
-      await verifyOtp(email, otp);
+      const { user } = await verifyOtp(email, otp);
+
+      if (!user.name) {
+        return redirect("/setup");
+      }
+
+      redirect("/app/dashboard");
     } catch (error) {
       console.log(error);
       setHasError(true);
     } finally {
       setIsLoading(false);
-    }
-
-    if (!hasError) {
-      redirect("/app/dashboard");
     }
   };
 

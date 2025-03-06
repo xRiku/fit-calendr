@@ -1,11 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth";
+import { getSessionCookie } from "better-auth/cookies";
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const sessionCookie = getSessionCookie(request);
 
-  const isOnPrivatePages = pathname.includes("/app");
+  const isOnPrivatePages =
+    pathname.includes("/app") || pathname.includes("/setup");
   const isOnLoginPage = pathname.includes("/auth");
 
   if (!sessionCookie && isOnPrivatePages) {

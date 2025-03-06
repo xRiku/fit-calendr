@@ -20,7 +20,7 @@ export default async function LoggedHeader() {
       return `${splitedNames[0].slice(0, 2)}`;
     }
 
-    return `${splitedNames[0][0]}${splitedNames[0][1]}`;
+    return `${splitedNames[0][0]}${splitedNames[1][0]}`;
   };
 
   const initialsFromName = getInitialsFromName(

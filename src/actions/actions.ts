@@ -287,7 +287,7 @@ export async function signInWithCredentials(email: string) {
 }
 
 export async function verifyOtp(email: string, otp: string) {
-  await auth.api.signInEmailOTP({
+  return await auth.api.signInEmailOTP({
     body: {
       email,
       otp,

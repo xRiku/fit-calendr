@@ -31,7 +31,7 @@ export function MyAccountDropdown({
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <Link href="/app/account" className="cursor-default">
               Settings
             </Link>
