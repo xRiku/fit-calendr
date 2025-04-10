@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useActionState, useEffect, useState } from "react";
 import { signInWithCredentials, verifyOtp } from "@/actions/actions";
 import { OTPInput } from "./otp-input"; // Import the new OTPInput component
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const signInFormSchema = z.object({
   email: z.string().email(),
@@ -24,6 +24,7 @@ export function SignInForm() {
   const [otpCode, setOtpCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const router = useRouter();
 
   const {
     formState: { errors },
@@ -58,10 +59,10 @@ export function SignInForm() {
       const { user } = await verifyOtp(email, otp);
 
       if (!user.name) {
-        return redirect("/setup");
+        return router.push("/setup");
       }
 
-      redirect("/app/dashboard");
+      router.push("/app/dashboard");
     } catch (error) {
       console.log(error);
       setHasError(true);
