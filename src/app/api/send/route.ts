@@ -6,12 +6,13 @@ import { Resend } from "resend";
 const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
+  console.log(env.RESEND_API_KEY);
   try {
     const body = await new Response(req.body).json();
     const { data, error } = await resend.emails.send({
-      from: "FitCalendr <fitcalendrbot@beamaia.com>",
+      from: "OTP <fitcalendr@phmarques.com>",
       to: [body.email],
-      subject: "FitCalendr",
+      subject: "Your one-time password for FitCalendr",
       react: EmailTemplate({
         code: body.otp,
       }),
