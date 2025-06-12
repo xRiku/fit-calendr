@@ -10,7 +10,7 @@ const options: {
     fetchCall: typeof getLastGymWorkout | typeof getLastCheatMeal;
   };
 } = {
-  "gym-workout": {
+  "workout": {
     title: "Days since last workout",
     fetchCall: getLastGymWorkout,
   },

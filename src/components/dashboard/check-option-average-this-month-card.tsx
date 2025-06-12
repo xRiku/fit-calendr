@@ -14,12 +14,12 @@ const options: {
       | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
-  "gym-workout": {
-    title: "Average Number of Workouts (month)",
+  "workout": {
+    title: "Workouts AVG. (month)",
     fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
-    title: "Average cheat meals (month)",
+    title: "Chheat meals AVG. (month)",
     fetchCall: getCheatMealsByYearGroupedByMonth,
   },
 };

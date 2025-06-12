@@ -19,13 +19,13 @@ const options: {
     color?: string;
   };
 } = {
-  "gym-workout": {
+  "workout": {
     title: "Workouts (year)",
-    color: "var(--primary)",
+    color: "var(--vibrant-green)",
   },
   "cheat-meal": {
     title: "Cheat meals (year)",
-    color: "var(--secondary)",
+    color: "var(--vibrant-orange)",
   },
 };
 

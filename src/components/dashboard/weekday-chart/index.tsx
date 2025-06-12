@@ -20,7 +20,7 @@ const options: {
       | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
-  "gym-workout": {
+  "workout": {
     description: "Showing workout frequency per weekday for this year",
     fetchCall: getGymChecksByYearGroupedByMonth,
   },

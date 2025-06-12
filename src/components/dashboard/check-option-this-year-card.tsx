@@ -15,7 +15,7 @@ const options: {
       | typeof getCheatMealsByYearGroupedByMonth;
   };
 } = {
-  "gym-workout": {
+  "workout": {
     title: "Workouts (year)",
     fetchCall: getGymChecksByYearGroupedByMonth,
   },

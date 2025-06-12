@@ -21,7 +21,7 @@ const options: {
     color?: string;
   };
 } = {
-  "gym-workout": {
+  "workout": {
     title: "Workouts",
     color: "var(--primary)",
   },
@@ -84,7 +84,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
       return {
         weekday,
         checkOption: checkOption,
-        fill: `var(--color-${weekday})`,
+        fill: `var(--chart-${weekday}-${selected})`,
       };
     }
   );

@@ -9,7 +9,7 @@ import H2 from "@/components/h2";
 
 export type DashBoardPageProps = {
   searchParams: Promise<{
-    [key: string]: "gym-workout" | "cheat-meal" | undefined;
+    [key: string]: "workout" | "cheat-meal" | undefined;
   }>;
 };
 
@@ -17,7 +17,7 @@ export default async function DashboardPage({
   searchParams,
 }: DashBoardPageProps) {
   const params = await searchParams;
-  const selected = params.selected ?? "gym-workout";
+  const selected = params.selected ?? "workout";
 
   return (
     <main className="flex flex-col gap-4 group">

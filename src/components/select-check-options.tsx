@@ -39,7 +39,7 @@ export default function SelectCheckOptions({ selected }: { selected: string }) {
           <SelectValue defaultValue={selected} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="gym-workout" className="flex items-center">
+          <SelectItem value="workout" className="flex items-center">
             Workouts
           </SelectItem>
           <SelectItem value="cheat-meal">Cheat Meals</SelectItem>
