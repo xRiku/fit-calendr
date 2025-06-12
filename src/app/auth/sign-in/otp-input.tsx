@@ -10,6 +10,7 @@ interface OTPInputProps {
   handleOnComplete: (otp: string) => Promise<void>;
   hasError: boolean;
   isLoading: boolean;
+  isNavigating?: boolean;
   // setHasError: (value: boolean) => void;
   setShouldShowOtpField: (value: boolean) => void;
 }
@@ -21,6 +22,7 @@ export function OTPInput({
   hasError,
   // setHasError,
   isLoading,
+  isNavigating,
   setShouldShowOtpField,
 }: OTPInputProps) {
   return (
@@ -42,7 +44,14 @@ export function OTPInput({
         </InputOTPGroup>
       </InputOTP>
 
-      {isLoading && <p>Loading...</p>}
+      {(isLoading || isNavigating) && (
+        <div className="flex items-center justify-center space-x-2">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+          <span className="text-sm text-gray-400">
+            {isLoading ? "Verifying..." : "Redirecting..."}
+          </span>
+        </div>
+      )}
 
       {hasError && (
         <span className="text-sm text-red-500 dark:text-red-900">

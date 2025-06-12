@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
 import { signInWithCredentials, verifyOtp } from "@/actions/actions";
 import { OTPInput } from "./otp-input"; // Import the new OTPInput component
 import { useRouter } from "next/navigation";
@@ -25,6 +25,7 @@ export function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const router = useRouter();
+  const [isNavigating, startTransition] = useTransition();
 
   const {
     formState: { errors },
@@ -49,7 +50,7 @@ export function SignInForm() {
     setShouldShowOtpField(true);
   }
 
-  const [, formAction, isPending] = useActionState(handleSignIn, null);
+  const [, formAction, isPendingSubmit] = useActionState(handleSignIn, null);
 
   const handleOnComplete = async (otp: string) => {
     setIsLoading(true);
@@ -59,10 +60,15 @@ export function SignInForm() {
       const { user } = await verifyOtp(email, otp);
 
       if (!user.name) {
-        return router.push("/setup");
+        startTransition(() => {
+          router.push("/setup");
+        });
+        return;
       }
 
-      router.push("/app/dashboard");
+      startTransition(() => {
+        router.push("/app/dashboard");
+      });
     } catch (error) {
       console.log(error);
       setHasError(true);
@@ -80,6 +86,7 @@ export function SignInForm() {
         hasError={hasError}
         // setHasError={setHasError}
         isLoading={isLoading}
+        isNavigating={isNavigating}
         setShouldShowOtpField={setShouldShowOtpField}
       />
     );
@@ -103,8 +110,8 @@ export function SignInForm() {
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? (
+      <Button type="submit" className="w-full" disabled={isPendingSubmit}>
+        {isPendingSubmit ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <LogIn className="mr-2 h-4 w-4" />
