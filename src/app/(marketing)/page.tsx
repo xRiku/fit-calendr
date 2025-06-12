@@ -21,8 +21,8 @@ export default function LandingPage() {
               FitCalendr helps you stay on top of your workouts and cheat meals
               with clear tracking and powerful analytics.
             </p>
-            <Button  asChild variant="ghost" className=" font-semibold hover:opacity-90 px-8 py-6 text-lg">
-              <Link href="/auth/sign-in" className="text-black bg-primary">
+            <Button asChild variant="ghost" className="font-semibold hover:opacity-90 px-8 py-6 text-lg">
+              <Link href="/auth/sign-in" className="text-black bg-primary hover:bg-primary! hover:text-black!">
                 Start Your Journey
               </Link>
             </Button>
@@ -159,7 +159,7 @@ export default function LandingPage() {
             Join thousands of users who have improved their fitness habits.
           </p>
           <Button asChild variant="ghost" className="font-semibold hover:opacity-90 px-8 py-6 text-lg">
-            <Link href="/auth/sign-in" className="bg-primary text-black">
+              <Link href="/auth/sign-in" className="text-black bg-primary hover:bg-primary! hover:text-black!">
               Get Started Now
             </Link>
           </Button>
