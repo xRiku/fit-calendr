@@ -31,7 +31,7 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex flex-col gap-4 md:mt-0 mt-8"
           >
-            <Card className="bg-neutral-900/70 backdrop-blur border border-neutral-800 text-white shadow-lg hover:border-[#2adb7a]/30 transition-all duration-300 hover:shadow-[#2adb7a]/10 hover:shadow-xl group">
+            <Card className="bg-neutral-900/70 backdrop-blur-sm border border-neutral-800 text-white shadow-lg hover:border-[#2adb7a]/30 transition-all duration-300 hover:shadow-[#2adb7a]/10 hover:shadow-xl group">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-neutral-800 p-2 rounded-lg group-hover:bg-[#2adb7a]/20 transition-colors duration-300">
@@ -44,7 +44,7 @@ export default function LandingPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-neutral-900/70 backdrop-blur border border-neutral-800 text-white shadow-lg hover:border-[#2adb7a]/30 transition-all duration-300 hover:shadow-[#2adb7a]/10 hover:shadow-xl group">
+            <Card className="bg-neutral-900/70 backdrop-blur-sm border border-neutral-800 text-white shadow-lg hover:border-[#2adb7a]/30 transition-all duration-300 hover:shadow-[#2adb7a]/10 hover:shadow-xl group">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-neutral-800 p-2 rounded-lg group-hover:bg-[#2adb7a]/20 transition-colors duration-300">
@@ -57,7 +57,7 @@ export default function LandingPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-neutral-900/70 backdrop-blur border border-neutral-800 text-white shadow-lg hover:border-[#2adb7a]/30 transition-all duration-300 hover:shadow-[#2adb7a]/10 hover:shadow-xl group">
+            <Card className="bg-neutral-900/70 backdrop-blur-sm border border-neutral-800 text-white shadow-lg hover:border-[#2adb7a]/30 transition-all duration-300 hover:shadow-[#2adb7a]/10 hover:shadow-xl group">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-neutral-800 p-2 rounded-lg group-hover:bg-[#2adb7a]/20 transition-colors duration-300">
@@ -75,14 +75,14 @@ export default function LandingPage() {
       </section>
 
       <section className="py-24 p-4 relative border-t border-neutral-800">
-        <div className="absolute inset-0 bg-gradient-to-b from-black to-neutral-900"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-black to-neutral-900"></div>
         <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="max-w-5xl mx-auto text-center relative z-10"
         >
-          <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#2adb7a] to-[#22c96b]">
+          <h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-linear-to-r from-[#2adb7a] to-[#22c96b]">
             Why Choose FitCalendr?
           </h2>
           <p className="text-xl text-white mb-16 max-w-2xl mx-auto">
@@ -95,7 +95,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-neutral-900/50 backdrop-blur p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
+              className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
             >
 
               <h3 className="text-2xl flex items-center gap-2 font-semibold text-white mb-3">
@@ -112,7 +112,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-neutral-900/50 backdrop-blur p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
+              className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
             >
               <h3 className="text-2xl font-semibold flex items-center gap-2 text-white mb-3">
                 <span className="text-primary text-2xl">✓</span>
@@ -128,7 +128,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="bg-neutral-900/50 backdrop-blur p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
+              className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
             >
               <h3 className="text-2xl font-semibold flex items-center gap-2 text-white mb-3">
                 <span className="text-primary text-2xl">✓</span>
@@ -148,14 +148,14 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-4xl mx-auto text-center bg-gradient-to-r from-neutral-900 to-black p-10 rounded-2xl border border-neutral-800 shadow-xl"
+          className="max-w-4xl mx-auto text-center bg-linear-to-r from-neutral-900 to-black p-10 rounded-2xl border border-neutral-800 shadow-xl"
         >
           <h2 className="text-3xl font-bold mb-6 text-white">Ready to transform your fitness journey?</h2>
           <p className="text-xl text-neutral-300 mb-8 max-w-2xl mx-auto">
             Start tracking your workouts and cheat meals today with FitCalendr.
             Join thousands of users who have improved their fitness habits.
           </p>
-          <Button className="bg-gradient-to-r from-[#2adb7a] to-[#22c96b] text-black font-semibold hover:opacity-90 px-8 py-6 text-lg">
+          <Button className="bg-linear-to-r from-[#2adb7a] to-[#22c96b] text-black font-semibold hover:opacity-90 px-8 py-6 text-lg">
             Get Started Now
           </Button>
         </MotionDiv>

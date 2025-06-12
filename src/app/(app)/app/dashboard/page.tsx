@@ -25,7 +25,7 @@ export default async function DashboardPage({
         <H2>Dashboard</H2>
         <SelectCheckOptions selected={selected} />
       </div>
-      <div className="flex flex-col gap-4 group-has-[[data-pending]]:animate-pulse">
+      <div className="flex flex-col gap-4 group-has-data-pending:animate-pulse">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <CheckOptionThisYearCard selected={selected} />
           <CheckOptionAveragePerMonthCard selected={selected} />

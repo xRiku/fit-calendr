@@ -250,7 +250,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
           </Pie>
           <ChartLegend
             content={<ChartLegendContent nameKey="weekday" />}
-            className="h-12 -translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+            className="h-12 -translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
           />
         </PieChart>
       </ChartContainer>
