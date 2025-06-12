@@ -22,7 +22,7 @@ const options: {
   };
 } = {
   "gym-workout": {
-    title: "Gym workouts",
+    title: "Workouts",
     color: "var(--primary)",
   },
   "cheat-meal": {

@@ -6,26 +6,22 @@ import {
 import { add } from "date-fns";
 
 export default async function Calendars() {
-  const cheatMealsGroupedByMonthPromise = getCheatMealsByYearGroupedByMonth();
+  // const cheatMealsGroupedByMonthPromise = getCheatMealsByYearGroupedByMonth();
 
-  const gymChecksGroupedByMonthPromise = getGymChecksByYearGroupedByMonth();
+  // const gymChecksGroupedByMonthPromise = getGymChecksByYearGroupedByMonth();
 
-  const [cheatMealsGroupedByMonth, gymChecksGroupedByMonth] = await Promise.all(
-    [cheatMealsGroupedByMonthPromise, gymChecksGroupedByMonthPromise]
-  );
+  // const [cheatMealsGroupedByMonth, gymChecksGroupedByMonth] = await Promise.all(
+  //   [cheatMealsGroupedByMonthPromise, gymChecksGroupedByMonthPromise]
+  // );
 
-  return Array.from({ length: 12 }).map((_, i) => {
+  // return Array.from({ length: 12 }).map((_, i) => {
     return (
       <Calendar
-        key={`calendar-${i}`}
         disableNavigation
         showOutsideDays={false}
-        defaultMonth={add(new Date(2025, 0, 15), {
-          months: i,
-        })}
-        cheatMealModifiersArray={cheatMealsGroupedByMonth.hashTable[i]}
-        gymModifiersArray={gymChecksGroupedByMonth.hashTable[i]}
+        // cheatMealModifiersArray={cheatMealsGroupedByMonth.hashTable[i]}
+        // gymModifiersArray={gymChecksGroupedByMonth.hashTable[i]}
       />
     );
-  });
+  // });
 }

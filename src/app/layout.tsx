@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${onest.variable}`}>
       <body
         className={
-          "dark:bg-[#121212] bg-[#F5F5F5] antialiased min-h-screen onest"
+          "dark:bg-[#121212] bg-[#F5F5F5] antialiased flex min-h-svh flex-col overscroll-none onest"
         }
       >
         <ThemeProvider

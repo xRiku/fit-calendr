@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <LoggedHeader />
-      <main className="flex flex-col justify-center flex-1 gap-4 p-8 pt-6 ">
+      <main className="flex flex-col justify-center gap-4 p-8 pt-6 ">
         {children}
       </main>
       <DayInfoDrawerDialog />

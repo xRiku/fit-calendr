@@ -23,8 +23,8 @@ const options: {
   };
 } = {
   "gym-workout": {
-    title: "Gym Workout Frequency Chart",
-    description: "Showing gym workout frequency for this year",
+    title: "Workout Frequency Chart",
+    description: "Showing workout frequency for this year",
     fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {

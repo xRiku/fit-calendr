@@ -9,20 +9,20 @@ export default async function CalendarPage() {
       <H2>Calendar</H2>
       <div className="flex flex-col">
         <div className="flex items-center">
-          <span className="h-2 w-2 mr-2 rounded-xl bg-primary" /> Gym
+          <span className="h-2 w-2 mr-2 rounded-xl bg-primary" /> Workout
         </div>
         <div className="flex items-center">
           <span className="h-2 w-2 mr-2 rounded-xl bg-secondary" /> Cheat Meal
         </div>
       </div>
       <div className="w-full flex items-start xl:justify-start justify-center flex-wrap gap-4 sm:gap-6 2xl:gap-0">
-        <Suspense
+        {/* <Suspense
           fallback={Array.from({ length: 12 }).map((item, index) => (
             <CalendarSkeleton key={`calendar-skeleton-${index}`} />
           ))}
-        >
+        > */}
           <Calendars />
-        </Suspense>
+        {/* </Suspense> */}
       </div>
     </>
   );

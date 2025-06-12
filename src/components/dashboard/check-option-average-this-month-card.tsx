@@ -15,7 +15,7 @@ const options: {
   };
 } = {
   "gym-workout": {
-    title: "Average gym workouts (month)",
+    title: "Average Number of Workouts (month)",
     fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {

@@ -15,14 +15,14 @@ export default function LandingPage() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="sm:text-6xl mb-6 font-extrabold tracking-tight underline-offset-8 text-3xl leading-9 sm:leading-16">
-              Track Your <span className="decoration-dashed underline underline-offset-4 decoration-primary">Fitness</span>.<br/> Own Your <span className="decoration-dashed underline underline-offset-4 decoration-primary">Progress</span>.
+              Track Your <span className="decoration-dashed underline underline-offset-4 decoration-vibrant-green">Fitness</span>.<br/> Own Your <span className="decoration-dashed underline underline-offset-4 decoration-vibrant-green">Progress</span>.
             </h1>
             <p className="text-xl mb-8 max-w-md text-neutral-300">
               FitCalendr helps you stay on top of your workouts and cheat meals
               with clear tracking and powerful analytics.
             </p>
             <Button asChild variant="ghost" className="font-semibold hover:opacity-90 px-8 py-6 text-lg">
-              <Link href="/auth/sign-in" className="text-black bg-primary hover:bg-primary! hover:text-black!">
+              <Link href="/auth/sign-in" className="text-black bg-vibrant-green hover:bg-vibrant-green! hover:text-black!">
                 Start Your Journey
               </Link>
             </Button>
@@ -38,7 +38,7 @@ export default function LandingPage() {
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-neutral-800 p-2 rounded-lg group-hover:bg-[#2adb7a]/20 transition-colors duration-300">
-                    <Dumbbell className="w-6 h-6 text-primary" />
+                    <Dumbbell className="w-6 h-6 text-vibrant-green" />
                   </div>
                   <h2 className="text-xl font-bold">Workout Tracking</h2>
                 </div>
@@ -51,7 +51,7 @@ export default function LandingPage() {
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-neutral-800 p-2 rounded-lg group-hover:bg-[#2adb7a]/20 transition-colors duration-300">
-                    <Pizza className="w-6 h-6 text-primary" />
+                    <Pizza className="w-6 h-6 text-vibrant-green" />
                   </div>
                   <h2 className="text-xl font-bold">Cheat Meal Tracking</h2>
                 </div>
@@ -64,7 +64,7 @@ export default function LandingPage() {
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="bg-neutral-800 p-2 rounded-lg group-hover:bg-[#2adb7a]/20 transition-colors duration-300">
-                    <BarChart4 className="w-6 h-6 text-primary" />
+                    <BarChart4 className="w-6 h-6 text-vibrant-green" />
                   </div>
                   <h2 className="text-xl font-bold">Insightful Analytics</h2>
                 </div>
@@ -102,7 +102,7 @@ export default function LandingPage() {
             >
 
               <h3 className="text-2xl flex items-center gap-2 font-semibold text-white mb-3">
-                <span className="text-primary text-2xl">✓</span>
+                <span className="text-vibrant-green text-2xl">✓</span>
                 Easy Logging
               </h3>
               <p className="text-neutral-300">
@@ -118,7 +118,7 @@ export default function LandingPage() {
               className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
             >
               <h3 className="text-2xl font-semibold flex items-center gap-2 text-white mb-3">
-                <span className="text-primary text-2xl">✓</span>
+                <span className="text-vibrant-green text-2xl">✓</span>
                 Visual Insights
               </h3>
               <p className="text-neutral-300">
@@ -134,7 +134,7 @@ export default function LandingPage() {
               className="bg-neutral-900/50 backdrop-blur-sm p-6 rounded-xl border border-neutral-800 hover:border-[#2adb7a]/30 transition-all duration-300"
             >
               <h3 className="text-2xl font-semibold flex items-center gap-2 text-white mb-3">
-                <span className="text-primary text-2xl">✓</span>
+                <span className="text-vibrant-green text-2xl">✓</span>
                 Stay Accountable
               </h3>
               <p className="text-neutral-300">
@@ -159,7 +159,7 @@ export default function LandingPage() {
             Join thousands of users who have improved their fitness habits.
           </p>
           <Button asChild variant="ghost" className="font-semibold hover:opacity-90 px-8 py-6 text-lg">
-              <Link href="/auth/sign-in" className="text-black bg-primary hover:bg-primary! hover:text-black!">
+              <Link href="/auth/sign-in" className="text-black bg-vibrant-green hover:bg-vibrant-green! hover:text-black!">
               Get Started Now
             </Link>
           </Button>

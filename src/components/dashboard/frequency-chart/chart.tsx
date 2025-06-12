@@ -20,7 +20,7 @@ const options: {
   };
 } = {
   "gym-workout": {
-    title: "Gym workouts (year)",
+    title: "Workouts (year)",
     color: "var(--primary)",
   },
   "cheat-meal": {

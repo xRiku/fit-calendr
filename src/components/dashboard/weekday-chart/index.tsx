@@ -21,7 +21,7 @@ const options: {
   };
 } = {
   "gym-workout": {
-    description: "Showing gym workout frequency per weekday for this year",
+    description: "Showing workout frequency per weekday for this year",
     fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {

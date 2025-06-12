@@ -110,7 +110,7 @@ export function SignInForm() {
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isPendingSubmit}>
+      <Button type="submit" className="w-full bg-vibrant-green! font-semibold" disabled={isPendingSubmit}>
         {isPendingSubmit ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (

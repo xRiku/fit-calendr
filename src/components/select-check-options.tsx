@@ -40,9 +40,9 @@ export default function SelectCheckOptions({ selected }: { selected: string }) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="gym-workout" className="flex items-center">
-            Gym workout
+            Workouts
           </SelectItem>
-          <SelectItem value="cheat-meal">Cheat Meal</SelectItem>
+          <SelectItem value="cheat-meal">Cheat Meals</SelectItem>
         </SelectContent>
       </Select>
     </div>

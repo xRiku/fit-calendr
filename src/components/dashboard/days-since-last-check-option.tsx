@@ -11,7 +11,7 @@ const options: {
   };
 } = {
   "gym-workout": {
-    title: "Days since last gym workout",
+    title: "Days since last workout",
     fetchCall: getLastGymWorkout,
   },
   "cheat-meal": {
