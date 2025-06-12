@@ -10,7 +10,7 @@ const onest = Onest({
 
 export const metadata: Metadata = {
   title: "FitCalendr",
-  description: "Track your gym frequency and cheat meals",
+  description: "Track your workout frequency and cheat meals",
 };
 
 export default function RootLayout({

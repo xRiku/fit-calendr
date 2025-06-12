@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dumbbell, Pizza, BarChart4 } from "lucide-react";
 import MotionDiv from "./motion-div";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -13,15 +14,17 @@ export default function LandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="sm:text-6xl mb-6 font-extrabold tracking-tight underline-offset-8 text-3xl leading-9">
+            <h1 className="sm:text-6xl mb-6 font-extrabold tracking-tight underline-offset-8 text-3xl leading-9 sm:leading-16">
               Track Your <span className="decoration-dashed underline underline-offset-4 decoration-primary">Fitness</span>.<br/> Own Your <span className="decoration-dashed underline underline-offset-4 decoration-primary">Progress</span>.
             </h1>
             <p className="text-xl mb-8 max-w-md text-neutral-300">
               FitCalendr helps you stay on top of your workouts and cheat meals
               with clear tracking and powerful analytics.
             </p>
-            <Button className="bg-primary hover:opacity-90 px-8 py-6 text-lg">
-              Start Your Journey
+            <Button  asChild variant="ghost" className=" font-semibold hover:opacity-90 px-8 py-6 text-lg">
+              <Link href="/auth/sign-in" className="text-black bg-primary">
+                Start Your Journey
+              </Link>
             </Button>
           </MotionDiv>
 
@@ -155,8 +158,10 @@ export default function LandingPage() {
             Start tracking your workouts and cheat meals today with FitCalendr.
             Join thousands of users who have improved their fitness habits.
           </p>
-          <Button className="bg-linear-to-r from-[#2adb7a] to-[#22c96b] text-black font-semibold hover:opacity-90 px-8 py-6 text-lg">
-            Get Started Now
+          <Button asChild variant="ghost" className="font-semibold hover:opacity-90 px-8 py-6 text-lg">
+            <Link href="/auth/sign-in" className="bg-primary text-black">
+              Get Started Now
+            </Link>
           </Button>
         </MotionDiv>
       </section>
