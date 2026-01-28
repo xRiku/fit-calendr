@@ -5,13 +5,13 @@ import { Loader2, LogIn } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { signInWithCredentials, verifyOtp } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useActionState, useEffect, useState, useTransition } from "react";
-import { signInWithCredentials, verifyOtp } from "@/actions/actions";
-import { OTPInput } from "./otp-input"; // Import the new OTPInput component
 import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState, useTransition } from "react";
+import { OTPInput } from "./otp-input"; // Import the new OTPInput component
 
 const signInFormSchema = z.object({
 	email: z.string().email(),

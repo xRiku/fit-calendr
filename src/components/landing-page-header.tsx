@@ -1,8 +1,8 @@
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Link from "next/link";
 import Header from "./header";
 import { Button } from "./ui/button";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 
 export default async function LandingPageHeader() {
 	const session = await auth.api.getSession({

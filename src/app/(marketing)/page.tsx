@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dumbbell, Pizza, BarChart4 } from "lucide-react";
-import MotionDiv from "./motion-div";
+import { BarChart4, Dumbbell, Pizza } from "lucide-react";
 import Link from "next/link";
+import MotionDiv from "./motion-div";
 
 export default function LandingPage() {
 	return (

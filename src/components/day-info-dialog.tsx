@@ -1,9 +1,9 @@
 "use client";
 
-import { DialogHeader, DialogContent, Dialog, DialogTitle } from "./ui/dialog";
-import DayInfoForm from "./day-info-form";
 import { useModalStore } from "@/stores/day-info-modal";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import DayInfoForm from "./day-info-form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 export default function DayInfoDialog() {
 	const {

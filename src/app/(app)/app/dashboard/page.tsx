@@ -1,12 +1,12 @@
-import SelectCheckOptions from "@/components/select-check-options";
-import SelectYear from "@/components/select-year";
+import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
-import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
 import { WeekdayChart } from "@/components/dashboard/weekday-chart";
 import H2 from "@/components/h2";
+import SelectCheckOptions from "@/components/select-check-options";
+import SelectYear from "@/components/select-year";
 import { getAvailableYears } from "@/lib/server-utils";
 
 export type DashBoardPageProps = {

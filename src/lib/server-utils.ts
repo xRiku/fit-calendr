@@ -1,10 +1,10 @@
 "use server-only";
 
 import { headers } from "next/headers";
-import { auth } from "./auth";
 import { redirect } from "next/navigation";
-import prisma from "./db";
 import { cache } from "react";
+import { auth } from "./auth";
+import prisma from "./db";
 
 export const getCheatMealsByYearGroupedByMonth = cache(
 	async (params?: {

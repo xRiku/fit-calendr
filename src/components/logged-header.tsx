@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Header from "./header";
 import MainNav from "./main-nav";
-import { headers } from "next/headers";
 import { MyAccountDropdown } from "./my-account-dropdown";
 
 export default async function LoggedHeader() {

@@ -1,7 +1,7 @@
-import CalendarDataProvider from "./(calendar-display)/calendar-data-provider";
 import H2 from "@/components/h2";
-import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Suspense } from "react";
+import CalendarDataProvider from "./(calendar-display)/calendar-data-provider";
 
 export default async function CalendarPage() {
 	return (

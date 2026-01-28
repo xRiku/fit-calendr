@@ -4,12 +4,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Chart } from "./chart";
 import {
-	getGymChecksByYearGroupedByMonth,
 	getCheatMealsByYearGroupedByMonth,
+	getGymChecksByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { Suspense } from "react";
+import { Chart } from "./chart";
 import { ChartSkeleton } from "./chart-skeleton";
 
 const options: {

@@ -1,9 +1,9 @@
+import HeaderLogo from "@/components/header-logo";
+import { auth } from "@/lib/auth";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import SetupForm from "./setup-form";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import HeaderLogo from "@/components/header-logo";
 
 export const metadata: Metadata = {
 	title: "Setup account | FitCalendr",

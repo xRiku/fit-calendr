@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
 import { Calendar, formatDateKey } from "@/components/ui/calendar";
 import { useModalStore } from "@/stores/day-info-modal";
-import type { GymCheck, CheatMeal } from "@prisma/client";
+import type { CheatMeal, GymCheck } from "@prisma/client";
+import { useMemo } from "react";
 
 type CalendarsProps = {
 	gymChecks: GymCheck[];

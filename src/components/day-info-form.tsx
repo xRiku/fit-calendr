@@ -2,9 +2,9 @@
 
 import * as React from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
 	Form,
@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input";
 
 import { addDayInfo, updateDayInfo } from "@/actions/actions";
 import { useModalStore } from "@/stores/day-info-modal";
-import { Button } from "./ui/button";
 import { toast } from "sonner";
+import { Button } from "./ui/button";
 
 const formSchema = z.object({
 	cheatMealName: z.string().max(50).optional(),

@@ -1,5 +1,7 @@
 "use client";
 
+import { logOut } from "@/actions/actions";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -9,8 +11,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { logOut } from "@/actions/actions";
 import Link from "next/link";
 
 type MyAccountDropdownProps = {

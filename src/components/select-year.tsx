@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import {
 	Select,
 	SelectContent,
@@ -8,7 +9,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
-import { useTransition } from "react";
 
 type SelectYearProps = {
 	availableYears: number[];
