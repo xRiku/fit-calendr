@@ -38,7 +38,7 @@ export default function SelectYear({
 				disabled={isPending}
 				onValueChange={(value: string) => {
 					startTransition(() =>
-						router.push(`${pathname}?${createQueryString("year", value)}`)
+						router.push(`${pathname}?${createQueryString("year", value)}`),
 					);
 				}}
 			>

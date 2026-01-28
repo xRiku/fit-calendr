@@ -1,57 +1,57 @@
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/components/ui/card";
 
 import { Chart } from "./chart";
 import {
-  getCheatMealsByYearGroupedByMonth,
-  getGymChecksByYearGroupedByMonth,
+	getCheatMealsByYearGroupedByMonth,
+	getGymChecksByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { Suspense } from "react";
 import { ChartSkeleton } from "./chart-skeleton";
 
 const options: {
-  [key: string]: {
-    title: string;
-    description: string;
-    fetchCall:
-      | typeof getGymChecksByYearGroupedByMonth
-      | typeof getCheatMealsByYearGroupedByMonth;
-  };
+	[key: string]: {
+		title: string;
+		description: string;
+		fetchCall:
+			| typeof getGymChecksByYearGroupedByMonth
+			| typeof getCheatMealsByYearGroupedByMonth;
+	};
 } = {
-  "workout": {
-    title: "Workout Frequency Chart",
-    description: "Showing workout frequency for this year",
-    fetchCall: getGymChecksByYearGroupedByMonth,
-  },
-  "cheat-meal": {
-    title: "Cheat Meal Frequency Chart",
-    description: "Showing cheat meal frequency for this year",
-    fetchCall: getCheatMealsByYearGroupedByMonth,
-  },
+	workout: {
+		title: "Workout Frequency Chart",
+		description: "Showing workout frequency for this year",
+		fetchCall: getGymChecksByYearGroupedByMonth,
+	},
+	"cheat-meal": {
+		title: "Cheat Meal Frequency Chart",
+		description: "Showing cheat meal frequency for this year",
+		fetchCall: getCheatMealsByYearGroupedByMonth,
+	},
 };
 
 export function FrequencyChart({
-  selected,
-  year = new Date().getFullYear(),
+	selected,
+	year = new Date().getFullYear(),
 }: {
-  selected: string;
-  year?: number;
+	selected: string;
+	year?: number;
 }) {
-  const fetchCallPromise = options[selected].fetchCall({ year });
+	const fetchCallPromise = options[selected].fetchCall({ year });
 
-  return (
-    <Card className="col-span-6">
-      <CardHeader>
-        <CardTitle>{options[selected].title}</CardTitle>
-        <CardDescription>{options[selected].description}</CardDescription>
-      </CardHeader>
-      <Suspense fallback={<ChartSkeleton />}>
-        <Chart selected={selected} fetchCallPromise={fetchCallPromise} />
-      </Suspense>
-    </Card>
-  );
+	return (
+		<Card className="col-span-6">
+			<CardHeader>
+				<CardTitle>{options[selected].title}</CardTitle>
+				<CardDescription>{options[selected].description}</CardDescription>
+			</CardHeader>
+			<Suspense fallback={<ChartSkeleton />}>
+				<Chart selected={selected} fetchCallPromise={fetchCallPromise} />
+			</Suspense>
+		</Card>
+	);
 }

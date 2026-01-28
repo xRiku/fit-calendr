@@ -5,52 +5,52 @@ import { differenceInDays } from "date-fns";
 import { getLastCheatMeal, getLastGymWorkout } from "@/lib/server-utils";
 
 const options: {
-  [key: string]: {
-    title: string;
-    fetchCall: typeof getLastGymWorkout | typeof getLastCheatMeal;
-  };
+	[key: string]: {
+		title: string;
+		fetchCall: typeof getLastGymWorkout | typeof getLastCheatMeal;
+	};
 } = {
-  "workout": {
-    title: "Days since last workout",
-    fetchCall: getLastGymWorkout,
-  },
-  "cheat-meal": {
-    title: "Days since last cheat meal",
-    fetchCall: getLastCheatMeal,
-  },
+	workout: {
+		title: "Days since last workout",
+		fetchCall: getLastGymWorkout,
+	},
+	"cheat-meal": {
+		title: "Days since last cheat meal",
+		fetchCall: getLastCheatMeal,
+	},
 };
 
 export default async function DaysSinceLastCheckOptionCard({
-  selected,
+	selected,
 }: {
-  selected: string;
+	selected: string;
 }) {
-  async function CardData() {
-    const lastCheckOption = await options[selected].fetchCall();
+	async function CardData() {
+		const lastCheckOption = await options[selected].fetchCall();
 
-    let daysSinceLastCheckOption = 0;
+		let daysSinceLastCheckOption = 0;
 
-    if (lastCheckOption.length) {
-      daysSinceLastCheckOption = differenceInDays(
-        new Date().getTime(),
-        lastCheckOption[0].date.getTime() || new Date()
-      );
-    }
+		if (lastCheckOption.length) {
+			daysSinceLastCheckOption = differenceInDays(
+				new Date().getTime(),
+				lastCheckOption[0].date.getTime() || new Date(),
+			);
+		}
 
-    return (
-      <span className="text-2xl font-bold">{daysSinceLastCheckOption}</span>
-    );
-  }
+		return (
+			<span className="text-2xl font-bold">{daysSinceLastCheckOption}</span>
+		);
+	}
 
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold">
-          {options[selected].title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-1">
-        {/* {monthReceipt ? (
+	return (
+		<Card>
+			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+				<CardTitle className="text-base font-semibold">
+					{options[selected].title}
+				</CardTitle>
+			</CardHeader>
+			<CardContent className="space-y-1">
+				{/* {monthReceipt ? (
           <>
             <span className="text-2xl font-bold">
               {monthReceipt.receipt.toLocaleString('pt-BR', {
@@ -76,10 +76,10 @@ export default async function DaysSinceLastCheckOptionCard({
           </>
         ) : (
           )} */}
-        <Suspense fallback={<CardSkeleton />}>
-          <CardData />
-        </Suspense>
-      </CardContent>
-    </Card>
-  );
+				<Suspense fallback={<CardSkeleton />}>
+					<CardData />
+				</Suspense>
+			</CardContent>
+		</Card>
+	);
 }

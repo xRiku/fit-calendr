@@ -8,11 +8,11 @@ import DayInfoDrawer from "./day-info-drawer";
 import DayInfoDialog from "./day-info-dialog";
 
 export function DayInfoDrawerDialog() {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  if (isDesktop) {
-    return <DayInfoDialog />;
-  }
+	if (isDesktop) {
+		return <DayInfoDialog />;
+	}
 
-  return <DayInfoDrawer />;
+	return <DayInfoDrawer />;
 }

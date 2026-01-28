@@ -6,23 +6,23 @@ import { Resend } from "resend";
 const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
-  try {
-    const body = await new Response(req.body).json();
-    const { data, error } = await resend.emails.send({
-      from: "OTP <fitcalendr@phmarques.com>",
-      to: [body.email],
-      subject: "Your one-time password for FitCalendr",
-      react: EmailTemplate({
-        code: body.otp,
-      }),
-    });
+	try {
+		const body = await new Response(req.body).json();
+		const { data, error } = await resend.emails.send({
+			from: "OTP <fitcalendr@phmarques.com>",
+			to: [body.email],
+			subject: "Your one-time password for FitCalendr",
+			react: EmailTemplate({
+				code: body.otp,
+			}),
+		});
 
-    if (error) {
-      return Response.json({ error }, { status: 500 });
-    }
+		if (error) {
+			return Response.json({ error }, { status: 500 });
+		}
 
-    return Response.json(data);
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
-  }
+		return Response.json(data);
+	} catch (error) {
+		return Response.json({ error }, { status: 500 });
+	}
 }

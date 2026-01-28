@@ -2,14 +2,14 @@ import { createAuthClient } from "better-auth/react";
 import { emailOTPClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  plugins: [emailOTPClient()],
+	plugins: [emailOTPClient()],
 });
 
 export const signInGoogle = async () => {
-  const data = await authClient.signIn.social({
-    provider: "google",
-    callbackURL: "/app/dashboard",
-  });
+	const data = await authClient.signIn.social({
+		provider: "google",
+		callbackURL: "/app/dashboard",
+	});
 
-  console.log("data", data);
+	console.log("data", data);
 };

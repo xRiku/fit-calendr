@@ -33,7 +33,12 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 				cheatMealsByDate.set(dateKey, cheatMeal);
 			}
 
-			return { workoutDates, cheatMealDates, gymChecksByDate, cheatMealsByDate };
+			return {
+				workoutDates,
+				cheatMealDates,
+				gymChecksByDate,
+				cheatMealsByDate,
+			};
 		}, [gymChecks, cheatMeals]);
 
 	const handleDayClick = (date: Date) => {

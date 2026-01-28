@@ -5,19 +5,19 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 export default async function AccountPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-  if (!session) {
-    redirect("/sign-in");
-  }
+	if (!session) {
+		redirect("/sign-in");
+	}
 
-  return (
-    <main className="flex w-full flex-col items-center justify-center gap-8">
-      <H1>Your account</H1>
-      <h2>{session?.user?.email}</h2>
-      <SignOutButton />
-    </main>
-  );
+	return (
+		<main className="flex w-full flex-col items-center justify-center gap-8">
+			<H1>Your account</H1>
+			<h2>{session?.user?.email}</h2>
+			<SignOutButton />
+		</main>
+	);
 }

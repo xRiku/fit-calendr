@@ -1,20 +1,20 @@
 import { create } from "zustand";
 
 export type DeleteConfirmationModalState = {
-  isDeleteConfirmationModalOpened: boolean;
+	isDeleteConfirmationModalOpened: boolean;
 };
 export type DeleteConfirmationModalAction = {
-  toggleIsDeleteConfirmationModalOpened: () => void;
+	toggleIsDeleteConfirmationModalOpened: () => void;
 };
 
 export type DeleteConfirmationModalStore = DeleteConfirmationModalState &
-  DeleteConfirmationModalAction;
+	DeleteConfirmationModalAction;
 
 export const useDeleteConfirmationModalStore =
-  create<DeleteConfirmationModalStore>((set) => ({
-    isDeleteConfirmationModalOpened: false,
-    toggleIsDeleteConfirmationModalOpened: () =>
-      set((state) => ({
-        isDeleteConfirmationModalOpened: !state.isDeleteConfirmationModalOpened,
-      })),
-  }));
+	create<DeleteConfirmationModalStore>((set) => ({
+		isDeleteConfirmationModalOpened: false,
+		toggleIsDeleteConfirmationModalOpened: () =>
+			set((state) => ({
+				isDeleteConfirmationModalOpened: !state.isDeleteConfirmationModalOpened,
+			})),
+	}));
