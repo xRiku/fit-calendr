@@ -26,27 +26,32 @@ const options: {
 
 export default function CheckOptionThisMonthCard({
   selected,
+  year = new Date().getFullYear(),
 }: {
   selected: keyof typeof options;
+  year?: number;
 }) {
   async function CardData() {
-    const gymChecksGroupedByMonth = await options[selected].fetchCall();
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    const gymChecksGroupedByMonth = await options[selected].fetchCall({ year });
 
     const getDiffFromLastMonth = async () => {
+      // For non-current years, show the last month of that year
+      const targetMonth = year === currentYear ? currentMonth : 11;
       const thisMonth =
-        gymChecksGroupedByMonth.hashTable[new Date().getMonth()]?.length || 0;
+        gymChecksGroupedByMonth.hashTable[targetMonth]?.length || 0;
       if (thisMonth === 0) {
         return 0;
       }
       let prevMonth =
-        gymChecksGroupedByMonth.hashTable[new Date().getMonth() - 1]?.length ||
-        0;
+        gymChecksGroupedByMonth.hashTable[targetMonth - 1]?.length || 0;
 
       if (prevMonth === 0) {
-        if (new Date().getMonth() === 0) {
+        if (targetMonth === 0) {
           const prevYearGymChecksGroupedByMonth =
-            await getGymChecksByYearGroupedByMonth({
-              year: new Date().getFullYear() - 1,
+            await options[selected].fetchCall({
+              year: year - 1,
             });
           prevMonth =
             prevYearGymChecksGroupedByMonth.hashTable[11]?.length || 0;
@@ -63,14 +68,15 @@ export default function CheckOptionThisMonthCard({
     };
 
     const diffFromLastMonth = await getDiffFromLastMonth();
+    const currentYearVal = new Date().getFullYear();
+    const targetMonth = year === currentYearVal ? new Date().getMonth() : 11;
 
     return (
       <>
         {gymChecksGroupedByMonth && (
           <>
             <span className="text-2xl font-bold">
-              {gymChecksGroupedByMonth.hashTable[new Date().getMonth()]
-                ?.length || 0}
+              {gymChecksGroupedByMonth.hashTable[targetMonth]?.length || 0}
             </span>
             {diffFromLastMonth !== 0 && (
               <p className="text-xs text-muted-foreground">
@@ -85,7 +91,7 @@ export default function CheckOptionThisMonthCard({
                     : diffFromLastMonth.toFixed(1)}
                   %
                 </span>{" "}
-                this month
+                vs last month
               </p>
             )}
           </>

@@ -30,8 +30,14 @@ const options: {
   },
 };
 
-export function WeekdayChart({ selected }: { selected: string }) {
-  const fetchCallPromise = options[selected].fetchCall();
+export function WeekdayChart({
+  selected,
+  year = new Date().getFullYear(),
+}: {
+  selected: string;
+  year?: number;
+}) {
+  const fetchCallPromise = options[selected].fetchCall({ year });
 
   return (
     <Card className="col-span-3">

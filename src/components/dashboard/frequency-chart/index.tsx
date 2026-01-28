@@ -34,8 +34,14 @@ const options: {
   },
 };
 
-export function FrequencyChart({ selected }: { selected: string }) {
-  const fetchCallPromise = options[selected].fetchCall();
+export function FrequencyChart({
+  selected,
+  year = new Date().getFullYear(),
+}: {
+  selected: string;
+  year?: number;
+}) {
+  const fetchCallPromise = options[selected].fetchCall({ year });
 
   return (
     <Card className="col-span-6">

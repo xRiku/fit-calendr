@@ -27,21 +27,23 @@ const options: {
 
 export default async function CheckOptionThisYearCard({
   selected,
+  year = new Date().getFullYear(),
 }: {
   selected: keyof typeof options;
+  year?: number;
 }) {
   async function CardData() {
-    const gymChecksGroupedByMonth = await options[selected].fetchCall();
+    const gymChecksGroupedByMonth = await options[selected].fetchCall({ year });
 
-    const getDiffFromLastMonth = async () => {
+    const getDiffFromLastYear = async () => {
       const thisYear = gymChecksGroupedByMonth.count || 0;
       if (thisYear === 0) {
         return 0;
       }
 
       const lastYearGymChecksGroupedByMonth =
-        await getGymChecksByYearGroupedByMonth({
-          year: new Date().getFullYear() - 1,
+        await options[selected].fetchCall({
+          year: year - 1,
         });
       const prevYear = lastYearGymChecksGroupedByMonth?.count || 0;
 
@@ -52,7 +54,7 @@ export default async function CheckOptionThisYearCard({
       return (thisYear / prevYear - 1) * 100;
     };
 
-    const diffFromLastMonth = await getDiffFromLastMonth();
+    const diffFromLastYear = await getDiffFromLastYear();
 
     return (
       <>
@@ -61,20 +63,20 @@ export default async function CheckOptionThisYearCard({
             <span className="text-2xl font-bold">
               {gymChecksGroupedByMonth.count || 0}
             </span>
-            {diffFromLastMonth !== 0 && (
+            {diffFromLastYear !== 0 && (
               <p className="text-xs text-muted-foreground">
-                {diffFromLastMonth > 0 ? "Up by " : "Down by "}
+                {diffFromLastYear > 0 ? "Up by " : "Down by "}
                 <span
                   className={
-                    diffFromLastMonth > 0 ? "text-emerald-500" : "text-red-500"
+                    diffFromLastYear > 0 ? "text-emerald-500" : "text-red-500"
                   }
                 >
-                  {diffFromLastMonth > 0
-                    ? `+${diffFromLastMonth.toFixed(1)}`
-                    : diffFromLastMonth.toFixed(1)}
+                  {diffFromLastYear > 0
+                    ? `+${diffFromLastYear.toFixed(1)}`
+                    : diffFromLastYear.toFixed(1)}
                   %
                 </span>{" "}
-                this year
+                vs last year
               </p>
             )}
           </>

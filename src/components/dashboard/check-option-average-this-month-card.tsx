@@ -19,18 +19,20 @@ const options: {
     fetchCall: getGymChecksByYearGroupedByMonth,
   },
   "cheat-meal": {
-    title: "Chheat meals AVG. (month)",
+    title: "Cheat meals AVG. (month)",
     fetchCall: getCheatMealsByYearGroupedByMonth,
   },
 };
 
 export default function CheckOptionAveragePerMonthCard({
   selected,
+  year = new Date().getFullYear(),
 }: {
   selected: keyof typeof options;
+  year?: number;
 }) {
   async function CardData() {
-    const checkOptionsGroupedByMonth = await options[selected].fetchCall();
+    const checkOptionsGroupedByMonth = await options[selected].fetchCall({ year });
 
     // const getDiffFromLastMonth = async () => {
     //   const thisMonth =

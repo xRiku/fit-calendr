@@ -69,8 +69,7 @@ export function SignInForm() {
       startTransition(() => {
         router.push("/app/dashboard");
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       setHasError(true);
     } finally {
       setIsLoading(false);

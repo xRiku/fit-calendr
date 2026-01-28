@@ -19,9 +19,13 @@ function Calendar({
   buttonVariant = "ghost",
   formatters,
   components,
+  workoutDates,
+  cheatMealDates,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
+  workoutDates?: Set<string>
+  cheatMealDates?: Set<string>
 }) {
   const defaultClassNames = getDefaultClassNames()
 
@@ -152,7 +156,13 @@ function Calendar({
             <ChevronDownIcon className={cn("size-4", className)} {...props} />
           )
         },
-        DayButton: CalendarDayButton,
+        DayButton: (dayButtonProps) => (
+          <CalendarDayButton
+            {...dayButtonProps}
+            workoutDates={workoutDates}
+            cheatMealDates={cheatMealDates}
+          />
+        ),
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -169,18 +179,32 @@ function Calendar({
   )
 }
 
+function formatDateKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+}
+
 function CalendarDayButton({
   className,
   day,
   modifiers,
+  workoutDates,
+  cheatMealDates,
   ...props
-}: React.ComponentProps<typeof DayButton>) {
+}: React.ComponentProps<typeof DayButton> & {
+  workoutDates?: Set<string>
+  cheatMealDates?: Set<string>
+}) {
   const defaultClassNames = getDefaultClassNames()
 
   const ref = React.useRef<HTMLButtonElement>(null)
   React.useEffect(() => {
     if (modifiers.focused) ref.current?.focus()
   }, [modifiers.focused])
+
+  const dateKey = formatDateKey(day.date)
+  const hasWorkout = workoutDates?.has(dateKey)
+  const hasCheatMeal = cheatMealDates?.has(dateKey)
+  const hasData = hasWorkout || hasCheatMeal
 
   return (
     <Button
@@ -197,14 +221,27 @@ function CalendarDayButton({
       data-range-start={modifiers.range_start}
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
+      data-has-data={hasData}
       className={cn(
-        "data-[selected-single=true]:bg-stone-900 data-[selected-single=true]:text-stone-50 data-[range-middle=true]:bg-stone-100 data-[range-middle=true]:text-stone-900 data-[range-start=true]:bg-stone-900 data-[range-start=true]:text-stone-50 data-[range-end=true]:bg-stone-900 data-[range-end=true]:text-stone-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-stone-900 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-stone-50 dark:data-[selected-single=true]:text-stone-900 dark:data-[range-middle=true]:bg-stone-800 dark:data-[range-middle=true]:text-stone-50 dark:data-[range-start=true]:bg-stone-50 dark:data-[range-start=true]:text-stone-900 dark:data-[range-end=true]:bg-stone-50 dark:data-[range-end=true]:text-stone-900 dark:dark:hover:text-stone-50",
+        "data-[selected-single=true]:bg-stone-900 data-[selected-single=true]:text-stone-50 data-[range-middle=true]:bg-stone-100 data-[range-middle=true]:text-stone-900 data-[range-start=true]:bg-stone-900 data-[range-start=true]:text-stone-50 data-[range-end=true]:bg-stone-900 data-[range-end=true]:text-stone-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-stone-900 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-0.5 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-stone-50 dark:data-[selected-single=true]:text-stone-900 dark:data-[range-middle=true]:bg-stone-800 dark:data-[range-middle=true]:text-stone-50 dark:data-[range-start=true]:bg-stone-50 dark:data-[range-start=true]:text-stone-900 dark:data-[range-end=true]:bg-stone-50 dark:data-[range-end=true]:text-stone-900 dark:dark:hover:text-stone-50",
         defaultClassNames.day,
         className
       )}
       {...props}
-    />
+    >
+      {props.children}
+      {hasData && (
+        <div className="flex gap-0.5 justify-center">
+          {hasWorkout && (
+            <span className="size-1.5 rounded-full bg-vibrant-green shadow-[0_0_4px_var(--vibrant-green)]" />
+          )}
+          {hasCheatMeal && (
+            <span className="size-1.5 rounded-full bg-vibrant-orange shadow-[0_0_4px_var(--vibrant-orange)]" />
+          )}
+        </div>
+      )}
+    </Button>
   )
 }
 
-export { Calendar, CalendarDayButton }
+export { Calendar, CalendarDayButton, formatDateKey }
