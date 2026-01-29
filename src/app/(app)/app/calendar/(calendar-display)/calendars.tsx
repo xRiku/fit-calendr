@@ -77,6 +77,7 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 
   return (
     <Calendar
+      className="w-full"
       captionLayout="dropdown"
       showOutsideDays={false}
       startMonth={new Date(2024, 0)}

@@ -26,15 +26,13 @@ export default async function CalendarPage() {
 					</div>
 				</CardHeader>
 				<CardContent>
-					<div className="w-full flex items-start xl:justify-start justify-center flex-wrap gap-4 sm:gap-6 2xl:gap-0">
-						<Suspense
-							fallback={
-								<div className="animate-pulse h-80 w-72 bg-muted rounded-lg" />
-							}
-						>
-							<CalendarDataProvider />
-						</Suspense>
-					</div>
+					<Suspense
+						fallback={
+							<div className="animate-pulse h-80 w-full bg-muted rounded-lg" />
+						}
+					>
+						<CalendarDataProvider />
+					</Suspense>
 				</CardContent>
 			</Card>
 		</>
