@@ -16,8 +16,7 @@ const DEFAULT_PRESETS = [
 
 export const auth = betterAuth({
 	database: prismaAdapter(prisma, {
-		provider: "sqlite",
-		// provider: "postgresql",
+		provider: "postgresql",
 	}),
 	socialProviders: {
 		google: {

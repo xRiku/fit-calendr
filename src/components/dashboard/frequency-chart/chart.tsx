@@ -50,9 +50,11 @@ type ChartProps = {
 export function Chart({ selected, fetchCallPromise }: ChartProps) {
 	const data = use(fetchCallPromise);
 
-	const lastMonthNumber = Number.parseInt(
-		Object.keys(data.hashTable)[Object.keys(data.hashTable).length - 1],
-	);
+	const hashTableKeys = Object.keys(data.hashTable);
+	const lastMonthNumber =
+		hashTableKeys.length > 0
+			? Number.parseInt(hashTableKeys[hashTableKeys.length - 1])
+			: new Date().getMonth();
 
 	const chartData = Array.from({ length: lastMonthNumber + 1 }).map(
 		(_, index) => {

@@ -68,10 +68,9 @@ export default function CheckOptionAveragePerMonthCard({
 
 		// const diffFromLastMonth = await getDiffFromLastMonth();
 
+		const hashTableKeys = Object.keys(checkOptionsGroupedByMonth.hashTable);
 		const lastestMonth =
-			Math.max(
-				...Object.keys(checkOptionsGroupedByMonth.hashTable).map(Number),
-			) + 1;
+			hashTableKeys.length > 0 ? Math.max(...hashTableKeys.map(Number)) + 1 : 1;
 
 		return (
 			<>
