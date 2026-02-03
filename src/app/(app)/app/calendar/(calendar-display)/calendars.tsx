@@ -61,6 +61,7 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 						userId: existingGymCheck.userId,
 						updatedAt: existingGymCheck.updatedAt,
 						createdAt: existingGymCheck.createdAt,
+						presetId: existingGymCheck.presetId,
 					}
 				: undefined,
 			cheatMeal: existingCheatMeal
