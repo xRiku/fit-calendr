@@ -1,8 +1,8 @@
 import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
-import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
+import StreakCard from "@/components/dashboard/streak-card";
 import { WeekdayChart } from "@/components/dashboard/weekday-chart";
 import H2 from "@/components/h2";
 import SelectCheckOptions from "@/components/select-check-options";
@@ -40,7 +40,7 @@ export default async function DashboardPage({
 					<CheckOptionThisYearCard selected={selected} year={year} />
 					<CheckOptionAveragePerMonthCard selected={selected} year={year} />
 					<CheckOptionThisMonthCard selected={selected} year={year} />
-					<DaysSinceLastCheckOptionCard selected={selected} />
+					<StreakCard selected={selected} />
 				</div>
 
 				<div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">

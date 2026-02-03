@@ -173,3 +173,127 @@ export const getAvailableYears = cache(async (): Promise<number[]> => {
 
 	return Array.from(yearsSet).sort((a, b) => b - a);
 });
+
+function calculateStreak(dates: Date[]): {
+	currentStreak: number;
+	longestStreak: number;
+} {
+	if (dates.length === 0) {
+		return { currentStreak: 0, longestStreak: 0 };
+	}
+
+	// Sort dates ascending (oldest first)
+	const sortedDates = dates
+		.map((d) => new Date(d))
+		.sort((a, b) => a.getTime() - b.getTime());
+
+	// Normalize dates to midnight for comparison
+	const normalizeDate = (date: Date) => {
+		const d = new Date(date);
+		d.setHours(0, 0, 0, 0);
+		return d.getTime();
+	};
+
+	const today = normalizeDate(new Date());
+
+	// Calculate longest streak
+	let longestStreak = 1;
+	let currentLongestRun = 1;
+
+	for (let i = 1; i < sortedDates.length; i++) {
+		const prevDate = normalizeDate(sortedDates[i - 1]);
+		const currDate = normalizeDate(sortedDates[i]);
+		const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+
+		if (diffDays === 1) {
+			currentLongestRun++;
+			longestStreak = Math.max(longestStreak, currentLongestRun);
+		} else if (diffDays > 1) {
+			currentLongestRun = 1;
+		}
+	}
+
+	// Calculate current streak (from today backwards)
+	let currentStreak = 0;
+	const hasEntryToday = sortedDates.some((d) => normalizeDate(d) === today);
+
+	if (hasEntryToday) {
+		currentStreak = 1;
+		for (let i = sortedDates.length - 2; i >= 0; i--) {
+			const currDate = normalizeDate(sortedDates[i + 1]);
+			const prevDate = normalizeDate(sortedDates[i]);
+			const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+
+			if (diffDays === 1) {
+				currentStreak++;
+			} else {
+				break;
+			}
+		}
+	} else {
+		// Check if yesterday has entry (streak continues but not yet logged today)
+		const yesterday = today - 24 * 60 * 60 * 1000;
+		const hasEntryYesterday = sortedDates.some(
+			(d) => normalizeDate(d) === yesterday,
+		);
+
+		if (hasEntryYesterday) {
+			currentStreak = 1;
+			for (let i = sortedDates.length - 2; i >= 0; i--) {
+				const currDate = normalizeDate(sortedDates[i + 1]);
+				const prevDate = normalizeDate(sortedDates[i]);
+				const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+
+				if (diffDays === 1) {
+					currentStreak++;
+				} else {
+					break;
+				}
+			}
+		}
+	}
+
+	return { currentStreak, longestStreak };
+}
+
+export const getGymStreak = cache(async () => {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		redirect("/auth/sign-in");
+	}
+
+	const gymChecks = await prisma.gymCheck.findMany({
+		where: {
+			userId: session.user.id,
+		},
+		select: { date: true },
+		orderBy: { date: "asc" },
+	});
+
+	const dates = gymChecks.map((g) => g.date);
+	return calculateStreak(dates);
+});
+
+export const getCheatMealStreak = cache(async () => {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		redirect("/auth/sign-in");
+	}
+
+	const cheatMeals = await prisma.cheatMeal.findMany({
+		where: {
+			userId: session.user.id,
+		},
+		select: { date: true },
+		orderBy: { date: "asc" },
+	});
+
+	const dates = cheatMeals.map((c) => c.date);
+	return calculateStreak(dates);
+});
