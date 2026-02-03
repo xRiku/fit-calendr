@@ -7,6 +7,7 @@ import {
 	getUserPresets,
 	updatePreset,
 } from "@/actions/preset-actions";
+import { migrateExistingUserPresets } from "@/actions/preset-migration";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -37,6 +38,7 @@ export function PresetsSection() {
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editLabel, setEditLabel] = useState("");
 	const [isCreating, setIsCreating] = useState(false);
+	const [isMigrating, setIsMigrating] = useState(false);
 
 	const loadPresets = useCallback(async () => {
 		try {
@@ -51,6 +53,35 @@ export function PresetsSection() {
 
 	useEffect(() => {
 		loadPresets();
+	}, [loadPresets]);
+
+	useEffect(() => {
+		let mounted = true;
+
+		const runMigration = async () => {
+			setIsMigrating(true);
+			try {
+				const result = await migrateExistingUserPresets();
+				if (mounted && result.created > 0) {
+					toast.success(
+						`Created ${result.created} presets from your workout history`,
+					);
+					await loadPresets();
+				}
+			} catch {
+				// Migration errors are not critical, silently fail
+			} finally {
+				if (mounted) {
+					setIsMigrating(false);
+				}
+			}
+		};
+
+		runMigration();
+
+		return () => {
+			mounted = false;
+		};
 	}, [loadPresets]);
 
 	const handleColorChange = async (preset: WorkoutPreset, newColor: string) => {
@@ -179,7 +210,7 @@ export function PresetsSection() {
 		}
 	};
 
-	if (loading) {
+	if (loading || isMigrating) {
 		return (
 			<div className="w-full space-y-3">
 				<Skeleton className="h-12 w-full" />

@@ -136,19 +136,21 @@ export function WorkoutChipInput({
 					{value.map((chip) => (
 						<Badge
 							key={chip.id}
-							variant="secondary"
-							className="gap-1 px-2 py-1 text-xs"
+							variant="outline"
+							className="gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full transition-colors duration-150 bg-transparent hover:bg-[color:var(--chip-color)]/10"
 							style={{
-								backgroundColor: chip.color,
-								color: "#ffffff",
-								borderColor: chip.color,
+								["--chip-color" as string]: chip.color,
+								color: chip.color,
+								borderColor: `${chip.color}4d`,
+								backgroundColor: "transparent",
 							}}
 						>
 							{chip.label}
 							<button
 								type="button"
 								onClick={() => chip.id && handleRemove(chip.id)}
-								className="ml-1 rounded-full p-0.5 hover:bg-white/20"
+								className="ml-0.5 rounded-full p-0.5 opacity-50 hover:opacity-80 transition-opacity"
+								style={{ color: chip.color }}
 							>
 								×
 							</button>
