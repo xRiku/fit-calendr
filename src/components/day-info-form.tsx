@@ -1,11 +1,8 @@
 "use client";
 
-import * as React from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
+import { addDayInfo, updateDayInfo } from "@/actions/actions";
+import { getUserPresets } from "@/actions/preset-actions";
+import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -15,34 +12,64 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { addDayInfo, updateDayInfo } from "@/actions/actions";
+import type { WorkoutChip } from "@/components/workout-chip-input";
+import { WorkoutChipInput } from "@/components/workout-chip-input";
 import { useModalStore } from "@/stores/day-info-modal";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
+import * as z from "zod";
 
 const formSchema = z.object({
 	cheatMealName: z.string().max(50).optional(),
-	workoutDescription: z.string().max(50).optional(),
 });
 
 export default function DayInfoForm() {
 	const { selectedDayInfo, dayInfoType, toggleDayInfoModalState } =
 		useModalStore();
+	const [workoutChips, setWorkoutChips] = useState<WorkoutChip[]>([]);
+	const [presets, setPresets] = useState<
+		Awaited<ReturnType<typeof getUserPresets>>
+	>([]);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			cheatMealName: selectedDayInfo?.cheatMeal?.name ?? "",
-			workoutDescription: selectedDayInfo?.gymCheck?.description ?? "",
 		},
 	});
+
+	useEffect(() => {
+		const loadPresets = async () => {
+			const userPresets = await getUserPresets();
+			setPresets(userPresets);
+		};
+		loadPresets();
+	}, []);
+
+	useEffect(() => {
+		if (dayInfoType === "edit" && selectedDayInfo?.gymCheck) {
+			const chip: WorkoutChip = {
+				id: crypto.randomUUID(),
+				label: selectedDayInfo.gymCheck.description,
+				color: "#3b82f6",
+			};
+			setWorkoutChips([chip]);
+		} else {
+			setWorkoutChips([]);
+		}
+	}, [dayInfoType, selectedDayInfo]);
 
 	return (
 		<Form {...form}>
 			<form
 				id="day-info-form"
-				action={async (formData) => {
+				action={async () => {
+					const formData = new FormData();
+					formData.set("cheatMealName", form.getValues().cheatMealName || "");
+					formData.set("workouts", JSON.stringify(workoutChips));
+
 					if (dayInfoType === "create") {
 						toast.promise(
 							addDayInfo({
@@ -63,12 +90,14 @@ export default function DayInfoForm() {
 								cheatMealId: selectedDayInfo?.cheatMeal?.id,
 								gymCheckId: selectedDayInfo?.gymCheck?.id,
 								cheatMealName: form.formState.dirtyFields?.cheatMealName
-									? (formData.get("cheatMealName") as string)
+									? form.getValues().cheatMealName
 									: undefined,
-								workoutDescription: form.formState.dirtyFields
-									?.workoutDescription
-									? (formData.get("workoutDescription") as string)
-									: undefined,
+								workoutDescription:
+									workoutChips.length > 0
+										? workoutChips[0]?.label
+										: workoutChips.length === 0 && selectedDayInfo?.gymCheck
+											? ""
+											: undefined,
 								date: selectedDayInfo?.date ?? new Date(),
 							}),
 							{
@@ -83,22 +112,19 @@ export default function DayInfoForm() {
 				}}
 				className="space-y-4 flex flex-col items-end justify-center"
 			>
-				<FormField
-					control={form.control}
-					name="workoutDescription"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel className="font-bold">
-								Workout description{" "}
-								<span className="text-xs font-normal">(Optional)</span>
-							</FormLabel>
-							<FormControl>
-								<Input placeholder="e.g Chest workout" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+				<FormItem className="w-full">
+					<FormLabel className="font-bold">
+						Workouts <span className="text-xs font-normal">(Optional)</span>
+					</FormLabel>
+					<FormControl>
+						<WorkoutChipInput
+							presets={presets}
+							value={workoutChips}
+							onChange={setWorkoutChips}
+						/>
+					</FormControl>
+					<FormMessage />
+				</FormItem>
 				<FormField
 					control={form.control}
 					name="cheatMealName"
@@ -120,9 +146,9 @@ export default function DayInfoForm() {
 				<Button
 					type="submit"
 					disabled={
-						!Object.values(form.getValues()).some((value) => {
-							return value.length > 0;
-						}) && dayInfoType === "create"
+						!workoutChips.length &&
+						!form.getValues().cheatMealName &&
+						dayInfoType === "create"
 					}
 					form="day-info-form"
 				>
@@ -143,9 +169,9 @@ export default function DayInfoForm() {
 				<Button
 					type="submit"
 					disabled={
-						!Object.values(form.getValues()).some((value) => {
-							return value.length > 0;
-						}) && dayInfoType === "create"
+						!workoutChips.length &&
+						!form.getValues().cheatMealName &&
+						dayInfoType === "create"
 					}
 					className="w-1/4"
 					form="day-info-form"

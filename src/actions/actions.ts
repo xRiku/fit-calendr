@@ -6,6 +6,14 @@ import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { createWorkoutWithPresets } from "./preset-actions";
+
+type WorkoutInput = {
+	id?: string;
+	label: string;
+	color: string;
+	presetId?: string;
+};
 
 export async function addDayInfo({
 	formData,
@@ -25,6 +33,7 @@ export async function addDayInfo({
 	let cheatMealResponse = undefined;
 	let gymCheckResponse = undefined;
 
+	// Handle cheat meal creation
 	if (formData.get("cheatMealName")) {
 		cheatMealResponse = await prisma.cheatMeal.create({
 			data: {
@@ -39,18 +48,20 @@ export async function addDayInfo({
 		});
 	}
 
-	if (formData.get("workoutDescription")) {
-		gymCheckResponse = await prisma.gymCheck.create({
-			data: {
-				description: formData.get("workoutDescription") as string,
+	// Handle workouts JSON from formData
+	const workoutsJson = formData.get("workouts") as string;
+	if (workoutsJson) {
+		const workouts: WorkoutInput[] = JSON.parse(workoutsJson);
+		if (workouts.length > 0) {
+			const workoutData = workouts.map((w) => ({
+				description: w.label,
+				presetId: w.presetId,
+			}));
+			gymCheckResponse = await createWorkoutWithPresets({
 				date,
-				user: {
-					connect: {
-						id: session.user.id,
-					},
-				},
-			},
-		});
+				workouts: workoutData,
+			});
+		}
 	}
 
 	revalidatePath("/app/calendar", "page");
@@ -177,18 +188,84 @@ export async function updateGymCheckInfo({
 	}
 }
 
+export async function updateWorkoutsForDay({
+	date,
+	existingWorkoutIds,
+	newWorkouts,
+	userId,
+}: {
+	date: Date;
+	existingWorkoutIds: string[];
+	newWorkouts: WorkoutInput[];
+	userId: string;
+}) {
+	const newWorkoutIds = newWorkouts
+		.map((w) => w.id)
+		.filter(Boolean) as string[];
+
+	// Delete workouts not in the new list
+	const idsToDelete = existingWorkoutIds.filter(
+		(id) => !newWorkoutIds.includes(id),
+	);
+	if (idsToDelete.length > 0) {
+		await prisma.gymCheck.deleteMany({
+			where: {
+				id: { in: idsToDelete },
+				userId,
+				date,
+			},
+		});
+	}
+
+	// Update existing workouts and create new ones
+	const results = await Promise.all(
+		newWorkouts.map(async (workout) => {
+			if (workout.id) {
+				// Update existing workout
+				const existing = await prisma.gymCheck.findFirst({
+					where: { id: workout.id, userId, date },
+				});
+				if (existing) {
+					return prisma.gymCheck.update({
+						where: { id: workout.id },
+						data: {
+							description: workout.label,
+							presetId: workout.presetId || null,
+						},
+					});
+				}
+			}
+			// Create new workout
+			return prisma.gymCheck.create({
+				data: {
+					description: workout.label,
+					date,
+					userId,
+					presetId: workout.presetId,
+				},
+			});
+		}),
+	);
+
+	return results;
+}
+
 export async function updateDayInfo({
 	gymCheckId,
 	cheatMealId,
 	cheatMealName,
 	workoutDescription,
 	date,
+	workouts,
+	existingWorkoutIds = [],
 }: {
 	gymCheckId?: string;
 	cheatMealId?: string;
 	cheatMealName?: string;
 	workoutDescription?: string;
 	date: Date;
+	workouts?: WorkoutInput[];
+	existingWorkoutIds?: string[];
 }) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -201,6 +278,7 @@ export async function updateDayInfo({
 	let cheatMealResponse = undefined;
 	let gymCheckResponse = undefined;
 
+	// Handle cheat meal update
 	if (cheatMealName !== undefined) {
 		cheatMealResponse = await updateCheatMealInfo({
 			userId: session.user.id,
@@ -210,7 +288,16 @@ export async function updateDayInfo({
 		});
 	}
 
-	if (workoutDescription !== undefined) {
+	// Handle workouts update using the new chip-based system
+	if (workouts !== undefined) {
+		gymCheckResponse = await updateWorkoutsForDay({
+			date,
+			existingWorkoutIds,
+			newWorkouts: workouts,
+			userId: session.user.id,
+		});
+	} else if (workoutDescription !== undefined) {
+		// Fallback for legacy single workout updates
 		gymCheckResponse = await updateGymCheckInfo({
 			userId: session.user.id,
 			gymCheckId,
