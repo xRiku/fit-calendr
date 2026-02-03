@@ -24,6 +24,7 @@ function Calendar({
 	formatters,
 	components,
 	workoutDates,
+	workoutColorsByDate,
 	cheatMealDates,
 	gymChecksByDate,
 	onQuickToggle,
@@ -31,6 +32,7 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker> & {
 	buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 	workoutDates?: Set<string>;
+	workoutColorsByDate?: Map<string, string[]>;
 	cheatMealDates?: Set<string>;
 	gymChecksByDate?: Map<string, { id: string }>;
 	onQuickToggle?: (date: Date, gymCheckId?: string) => void;
@@ -171,6 +173,7 @@ function Calendar({
 					<CalendarDayButton
 						{...dayButtonProps}
 						workoutDates={workoutDates}
+						workoutColorsByDate={workoutColorsByDate}
 						cheatMealDates={cheatMealDates}
 						gymChecksByDate={gymChecksByDate}
 						onQuickToggle={onQuickToggle}
@@ -201,12 +204,14 @@ function CalendarDayButton({
 	day,
 	modifiers,
 	workoutDates,
+	workoutColorsByDate,
 	cheatMealDates,
 	gymChecksByDate,
 	onQuickToggle,
 	...props
 }: React.ComponentProps<typeof DayButton> & {
 	workoutDates?: Set<string>;
+	workoutColorsByDate?: Map<string, string[]>;
 	cheatMealDates?: Set<string>;
 	gymChecksByDate?: Map<string, { id: string }>;
 	onQuickToggle?: (date: Date, gymCheckId?: string) => void;
@@ -223,6 +228,7 @@ function CalendarDayButton({
 	const hasCheatMeal = cheatMealDates?.has(dateKey);
 	const hasData = hasWorkout || hasCheatMeal;
 	const gymCheck = gymChecksByDate?.get(dateKey);
+	const workoutColors = workoutColorsByDate?.get(dateKey) ?? [];
 
 	const handleDoubleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -257,10 +263,17 @@ function CalendarDayButton({
 			{...props}
 		>
 			{props.children}
-			{hasData && (
-				<div className="flex gap-0.5 justify-center">
-					{hasWorkout && (
-						<span className="size-1.5 rounded-full bg-vibrant-green shadow-[0_0_4px_var(--vibrant-green)]" />
+			{(hasData || workoutColors.length > 0) && (
+				<div className="flex gap-0.5 justify-center items-center">
+					{workoutColors.slice(0, 3).map((color, index) => (
+						<span
+							key={index}
+							className="size-1.5 rounded-full"
+							style={{ backgroundColor: color }}
+						/>
+					))}
+					{workoutColors.length > 3 && (
+						<span className="text-[0.6rem] leading-none">+</span>
 					)}
 					{hasCheatMeal && (
 						<span className="size-1.5 rounded-full bg-vibrant-orange shadow-[0_0_4px_var(--vibrant-orange)]" />

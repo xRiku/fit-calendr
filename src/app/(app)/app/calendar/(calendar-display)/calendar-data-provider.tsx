@@ -18,6 +18,15 @@ async function getCalendarData() {
 			where: {
 				userId: session.user.id,
 			},
+			include: {
+				preset: {
+					select: {
+						id: true,
+						label: true,
+						color: true,
+					},
+				},
+			},
 		}),
 		prisma.cheatMeal.findMany({
 			where: {

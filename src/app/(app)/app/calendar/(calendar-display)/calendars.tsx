@@ -7,8 +7,12 @@ import { useModalStore } from "@/stores/day-info-modal";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
+type GymCheckWithPreset = GymCheck & {
+	preset?: { id: string; label: string; color: string } | null;
+};
+
 type CalendarsProps = {
-	gymChecks: GymCheck[];
+	gymChecks: GymCheckWithPreset[];
 	cheatMeals: CheatMeal[];
 };
 
@@ -16,32 +20,49 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 	const { setSelectedDayInfo, toggleDayInfoModalState } = useModalStore();
 
 	// Create date lookup maps for efficient checking
-	const { workoutDates, cheatMealDates, gymChecksByDate, cheatMealsByDate } =
-		useMemo(() => {
-			const workoutDates = new Set<string>();
-			const cheatMealDates = new Set<string>();
-			const gymChecksByDate = new Map<string, GymCheck>();
-			const cheatMealsByDate = new Map<string, CheatMeal>();
+	const {
+		workoutDates,
+		cheatMealDates,
+		gymChecksByDate,
+		cheatMealsByDate,
+		workoutColorsByDate,
+	} = useMemo(() => {
+		const workoutDates = new Set<string>();
+		const cheatMealDates = new Set<string>();
+		const gymChecksByDate = new Map<string, GymCheck>();
+		const cheatMealsByDate = new Map<string, CheatMeal>();
+		const workoutColorsByDate = new Map<string, string[]>();
 
-			for (const gymCheck of gymChecks) {
-				const dateKey = formatDateKey(new Date(gymCheck.date));
-				workoutDates.add(dateKey);
+		for (const gymCheck of gymChecks) {
+			const dateKey = formatDateKey(new Date(gymCheck.date));
+			workoutDates.add(dateKey);
+
+			// Store all workout colors for this date
+			const colors = workoutColorsByDate.get(dateKey) || [];
+			const color = gymCheck.preset?.color || "#22c55e"; // Default green if no preset
+			colors.push(color);
+			workoutColorsByDate.set(dateKey, colors);
+
+			// Keep first check for modal editing (legacy behavior for now)
+			if (!gymChecksByDate.has(dateKey)) {
 				gymChecksByDate.set(dateKey, gymCheck);
 			}
+		}
 
-			for (const cheatMeal of cheatMeals) {
-				const dateKey = formatDateKey(new Date(cheatMeal.date));
-				cheatMealDates.add(dateKey);
-				cheatMealsByDate.set(dateKey, cheatMeal);
-			}
+		for (const cheatMeal of cheatMeals) {
+			const dateKey = formatDateKey(new Date(cheatMeal.date));
+			cheatMealDates.add(dateKey);
+			cheatMealsByDate.set(dateKey, cheatMeal);
+		}
 
-			return {
-				workoutDates,
-				cheatMealDates,
-				gymChecksByDate,
-				cheatMealsByDate,
-			};
-		}, [gymChecks, cheatMeals]);
+		return {
+			workoutDates,
+			cheatMealDates,
+			gymChecksByDate,
+			cheatMealsByDate,
+			workoutColorsByDate,
+		};
+	}, [gymChecks, cheatMeals]);
 
 	const handleDayClick = (date: Date) => {
 		if (date > new Date()) return;
@@ -102,6 +123,7 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 			workoutDates={workoutDates}
 			cheatMealDates={cheatMealDates}
 			gymChecksByDate={gymChecksByDate}
+			workoutColorsByDate={workoutColorsByDate}
 			onQuickToggle={handleQuickToggle}
 		/>
 	);
