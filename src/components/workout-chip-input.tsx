@@ -3,16 +3,10 @@
 import type { WorkoutPreset } from "@/../prisma/generated/client";
 import { createPreset } from "@/actions/preset-actions";
 import { Badge } from "@/components/ui/badge";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 import { PRESET_COLORS } from "@/lib/constants/colors";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -41,20 +35,32 @@ export function WorkoutChipInput({
 	const [open, setOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	// Filter presets based on input
-	const filteredPresets = presets.filter(
-		(preset) =>
-			preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
-			!value.some((chip) => chip.presetId === preset.id),
-	);
+	// Filter presets based on input (only when user is typing)
+	const filteredPresets = inputValue
+		? presets.filter(
+				(preset) =>
+					preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
+					!value.some((chip) => chip.presetId === preset.id),
+			)
+		: [];
 
 	// Check if input matches an existing preset exactly
 	const exactMatch = presets.find(
 		(preset) => preset.label.toLowerCase() === inputValue.toLowerCase(),
 	);
 
+	// Check if input matches an existing chip (prevent duplicates)
+	const duplicateChip = value.find(
+		(chip) => chip.label.toLowerCase() === inputValue.toLowerCase(),
+	);
+
 	const handleSelect = useCallback(
 		(preset: WorkoutPreset) => {
+			// Check if already selected
+			if (value.some((chip) => chip.presetId === preset.id)) {
+				return;
+			}
+
 			const newChip: WorkoutChip = {
 				id: crypto.randomUUID(),
 				label: preset.label,
@@ -70,10 +76,23 @@ export function WorkoutChipInput({
 		[value, onChange],
 	);
 
+	const handleInputChange = useCallback((newValue: string) => {
+		setInputValue(newValue);
+		// Only show dropdown when user types something
+		setOpen(newValue.length > 0);
+	}, []);
+
 	const handleCreateNew = useCallback(async () => {
 		if (!inputValue.trim()) return;
 
-		// If exact match exists, use it instead of creating new
+		// If exact match exists and is already selected, do nothing
+		if (duplicateChip) {
+			setInputValue("");
+			setOpen(false);
+			return;
+		}
+
+		// If exact match exists but not selected, select it
 		if (exactMatch) {
 			handleSelect(exactMatch);
 			return;
@@ -106,7 +125,15 @@ export function WorkoutChipInput({
 			toast.error("Failed to create preset");
 			console.error(error);
 		}
-	}, [inputValue, exactMatch, handleSelect, presets.length, value, onChange]);
+	}, [
+		inputValue,
+		exactMatch,
+		duplicateChip,
+		handleSelect,
+		presets.length,
+		value,
+		onChange,
+	]);
 
 	const handleRemove = useCallback(
 		(chipId: string) => {
@@ -123,16 +150,18 @@ export function WorkoutChipInput({
 			} else if (e.key === "Backspace" && !inputValue && value.length > 0) {
 				// Remove last chip on backspace when input is empty
 				onChange(value.slice(0, -1));
+			} else if (e.key === "Escape") {
+				setOpen(false);
 			}
 		},
 		[inputValue, value, onChange, handleCreateNew],
 	);
 
 	return (
-		<div className={cn("relative", className)}>
-			<Command className="overflow-visible bg-transparent">
-				<div className="flex flex-wrap items-center gap-1.5 rounded-md border border-stone-200 bg-white px-2 py-1.5 dark:border-stone-800 dark:bg-stone-950 min-h-[42px]">
-					{/* Chips */}
+		<div className={cn("space-y-2", className)}>
+			{/* Chips Container - Above Input */}
+			{value.length > 0 && (
+				<div className="flex flex-wrap gap-1.5">
 					{value.map((chip) => (
 						<Badge
 							key={chip.id}
@@ -156,57 +185,57 @@ export function WorkoutChipInput({
 							</button>
 						</Badge>
 					))}
-
-					{/* Input */}
-					<CommandInput
-						ref={inputRef}
-						value={inputValue}
-						onValueChange={setInputValue}
-						onKeyDown={handleKeyDown}
-						onFocus={() => setOpen(true)}
-						placeholder={value.length === 0 ? "Type and press Enter..." : ""}
-						className="flex-1 bg-transparent border-0 px-1 py-0.5 text-sm placeholder:text-stone-500 focus:ring-0 dark:placeholder:text-stone-400 min-w-[120px]"
-					/>
 				</div>
+			)}
 
-				{/* Dropdown */}
-				{open && (inputValue || filteredPresets.length > 0) && (
+			{/* Input Container with Search Icon */}
+			<div className="relative">
+				<Input
+					ref={inputRef}
+					value={inputValue}
+					onChange={(e) => handleInputChange(e.target.value)}
+					onKeyDown={handleKeyDown}
+					placeholder={
+						value.length === 0
+							? "Type to search presets..."
+							: "Add another workout..."
+					}
+					className="w-full pr-10 bg-transparent border-stone-200 dark:border-stone-800"
+				/>
+				<Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400 pointer-events-none" />
+
+				{/* Dropdown - Only shown when typing */}
+				{open && inputValue && (
 					<div className="absolute z-50 w-full mt-1 rounded-md border border-stone-200 bg-white shadow-md dark:border-stone-800 dark:bg-stone-950">
-						<CommandList>
-							<CommandEmpty>
-								{inputValue ? (
-									<button
-										type="button"
-										onClick={handleCreateNew}
-										className="flex w-full items-center px-2 py-1.5 text-sm text-stone-900 hover:bg-stone-100 dark:text-stone-50 dark:hover:bg-stone-800"
-									>
-										Create &quot;{inputValue.trim()}&quot;
-									</button>
-								) : (
-									<span className="px-2 py-1.5 text-sm text-stone-500 dark:text-stone-400">
-										No presets found
-									</span>
-								)}
-							</CommandEmpty>
-							<CommandGroup>
+						{filteredPresets.length === 0 && !duplicateChip ? (
+							<button
+								type="button"
+								onClick={handleCreateNew}
+								className="flex w-full items-center px-3 py-2 text-sm text-stone-900 hover:bg-stone-100 dark:text-stone-50 dark:hover:bg-stone-800"
+							>
+								Create &quot;{inputValue.trim()}&quot;
+							</button>
+						) : (
+							<div className="py-1">
 								{filteredPresets.map((preset) => (
-									<CommandItem
+									<button
 										key={preset.id}
-										onSelect={() => handleSelect(preset)}
-										className="flex cursor-pointer items-center gap-2 px-2 py-1.5 text-sm"
+										type="button"
+										onClick={() => handleSelect(preset)}
+										className="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-900 hover:bg-stone-100 dark:text-stone-50 dark:hover:bg-stone-800"
 									>
 										<span
 											className="size-3 rounded-full"
 											style={{ backgroundColor: preset.color }}
 										/>
 										{preset.label}
-									</CommandItem>
+									</button>
 								))}
-							</CommandGroup>
-						</CommandList>
+							</div>
+						)}
 					</div>
 				)}
-			</Command>
+			</div>
 		</div>
 	);
 }
