@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 
 // Color palette for presets
-export const PRESET_COLORS = [
+const PRESET_COLORS = [
 	{ name: "Cyan", value: "#06b6d4" },
 	{ name: "Green", value: "#22c55e" },
 	{ name: "Red", value: "#ef4444" },
@@ -20,7 +20,7 @@ export const PRESET_COLORS = [
 ];
 
 // Default presets for new users
-export const DEFAULT_PRESETS = [
+const DEFAULT_PRESETS = [
 	{ label: "Leg Day", color: "#ef4444", order: 0 },
 	{ label: "Chest Day", color: "#f97316", order: 1 },
 	{ label: "Back Day", color: "#3b82f6", order: 2 },

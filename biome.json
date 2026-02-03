@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+		"ignore": ["prisma/generated/**/*", ".next/**/*"]
 	},
 	"formatter": {
 		"enabled": true,
