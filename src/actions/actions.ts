@@ -19,7 +19,7 @@ export async function addDayInfo({
 	});
 
 	if (!session) {
-		return;
+		throw new Error("Unauthorized");
 	}
 
 	let cheatMealResponse = undefined;
@@ -195,7 +195,7 @@ export async function updateDayInfo({
 	});
 
 	if (!session) {
-		return;
+		throw new Error("Unauthorized");
 	}
 
 	let cheatMealResponse = undefined;

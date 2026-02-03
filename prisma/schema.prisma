@@ -24,6 +24,9 @@ model GymCheck {
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
+  @@index([userId])
+  @@index([date])
+  @@index([userId, date])
   @@map("gym_checks")
 }
 
@@ -37,6 +40,9 @@ model CheatMeal {
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
+  @@index([userId])
+  @@index([date])
+  @@index([userId, date])
   @@map("cheat_meals")
 }
 

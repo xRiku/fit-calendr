@@ -1,4 +1,5 @@
 import H2 from "@/components/h2";
+import QuickAddTodayButton from "@/components/quick-add-today-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Suspense } from "react";
 import CalendarDataProvider from "./(calendar-display)/calendar-data-provider";
@@ -13,14 +14,17 @@ export default async function CalendarPage() {
 						<CardTitle className="text-base font-medium">
 							Track Your Progress
 						</CardTitle>
-						<div className="flex items-center gap-4 text-sm">
-							<div className="flex items-center">
-								<span className="size-2.5 mr-2 rounded-full bg-vibrant-green shadow-[0_0_6px_var(--vibrant-green)]" />
-								<span className="text-muted-foreground">Workout</span>
-							</div>
-							<div className="flex items-center">
-								<span className="size-2.5 mr-2 rounded-full bg-vibrant-orange shadow-[0_0_6px_var(--vibrant-orange)]" />
-								<span className="text-muted-foreground">Cheat Meal</span>
+						<div className="flex items-center gap-4">
+							<QuickAddTodayButton />
+							<div className="flex items-center gap-4 text-sm">
+								<div className="flex items-center">
+									<span className="size-2.5 mr-2 rounded-full bg-vibrant-green shadow-[0_0_6px_var(--vibrant-green)]" />
+									<span className="text-muted-foreground">Workout</span>
+								</div>
+								<div className="flex items-center">
+									<span className="size-2.5 mr-2 rounded-full bg-vibrant-orange shadow-[0_0_6px_var(--vibrant-orange)]" />
+									<span className="text-muted-foreground">Cheat Meal</span>
+								</div>
 							</div>
 						</div>
 					</div>

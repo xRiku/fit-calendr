@@ -20,7 +20,7 @@ export const getCheatMealsByYearGroupedByMonth = cache(
 		});
 
 		if (!session) {
-			redirect("/auth/signin");
+			redirect("/auth/sign-in");
 		}
 
 		const data = await prisma.cheatMeal.findMany({
