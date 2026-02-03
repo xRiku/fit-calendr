@@ -111,7 +111,7 @@ function Calendar({
 					defaultClassNames.week_number,
 				),
 				day: cn(
-					"relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
+					"relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square md:aspect-auto select-none",
 					defaultClassNames.day,
 				),
 				range_start: cn(
@@ -255,7 +255,7 @@ function CalendarDayButton({
 			data-range-middle={modifiers.range_middle}
 			data-has-data={hasData}
 			className={cn(
-				"data-[selected-single=true]:bg-stone-900 data-[selected-single=true]:text-stone-50 data-[range-middle=true]:bg-stone-100 data-[range-middle=true]:text-stone-900 data-[range-start=true]:bg-stone-900 data-[range-start=true]:text-stone-50 data-[range-end=true]:bg-stone-900 data-[range-end=true]:text-stone-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-stone-900 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-0.5 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-stone-50 dark:data-[selected-single=true]:text-stone-900 dark:data-[range-middle=true]:bg-stone-800 dark:data-[range-middle=true]:text-stone-50 dark:data-[range-start=true]:bg-stone-50 dark:data-[range-start=true]:text-stone-900 dark:data-[range-end=true]:bg-stone-50 dark:data-[range-end=true]:text-stone-900 dark:dark:hover:text-stone-50",
+				"data-[selected-single=true]:bg-stone-900 data-[selected-single=true]:text-stone-50 data-[range-middle=true]:bg-stone-100 data-[range-middle=true]:text-stone-900 data-[range-start=true]:bg-stone-900 data-[range-start=true]:text-stone-50 data-[range-end=true]:bg-stone-900 data-[range-end=true]:text-stone-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-stone-900 flex aspect-square md:aspect-auto size-auto w-full min-w-(--cell-size) md:h-(--cell-size) flex-col gap-0.5 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-stone-50 dark:data-[selected-single=true]:text-stone-900 dark:data-[range-middle=true]:bg-stone-800 dark:data-[range-middle=true]:text-stone-50 dark:data-[range-start=true]:bg-stone-50 dark:data-[range-start=true]:text-stone-900 dark:data-[range-end=true]:bg-stone-50 dark:data-[range-end=true]:text-stone-900 dark:dark:hover:text-stone-50",
 				defaultClassNames.day,
 				className,
 			)}

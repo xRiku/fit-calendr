@@ -30,8 +30,11 @@ export const useModalStore = create<ModalStore>((set) => ({
 			selectedDayInfo: dayInfo,
 		})),
 	toggleDayInfoModalState: (dayInfoType = "create") =>
-		set((state) => ({
-			dayInfoModalState: !state.dayInfoModalState,
-			dayInfoType,
-		})),
+		set((state) => {
+			const isOpening = !state.dayInfoModalState;
+			return {
+				dayInfoModalState: !state.dayInfoModalState,
+				...(isOpening && { dayInfoType }),
+			};
+		}),
 }));
