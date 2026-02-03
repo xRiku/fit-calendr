@@ -92,6 +92,7 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 						userId: existingCheatMeal.userId,
 						updatedAt: existingCheatMeal.updatedAt,
 						createdAt: existingCheatMeal.createdAt,
+						presetId: existingCheatMeal.presetId,
 					}
 				: undefined,
 		});

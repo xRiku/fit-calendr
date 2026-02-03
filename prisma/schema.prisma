@@ -28,6 +28,21 @@ model WorkoutPreset {
   @@map("workout_presets")
 }
 
+model CheatMealPreset {
+  id          String       @id @default(cuid())
+  label       String
+  color       String
+  order       Int          @default(0)
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cheatMeals  CheatMeal[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([userId])
+  @@map("cheat_meal_presets")
+}
+
 model GymCheck {
   id          String          @id @default(cuid())
   description String
@@ -50,11 +65,14 @@ model GymCheck {
 }
 
 model CheatMeal {
-  id     String   @id @default(cuid())
-  name   String
-  date   DateTime
-  user   User     @relation(fields: [userId], references: [id])
-  userId String
+  id       String           @id @default(cuid())
+  name     String
+  date     DateTime
+  user     User             @relation(fields: [userId], references: [id])
+  userId   String
+
+  presetId String?
+  preset   CheatMealPreset? @relation(fields: [presetId], references: [id])
 
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -62,6 +80,7 @@ model CheatMeal {
   @@index([userId])
   @@index([date])
   @@index([userId, date])
+  @@index([presetId])
   @@map("cheat_meals")
 }
 
@@ -72,7 +91,8 @@ model User {
   name           String
   cheatMeals     CheatMeal[]
   gymChecks      GymCheck[]
-  workoutPresets WorkoutPreset[]
+  workoutPresets   WorkoutPreset[]
+  cheatMealPresets CheatMealPreset[]
 
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())

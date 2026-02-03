@@ -1,3 +1,5 @@
+import { CheatMealPresetsSection } from "@/app/(app)/app/account/cheat-meal-presets-section";
+import { WorkoutPresetsSection } from "@/app/(app)/app/account/workout-presets-section";
 import H1 from "@/components/h1";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,10 +9,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
+import { Dumbbell, Utensils } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { PresetsSection } from "./presets-section";
 import SignOutButton from "./signout-button";
 
 export default async function AccountPage() {
@@ -44,13 +47,33 @@ export default async function AccountPage() {
 
 			<Card>
 				<CardHeader>
-					<CardTitle>Workout Presets</CardTitle>
+					<CardTitle>Presets</CardTitle>
 					<CardDescription>
-						Quick access to your frequently used workouts
+						Quick access to your frequently used items
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<PresetsSection />
+					<Tabs defaultValue="workouts" className="w-full">
+						<TabsList className="grid w-full grid-cols-2">
+							<TabsTrigger value="workouts" className="flex items-center gap-2">
+								<Dumbbell className="h-4 w-4" />
+								Workouts
+							</TabsTrigger>
+							<TabsTrigger
+								value="cheat-meals"
+								className="flex items-center gap-2"
+							>
+								<Utensils className="h-4 w-4" />
+								Cheat Meals
+							</TabsTrigger>
+						</TabsList>
+						<TabsContent value="workouts" className="mt-4">
+							<WorkoutPresetsSection />
+						</TabsContent>
+						<TabsContent value="cheat-meals" className="mt-4">
+							<CheatMealPresetsSection />
+						</TabsContent>
+					</Tabs>
 				</CardContent>
 			</Card>
 

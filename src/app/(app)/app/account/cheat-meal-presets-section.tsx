@@ -1,13 +1,13 @@
 "use client";
 
-import type { WorkoutPreset } from "@/../prisma/generated/client";
+import type { CheatMealPreset } from "@/../prisma/generated/client";
 import {
-	createPreset,
-	deletePreset,
-	getUserPresets,
-	updatePreset,
+	createCheatMealPreset,
+	deleteCheatMealPreset,
+	getUserCheatMealPresets,
+	updateCheatMealPreset,
 } from "@/actions/preset-actions";
-import { migrateExistingUserPresets } from "@/actions/preset-migration";
+import { migrateExistingUserCheatMealPresets } from "@/actions/preset-migration";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -27,13 +27,16 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PRESET_COLORS } from "@/lib/constants/colors";
+import {
+	DEFAULT_CHEAT_MEAL_PRESETS,
+	PRESET_COLORS,
+} from "@/lib/constants/colors";
 import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export function PresetsSection() {
-	const [presets, setPresets] = useState<WorkoutPreset[]>([]);
+export function CheatMealPresetsSection() {
+	const [presets, setPresets] = useState<CheatMealPreset[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [editLabel, setEditLabel] = useState("");
@@ -42,7 +45,7 @@ export function PresetsSection() {
 
 	const loadPresets = useCallback(async () => {
 		try {
-			const userPresets = await getUserPresets();
+			const userPresets = await getUserCheatMealPresets();
 			setPresets(userPresets);
 		} catch {
 			toast.error("Failed to load presets");
@@ -61,15 +64,13 @@ export function PresetsSection() {
 		const runMigration = async () => {
 			setIsMigrating(true);
 			try {
-				const result = await migrateExistingUserPresets();
+				const result = await migrateExistingUserCheatMealPresets();
 				if (mounted && result.created > 0) {
-					toast.success(
-						`Created ${result.created} presets from your workout history`,
-					);
+					toast.success(`Created ${result.created} cheat meal presets`);
 					await loadPresets();
 				}
 			} catch {
-				// Migration errors are not critical, silently fail
+				// Migration errors are not critical
 			} finally {
 				if (mounted) {
 					setIsMigrating(false);
@@ -84,9 +85,12 @@ export function PresetsSection() {
 		};
 	}, [loadPresets]);
 
-	const handleColorChange = async (preset: WorkoutPreset, newColor: string) => {
+	const handleColorChange = async (
+		preset: CheatMealPreset,
+		newColor: string,
+	) => {
 		try {
-			await updatePreset({ id: preset.id, color: newColor });
+			await updateCheatMealPreset({ id: preset.id, color: newColor });
 			setPresets((prev) =>
 				prev.map((p) => (p.id === preset.id ? { ...p, color: newColor } : p)),
 			);
@@ -96,19 +100,19 @@ export function PresetsSection() {
 		}
 	};
 
-	const handleLabelEdit = (preset: WorkoutPreset) => {
+	const handleLabelEdit = (preset: CheatMealPreset) => {
 		setEditingId(preset.id);
 		setEditLabel(preset.label);
 	};
 
-	const handleLabelSave = async (preset: WorkoutPreset) => {
+	const handleLabelSave = async (preset: CheatMealPreset) => {
 		if (editLabel.trim() === preset.label) {
 			setEditingId(null);
 			return;
 		}
 
 		try {
-			await updatePreset({ id: preset.id, label: editLabel.trim() });
+			await updateCheatMealPreset({ id: preset.id, label: editLabel.trim() });
 			setPresets((prev) =>
 				prev.map((p) =>
 					p.id === preset.id ? { ...p, label: editLabel.trim() } : p,
@@ -124,7 +128,7 @@ export function PresetsSection() {
 	};
 
 	const handleReorder = async (
-		preset: WorkoutPreset,
+		preset: CheatMealPreset,
 		direction: "up" | "down",
 	) => {
 		const currentIndex = presets.findIndex((p) => p.id === preset.id);
@@ -141,7 +145,9 @@ export function PresetsSection() {
 
 		try {
 			await Promise.all(
-				reorderedPresets.map((p) => updatePreset({ id: p.id, order: p.order })),
+				reorderedPresets.map((p) =>
+					updateCheatMealPreset({ id: p.id, order: p.order }),
+				),
 			);
 		} catch {
 			toast.error("Failed to reorder presets");
@@ -151,7 +157,7 @@ export function PresetsSection() {
 
 	const handleDelete = async (presetId: string) => {
 		try {
-			await deletePreset({ id: presetId });
+			await deleteCheatMealPreset({ id: presetId });
 			setPresets((prev) => prev.filter((p) => p.id !== presetId));
 			toast.success("Preset deleted");
 		} catch {
@@ -165,7 +171,7 @@ export function PresetsSection() {
 			const randomColor =
 				PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)].value;
 			const maxOrder = Math.max(...presets.map((p) => p.order), -1);
-			const newPreset = await createPreset({
+			const newPreset = await createCheatMealPreset({
 				label: "New Preset",
 				color: randomColor,
 				order: maxOrder + 1,
@@ -180,26 +186,15 @@ export function PresetsSection() {
 	};
 
 	const handleResetDefaults = async () => {
-		// Delete all existing presets
-		await Promise.all(presets.map((p) => deletePreset({ id: p.id })));
-
-		// Create defaults
-		const DEFAULT_PRESETS = [
-			{ label: "Leg Day", color: "#ef4444" },
-			{ label: "Chest Day", color: "#f97316" },
-			{ label: "Back Day", color: "#3b82f6" },
-			{ label: "Swimming", color: "#06b6d4" },
-			{ label: "Running", color: "#22c55e" },
-			{ label: "Calisthenics", color: "#a855f7" },
-		];
+		await Promise.all(presets.map((p) => deleteCheatMealPreset({ id: p.id })));
 
 		try {
 			const newPresets = await Promise.all(
-				DEFAULT_PRESETS.map((preset, index) =>
-					createPreset({
+				DEFAULT_CHEAT_MEAL_PRESETS.map((preset) =>
+					createCheatMealPreset({
 						label: preset.label,
 						color: preset.color,
-						order: index,
+						order: preset.order,
 					}),
 				),
 			);
@@ -365,7 +360,7 @@ export function PresetsSection() {
 							<AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
 							<AlertDialogDescription className="dark:text-stone-400">
 								This will delete all your custom presets and restore the default
-								workouts. Are you sure?
+								cheat meals. Are you sure?
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
