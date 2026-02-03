@@ -29,7 +29,7 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 	} = useMemo(() => {
 		const workoutDates = new Set<string>();
 		const cheatMealDates = new Set<string>();
-		const gymChecksByDate = new Map<string, GymCheck>();
+		const gymChecksByDate = new Map<string, GymCheckWithPreset[]>();
 		const cheatMealsByDate = new Map<string, CheatMeal>();
 		const workoutColorsByDate = new Map<string, string[]>();
 
@@ -43,10 +43,10 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 			colors.push(color);
 			workoutColorsByDate.set(dateKey, colors);
 
-			// Keep first check for modal editing (legacy behavior for now)
-			if (!gymChecksByDate.has(dateKey)) {
-				gymChecksByDate.set(dateKey, gymCheck);
-			}
+			// Store all gym checks for this date (not just first)
+			const checksForDate = gymChecksByDate.get(dateKey) || [];
+			checksForDate.push(gymCheck);
+			gymChecksByDate.set(dateKey, checksForDate);
 		}
 
 		for (const cheatMeal of cheatMeals) {
@@ -68,23 +68,22 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 		if (date > new Date()) return;
 
 		const dateKey = formatDateKey(date);
-		const existingGymCheck = gymChecksByDate.get(dateKey);
+		const existingGymChecks = gymChecksByDate.get(dateKey) || [];
 		const existingCheatMeal = cheatMealsByDate.get(dateKey);
 
-		const hasExistingData = existingGymCheck || existingCheatMeal;
+		const hasExistingData = existingGymChecks.length > 0 || existingCheatMeal;
 
 		setSelectedDayInfo({
 			date,
-			gymCheck: existingGymCheck
-				? {
-						id: existingGymCheck.id,
-						description: existingGymCheck.description,
-						userId: existingGymCheck.userId,
-						updatedAt: existingGymCheck.updatedAt,
-						createdAt: existingGymCheck.createdAt,
-						presetId: existingGymCheck.presetId,
-					}
-				: undefined,
+			gymChecks: existingGymChecks.map((gymCheck) => ({
+				id: gymCheck.id,
+				description: gymCheck.description,
+				userId: gymCheck.userId,
+				updatedAt: gymCheck.updatedAt,
+				createdAt: gymCheck.createdAt,
+				presetId: gymCheck.presetId,
+				presetColor: gymCheck.preset?.color,
+			})),
 			cheatMeal: existingCheatMeal
 				? {
 						id: existingCheatMeal.id,
@@ -99,6 +98,17 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 
 		toggleDayInfoModalState(hasExistingData ? "edit" : "create");
 	};
+
+	// Create a map for quick toggle that only needs first workout ID per date
+	const quickToggleMap = useMemo(() => {
+		const map = new Map<string, { id: string }>();
+		for (const [dateKey, checks] of gymChecksByDate) {
+			if (checks.length > 0) {
+				map.set(dateKey, { id: checks[0].id });
+			}
+		}
+		return map;
+	}, [gymChecksByDate]);
 
 	const handleQuickToggle = async (date: Date, gymCheckId?: string) => {
 		if (date > new Date()) return;
@@ -123,7 +133,7 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 			onDayClick={handleDayClick}
 			workoutDates={workoutDates}
 			cheatMealDates={cheatMealDates}
-			gymChecksByDate={gymChecksByDate}
+			gymChecksByDate={quickToggleMap}
 			workoutColorsByDate={workoutColorsByDate}
 			onQuickToggle={handleQuickToggle}
 		/>

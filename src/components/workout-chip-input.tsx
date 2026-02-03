@@ -7,8 +7,18 @@ import { Input } from "@/components/ui/input";
 import { PRESET_COLORS } from "@/lib/constants/colors";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import {
+	forwardRef,
+	useCallback,
+	useImperativeHandle,
+	useRef,
+	useState,
+} from "react";
 import { toast } from "sonner";
+
+export type WorkoutChipInputRef = {
+	flushInput: () => Promise<WorkoutChip | null>;
+};
 
 export type WorkoutChip = {
 	id?: string;
@@ -25,15 +35,24 @@ type WorkoutChipInputProps = {
 	className?: string;
 };
 
-export function WorkoutChipInput({
-	presets,
-	value,
-	onChange,
-	className,
-}: WorkoutChipInputProps) {
+export const WorkoutChipInput = forwardRef<
+	WorkoutChipInputRef,
+	WorkoutChipInputProps
+>(function WorkoutChipInput({ presets, value, onChange, className }, ref) {
 	const [inputValue, setInputValue] = useState("");
 	const [open, setOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	// Store latest values in refs for imperative handle access
+	const inputValueRef = useRef(inputValue);
+	const valueRef = useRef(value);
+	const presetsRef = useRef(presets);
+	const onChangeRef = useRef(onChange);
+
+	// Keep refs updated
+	inputValueRef.current = inputValue;
+	valueRef.current = value;
+	presetsRef.current = presets;
+	onChangeRef.current = onChange;
 
 	// Filter presets based on input (only when user is typing)
 	const filteredPresets = inputValue
@@ -82,31 +101,55 @@ export function WorkoutChipInput({
 		setOpen(newValue.length > 0);
 	}, []);
 
-	const handleCreateNew = useCallback(async () => {
-		if (!inputValue.trim()) return;
+	const flushInput = useCallback(async (): Promise<WorkoutChip | null> => {
+		const currentInput = inputValueRef.current.trim();
+		if (!currentInput) return null;
 
-		// If exact match exists and is already selected, do nothing
-		if (duplicateChip) {
+		// Check if exact match exists in current chips
+		const currentDuplicate = valueRef.current.find(
+			(chip) => chip.label.toLowerCase() === currentInput.toLowerCase(),
+		);
+		if (currentDuplicate) {
 			setInputValue("");
 			setOpen(false);
-			return;
+			return null;
 		}
 
-		// If exact match exists but not selected, select it
-		if (exactMatch) {
-			handleSelect(exactMatch);
-			return;
+		// Check if exact match exists in presets
+		const currentExactMatch = presetsRef.current.find(
+			(preset) => preset.label.toLowerCase() === currentInput.toLowerCase(),
+		);
+		if (currentExactMatch) {
+			// Select existing preset
+			if (
+				!valueRef.current.some((chip) => chip.presetId === currentExactMatch.id)
+			) {
+				const newChip: WorkoutChip = {
+					id: crypto.randomUUID(),
+					label: currentExactMatch.label,
+					color: currentExactMatch.color,
+					presetId: currentExactMatch.id,
+					isNew: false,
+				};
+				onChangeRef.current([...valueRef.current, newChip]);
+				setInputValue("");
+				setOpen(false);
+				return newChip;
+			}
+			setInputValue("");
+			setOpen(false);
+			return null;
 		}
 
+		// Create new preset
 		try {
-			// Create new preset with random color from palette
 			const randomColor =
 				PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)].value;
 
 			const newPreset = await createPreset({
-				label: inputValue.trim(),
+				label: currentInput,
 				color: randomColor,
-				order: presets.length,
+				order: presetsRef.current.length,
 			});
 
 			const newChip: WorkoutChip = {
@@ -117,36 +160,28 @@ export function WorkoutChipInput({
 				isNew: true,
 			};
 
-			onChange([...value, newChip]);
+			onChangeRef.current([...valueRef.current, newChip]);
 			setInputValue("");
 			setOpen(false);
 			toast.success(`Created new preset: ${newPreset.label}`);
+			return newChip;
 		} catch (error) {
 			toast.error("Failed to create preset");
 			console.error(error);
+			return null;
 		}
-	}, [
-		inputValue,
-		exactMatch,
-		duplicateChip,
-		handleSelect,
-		presets.length,
-		value,
-		onChange,
-	]);
+	}, []);
 
-	const handleRemove = useCallback(
-		(chipId: string) => {
-			onChange(value.filter((chip) => chip.id !== chipId));
-		},
-		[value, onChange],
-	);
+	// Expose imperative handle
+	useImperativeHandle(ref, () => ({
+		flushInput,
+	}));
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
 			if (e.key === "Enter" && inputValue) {
 				e.preventDefault();
-				handleCreateNew();
+				flushInput();
 			} else if (e.key === "Backspace" && !inputValue && value.length > 0) {
 				// Remove last chip on backspace when input is empty
 				onChange(value.slice(0, -1));
@@ -154,7 +189,7 @@ export function WorkoutChipInput({
 				setOpen(false);
 			}
 		},
-		[inputValue, value, onChange, handleCreateNew],
+		[inputValue, value, onChange, flushInput],
 	);
 
 	return (
@@ -177,7 +212,9 @@ export function WorkoutChipInput({
 							{chip.label}
 							<button
 								type="button"
-								onClick={() => chip.id && handleRemove(chip.id)}
+								onClick={() =>
+									chip.id && onChange(value.filter((c) => c.id !== chip.id))
+								}
 								className="ml-0.5 rounded-full p-0.5 opacity-50 hover:opacity-80 transition-opacity"
 								style={{ color: chip.color }}
 							>
@@ -210,7 +247,7 @@ export function WorkoutChipInput({
 						{filteredPresets.length === 0 && !duplicateChip ? (
 							<button
 								type="button"
-								onClick={handleCreateNew}
+								onClick={flushInput}
 								className="flex w-full items-center px-3 py-2 text-sm text-stone-900 hover:bg-stone-100 dark:text-stone-50 dark:hover:bg-stone-800"
 							>
 								Create &quot;{inputValue.trim()}&quot;
@@ -238,4 +275,6 @@ export function WorkoutChipInput({
 			</div>
 		</div>
 	);
-}
+});
+
+WorkoutChipInput.displayName = "WorkoutChipInput";

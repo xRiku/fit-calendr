@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Suspense } from "react";
 import CalendarDataProvider from "./(calendar-display)/calendar-data-provider";
 
+export const dynamic = "force-dynamic";
+
 export default async function CalendarPage() {
 	return (
 		<>

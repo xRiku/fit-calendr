@@ -27,10 +27,7 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-	DEFAULT_WORKOUT_PRESETS,
-	PRESET_COLORS,
-} from "@/lib/constants/colors";
+import { DEFAULT_WORKOUT_PRESETS, PRESET_COLORS } from "@/lib/constants/colors";
 import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";

@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 export type SelectedDayInfo = {
 	cheatMeal?: Omit<CheatMeal, "date">;
-	gymCheck?: Omit<GymCheck, "date">;
+	gymChecks: (Omit<GymCheck, "date"> & { presetColor?: string | null })[];
 	date: Date;
 };
 

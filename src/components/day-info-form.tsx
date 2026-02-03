@@ -12,11 +12,14 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { WorkoutChip } from "@/components/workout-chip-input";
+import type {
+	WorkoutChip,
+	WorkoutChipInputRef,
+} from "@/components/workout-chip-input";
 import { WorkoutChipInput } from "@/components/workout-chip-input";
 import { useModalStore } from "@/stores/day-info-modal";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -32,6 +35,7 @@ export default function DayInfoForm() {
 	const [presets, setPresets] = useState<
 		Awaited<ReturnType<typeof getUserPresets>>
 	>([]);
+	const workoutInputRef = useRef<WorkoutChipInputRef>(null);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -49,13 +53,17 @@ export default function DayInfoForm() {
 	}, []);
 
 	useEffect(() => {
-		if (dayInfoType === "edit" && selectedDayInfo?.gymCheck) {
-			const chip: WorkoutChip = {
-				id: crypto.randomUUID(),
-				label: selectedDayInfo.gymCheck.description,
-				color: "#3b82f6",
-			};
-			setWorkoutChips([chip]);
+		if (dayInfoType === "edit" && selectedDayInfo?.gymChecks) {
+			const chips: WorkoutChip[] = selectedDayInfo.gymChecks.map(
+				(gymCheck) => ({
+					id: gymCheck.id,
+					label: gymCheck.description,
+					// Use presetColor from server data directly (no async lookup needed)
+					color: gymCheck.presetColor ?? "#3b82f6",
+					presetId: gymCheck.presetId || undefined,
+				}),
+			);
+			setWorkoutChips(chips);
 		} else {
 			setWorkoutChips([]);
 		}
@@ -66,9 +74,16 @@ export default function DayInfoForm() {
 			<form
 				id="day-info-form"
 				action={async () => {
+					// Flush any uncommitted input before submitting and get the new chip
+					const flushedChip = await workoutInputRef.current?.flushInput();
+
 					const formData = new FormData();
 					formData.set("cheatMealName", form.getValues().cheatMealName || "");
-					formData.set("workouts", JSON.stringify(workoutChips));
+					// Include the flushed chip in workouts if it exists
+					const workoutsToSubmit = flushedChip
+						? [...workoutChips, flushedChip]
+						: workoutChips;
+					formData.set("workouts", JSON.stringify(workoutsToSubmit));
 
 					if (dayInfoType === "create") {
 						toast.promise(
@@ -85,19 +100,18 @@ export default function DayInfoForm() {
 					}
 
 					if (dayInfoType === "edit") {
+						// Collect existing workout IDs for proper update tracking
+						const existingWorkoutIds =
+							selectedDayInfo?.gymChecks?.map((w) => w.id) || [];
+
 						toast.promise(
 							updateDayInfo({
 								cheatMealId: selectedDayInfo?.cheatMeal?.id,
-								gymCheckId: selectedDayInfo?.gymCheck?.id,
 								cheatMealName: form.formState.dirtyFields?.cheatMealName
 									? form.getValues().cheatMealName
 									: undefined,
-								workoutDescription:
-									workoutChips.length > 0
-										? workoutChips[0]?.label
-										: workoutChips.length === 0 && selectedDayInfo?.gymCheck
-											? ""
-											: undefined,
+								workouts: workoutsToSubmit,
+								existingWorkoutIds,
 								date: selectedDayInfo?.date ?? new Date(),
 							}),
 							{
@@ -118,6 +132,7 @@ export default function DayInfoForm() {
 					</FormLabel>
 					<FormControl>
 						<WorkoutChipInput
+							ref={workoutInputRef}
 							presets={presets}
 							value={workoutChips}
 							onChange={setWorkoutChips}

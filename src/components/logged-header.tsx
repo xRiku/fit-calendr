@@ -1,10 +1,23 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { Suspense } from "react";
 import Header from "./header";
+import { HeaderSkeleton } from "./header-skeleton";
 import MainNav from "./main-nav";
 import { MyAccountDropdown } from "./my-account-dropdown";
 
-export default async function LoggedHeader() {
+function LoggedHeaderContent({
+	initialsFromName,
+}: { initialsFromName: string }) {
+	return (
+		<Header>
+			<MainNav />
+			<MyAccountDropdown initialsFromName={initialsFromName} />
+		</Header>
+	);
+}
+
+async function LoggedHeaderAsync() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -27,10 +40,13 @@ export default async function LoggedHeader() {
 		session?.user.name,
 	).toUpperCase();
 
+	return <LoggedHeaderContent initialsFromName={initialsFromName} />;
+}
+
+export default function LoggedHeader() {
 	return (
-		<Header>
-			<MainNav />
-			<MyAccountDropdown initialsFromName={initialsFromName} />
-		</Header>
+		<Suspense fallback={<HeaderSkeleton />}>
+			<LoggedHeaderAsync />
+		</Suspense>
 	);
 }
