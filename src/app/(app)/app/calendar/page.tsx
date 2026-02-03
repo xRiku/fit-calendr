@@ -9,9 +9,9 @@ export const dynamic = "force-dynamic";
 export default async function CalendarPage() {
 	return (
 		<>
-			<H2>Calendar</H2>
+			<H2 className="text-2xl">Calendar</H2>
 			<Card>
-				<CardHeader className="pb-3">
+				<CardHeader className="py-2 pb-2">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center justify-between">
 							<CardTitle className="text-base font-medium">

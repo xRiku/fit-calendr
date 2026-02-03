@@ -10,7 +10,7 @@ export default function QuickAddTodayButton() {
 	const handleQuickAdd = () => {
 		setSelectedDayInfo({
 			date: new Date(),
-			gymCheck: undefined,
+			gymChecks: [],
 			cheatMeal: undefined,
 		});
 		toggleDayInfoModalState("create");
