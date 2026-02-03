@@ -1,9 +1,11 @@
 "use client";
 
+import type { CheatMeal, GymCheck } from "@/../prisma/generated/client";
+import { quickToggleWorkout } from "@/actions/actions";
 import { Calendar, formatDateKey } from "@/components/ui/calendar";
 import { useModalStore } from "@/stores/day-info-modal";
-import type { CheatMeal, GymCheck } from "@/../prisma/generated/client";
 import { useMemo } from "react";
+import { toast } from "sonner";
 
 type CalendarsProps = {
 	gymChecks: GymCheck[];
@@ -75,6 +77,18 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 		toggleDayInfoModalState(hasExistingData ? "edit" : "create");
 	};
 
+	const handleQuickToggle = async (date: Date, gymCheckId?: string) => {
+		if (date > new Date()) return;
+
+		try {
+			await quickToggleWorkout({ date, gymCheckId });
+			toast.success(gymCheckId ? "Workout removed" : "Quick workout added!");
+		} catch (error) {
+			toast.error("Failed to toggle workout");
+			console.error(error);
+		}
+	};
+
 	return (
 		<Calendar
 			className="w-full"
@@ -86,6 +100,8 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 			onDayClick={handleDayClick}
 			workoutDates={workoutDates}
 			cheatMealDates={cheatMealDates}
+			gymChecksByDate={gymChecksByDate}
+			onQuickToggle={handleQuickToggle}
 		/>
 	);
 }

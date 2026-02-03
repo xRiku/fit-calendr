@@ -301,3 +301,39 @@ export async function logOut() {
 	});
 	redirect("/auth/sign-in");
 }
+
+// Quick toggle workout
+export async function quickToggleWorkout({
+	date,
+	gymCheckId,
+}: {
+	date: Date;
+	gymCheckId?: string;
+}) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
+
+	if (gymCheckId) {
+		// Delete existing workout
+		await prisma.gymCheck.delete({
+			where: { id: gymCheckId },
+		});
+	} else {
+		// Create quick workout with default description
+		await prisma.gymCheck.create({
+			data: {
+				description: "Quick workout",
+				date,
+				user: { connect: { id: session.user.id } },
+			},
+		});
+	}
+
+	revalidatePath("/app/calendar", "page");
+	return { success: true };
+}

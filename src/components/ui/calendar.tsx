@@ -25,11 +25,15 @@ function Calendar({
 	components,
 	workoutDates,
 	cheatMealDates,
+	gymChecksByDate,
+	onQuickToggle,
 	...props
 }: React.ComponentProps<typeof DayPicker> & {
 	buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 	workoutDates?: Set<string>;
 	cheatMealDates?: Set<string>;
+	gymChecksByDate?: Map<string, { id: string }>;
+	onQuickToggle?: (date: Date, gymCheckId?: string) => void;
 }) {
 	const defaultClassNames = getDefaultClassNames();
 
@@ -168,6 +172,8 @@ function Calendar({
 						{...dayButtonProps}
 						workoutDates={workoutDates}
 						cheatMealDates={cheatMealDates}
+						gymChecksByDate={gymChecksByDate}
+						onQuickToggle={onQuickToggle}
 					/>
 				),
 				WeekNumber: ({ children, ...props }) => {
@@ -196,10 +202,14 @@ function CalendarDayButton({
 	modifiers,
 	workoutDates,
 	cheatMealDates,
+	gymChecksByDate,
+	onQuickToggle,
 	...props
 }: React.ComponentProps<typeof DayButton> & {
 	workoutDates?: Set<string>;
 	cheatMealDates?: Set<string>;
+	gymChecksByDate?: Map<string, { id: string }>;
+	onQuickToggle?: (date: Date, gymCheckId?: string) => void;
 }) {
 	const defaultClassNames = getDefaultClassNames();
 
@@ -212,6 +222,15 @@ function CalendarDayButton({
 	const hasWorkout = workoutDates?.has(dateKey);
 	const hasCheatMeal = cheatMealDates?.has(dateKey);
 	const hasData = hasWorkout || hasCheatMeal;
+	const gymCheck = gymChecksByDate?.get(dateKey);
+
+	const handleDoubleClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (onQuickToggle && !modifiers.disabled) {
+			onQuickToggle(day.date, gymCheck?.id);
+		}
+	};
 
 	return (
 		<Button
@@ -234,6 +253,7 @@ function CalendarDayButton({
 				defaultClassNames.day,
 				className,
 			)}
+			onDoubleClick={handleDoubleClick}
 			{...props}
 		>
 			{props.children}
