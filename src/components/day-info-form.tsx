@@ -124,7 +124,7 @@ export default function DayInfoForm() {
 
 					toggleDayInfoModalState();
 				}}
-				className="space-y-4 flex flex-col items-end justify-center"
+				className="space-y-6 sm:space-y-4 flex flex-col items-end justify-center"
 			>
 				<FormItem className="w-full">
 					<FormLabel className="font-bold">
@@ -157,9 +157,11 @@ export default function DayInfoForm() {
 					)}
 				/>
 			</form>
-			<div className="flex flex-col w-full sm:hidden gap-2 mt-4 pb-4">
+			<div className="flex flex-col w-full sm:hidden gap-3 mt-6 pb-6">
 				<Button
 					type="submit"
+					size="lg"
+					className="h-12 text-base"
 					disabled={
 						!workoutChips.length &&
 						!form.getValues().cheatMealName &&
@@ -169,7 +171,12 @@ export default function DayInfoForm() {
 				>
 					Save
 				</Button>
-				<Button variant="outline" onClick={() => toggleDayInfoModalState()}>
+				<Button
+					variant="outline"
+					size="lg"
+					className="h-12 text-base"
+					onClick={() => toggleDayInfoModalState()}
+				>
 					Cancel
 				</Button>
 			</div>

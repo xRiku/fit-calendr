@@ -10,6 +10,7 @@ import {
 } from "@/lib/server-utils";
 import { Dumbbell, Flame, UtensilsCrossed } from "lucide-react";
 import { Suspense } from "react";
+import { CollapsibleSection } from "./collapsible-section";
 import PresetLegend from "./preset-legend";
 
 function StatItem({
@@ -112,19 +113,19 @@ async function SidebarStats() {
 
 export default function CalendarSidebar() {
 	return (
-		<aside className="lg:w-64 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-6 space-y-6">
-			<div>
-				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-					Legend
-				</h3>
+		<aside className="w-full pb-6 lg:pb-0 lg:w-64 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-6 space-y-6">
+			<CollapsibleSection
+				title="Legend"
+				collapsedHint="Tap to view workout types & colors"
+			>
 				<Suspense fallback={<LegendSkeleton />}>
 					<PresetLegendLoader />
 				</Suspense>
-			</div>
-			<div>
-				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-					This Month
-				</h3>
+			</CollapsibleSection>
+			<CollapsibleSection
+				title="This Month"
+				collapsedHint="Tap to view stats"
+			>
 				<Suspense
 					fallback={
 						<div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
@@ -137,7 +138,7 @@ export default function CalendarSidebar() {
 				>
 					<SidebarStats />
 				</Suspense>
-			</div>
+			</CollapsibleSection>
 		</aside>
 	);
 }

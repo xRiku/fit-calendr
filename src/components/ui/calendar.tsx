@@ -43,7 +43,7 @@ function Calendar({
 		<DayPicker
 			showOutsideDays={showOutsideDays}
 			className={cn(
-				"bg-white group/calendar p-3 [--cell-size:--spacing(10)] sm:[--cell-size:--spacing(12)] md:[--cell-size:--spacing(16)] lg:[--cell-size:--spacing(26)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent dark:bg-neutral-950",
+				"bg-white group/calendar p-2 sm:p-3 [--cell-size:--spacing(11)] sm:[--cell-size:--spacing(14)] md:[--cell-size:--spacing(16)] lg:[--cell-size:--spacing(26)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent dark:bg-neutral-950",
 				String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
 				String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
 				className,
@@ -67,12 +67,12 @@ function Calendar({
 				),
 				button_previous: cn(
 					buttonVariants({ variant: buttonVariant }),
-					"size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+					"size-(--cell-size) min-w-[44px] min-h-[44px] aria-disabled:opacity-50 p-0 select-none active:scale-95 transition-transform",
 					defaultClassNames.button_previous,
 				),
 				button_next: cn(
 					buttonVariants({ variant: buttonVariant }),
-					"size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+					"size-(--cell-size) min-w-[44px] min-h-[44px] aria-disabled:opacity-50 p-0 select-none active:scale-95 transition-transform",
 					defaultClassNames.button_next,
 				),
 				month_caption: cn(
@@ -98,7 +98,7 @@ function Calendar({
 				table: "w-full border-collapse",
 				weekdays: cn("flex", defaultClassNames.weekdays),
 				weekday: cn(
-					"text-neutral-500 rounded-md flex-1 font-normal text-[0.8rem] select-none dark:text-neutral-400",
+					"text-neutral-500 rounded-md flex-1 font-medium text-sm sm:text-[0.8rem] py-2 sm:py-1 whitespace-nowrap select-none dark:text-neutral-400",
 					defaultClassNames.weekday,
 				),
 				week: cn("flex w-full mt-2", defaultClassNames.week),
@@ -230,6 +230,37 @@ function CalendarDayButton({
 	const gymCheck = gymChecksByDate?.get(dateKey);
 	const workoutColors = workoutColorsByDate?.get(dateKey) ?? [];
 
+	// Long-press support for mobile quick toggle
+	const [isPressing, setIsPressing] = React.useState(false);
+	const pressTimer = React.useRef<NodeJS.Timeout | null>(null);
+	const PRESS_DURATION = 500;
+
+	const handleTouchStart = () => {
+		if (modifiers.disabled || !onQuickToggle) return;
+		setIsPressing(true);
+		pressTimer.current = setTimeout(() => {
+			onQuickToggle(day.date, gymCheck?.id);
+			setIsPressing(false);
+			if (navigator.vibrate) navigator.vibrate(50);
+		}, PRESS_DURATION);
+	};
+
+	const handleTouchEnd = () => {
+		setIsPressing(false);
+		if (pressTimer.current) {
+			clearTimeout(pressTimer.current);
+			pressTimer.current = null;
+		}
+	};
+
+	const handleTouchMove = () => {
+		if (pressTimer.current) {
+			clearTimeout(pressTimer.current);
+			pressTimer.current = null;
+		}
+		setIsPressing(false);
+	};
+
 	const handleDoubleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
@@ -255,28 +286,34 @@ function CalendarDayButton({
 			data-range-middle={modifiers.range_middle}
 			data-has-data={hasData}
 			className={cn(
-				"data-[selected-single=true]:bg-neutral-900 data-[selected-single=true]:text-neutral-50 data-[range-middle=true]:bg-neutral-100 data-[range-middle=true]:text-neutral-900 data-[range-start=true]:bg-neutral-900 data-[range-start=true]:text-neutral-50 data-[range-end=true]:bg-neutral-900 data-[range-end=true]:text-neutral-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-neutral-900 flex aspect-square md:aspect-auto size-auto w-full min-w-(--cell-size) md:min-h-(--cell-size) flex-col gap-0.5 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-neutral-50 dark:data-[selected-single=true]:text-neutral-900 dark:data-[range-middle=true]:bg-neutral-800 dark:data-[range-middle=true]:text-neutral-50 dark:data-[range-start=true]:bg-neutral-50 dark:data-[range-start=true]:text-neutral-900 dark:data-[range-end=true]:bg-neutral-50 dark:data-[range-end=true]:text-neutral-900 dark:dark:hover:text-neutral-50",
+				"data-[selected-single=true]:bg-neutral-900 data-[selected-single=true]:text-neutral-50 data-[range-middle=true]:bg-neutral-100 data-[range-middle=true]:text-neutral-900 data-[range-start=true]:bg-neutral-900 data-[range-start=true]:text-neutral-50 data-[range-end=true]:bg-neutral-900 data-[range-end=true]:text-neutral-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-neutral-900 flex aspect-square md:aspect-auto size-auto w-full min-w-(--cell-size) min-h-(--cell-size) flex-col gap-0.5 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-neutral-50 dark:data-[selected-single=true]:text-neutral-900 dark:data-[range-middle=true]:bg-neutral-800 dark:data-[range-middle=true]:text-neutral-50 dark:data-[range-start=true]:bg-neutral-50 dark:data-[range-start=true]:text-neutral-900 dark:data-[range-end=true]:bg-neutral-50 dark:data-[range-end=true]:text-neutral-900 dark:dark:hover:text-neutral-50 p-1 sm:p-2 transition-all duration-200",
+				isPressing && "scale-95 bg-neutral-100 dark:bg-neutral-800 ring-2 ring-primary/20",
 				defaultClassNames.day,
 				className,
 			)}
 			onDoubleClick={handleDoubleClick}
+			onTouchStart={handleTouchStart}
+			onTouchEnd={handleTouchEnd}
+			onTouchMove={handleTouchMove}
 			{...props}
 		>
 			{props.children}
 			{(hasData || workoutColors.length > 0) && (
-				<div className="flex gap-0.5 justify-center items-center">
-					{workoutColors.slice(0, 3).map((color, index) => (
+				<div className="flex gap-0.5 justify-center items-center flex-wrap content-end">
+					{workoutColors.slice(0, 4).map((color, index) => (
 						<span
 							key={index}
-							className="size-1.5 rounded-full"
+							className="size-1.5 sm:size-1.5 rounded-full"
 							style={{ backgroundColor: color }}
 						/>
 					))}
-					{workoutColors.length > 3 && (
-						<span className="text-[0.6rem] leading-none">+</span>
+					{workoutColors.length > 4 && (
+						<span className="text-[0.5rem] sm:text-[0.6rem] leading-none font-medium text-neutral-400">
+							+
+						</span>
 					)}
 					{hasCheatMeal && (
-						<span className="size-1.5 rounded-full bg-vibrant-orange shadow-[0_0_4px_var(--vibrant-orange)]" />
+						<span className="size-1.5 sm:size-1.5 rounded-full bg-vibrant-orange shadow-[0_0_4px_var(--vibrant-orange)]" />
 					)}
 				</div>
 			)}
