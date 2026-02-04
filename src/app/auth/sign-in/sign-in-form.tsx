@@ -31,6 +31,7 @@ export function SignInForm() {
 		formState: { errors },
 		register,
 		getValues,
+		trigger,
 	} = useForm<SignInFormSchema>({
 		resolver: zodResolver(signInFormSchema),
 		defaultValues: {
@@ -45,6 +46,8 @@ export function SignInForm() {
 	}, [hasError, otpCode]);
 
 	async function handleSignIn() {
+		const isValid = await trigger();
+		if (!isValid) return;
 		const { email } = getValues();
 		await signInWithCredentials(email);
 		setShouldShowOtpField(true);

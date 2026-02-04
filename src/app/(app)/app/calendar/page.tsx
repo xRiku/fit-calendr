@@ -9,7 +9,7 @@ export default async function CalendarPage() {
 	return (
 		<div className="flex flex-col h-[calc(100dvh-theme(spacing.14))] -mt-2">
 			<CalendarToolbar />
-			<div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0 overflow-y-auto">
+			<div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0">
 				<div className="lg:flex-1 min-w-0 order-1 lg:order-2">
 					<Suspense
 						fallback={
