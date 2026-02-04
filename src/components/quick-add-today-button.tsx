@@ -11,7 +11,7 @@ export default function QuickAddTodayButton() {
 		setSelectedDayInfo({
 			date: new Date(),
 			gymChecks: [],
-			cheatMeal: undefined,
+			cheatMeals: [],
 		});
 		toggleDayInfoModalState("create");
 	};

@@ -122,10 +122,7 @@ export default function CalendarSidebar() {
 					<PresetLegendLoader />
 				</Suspense>
 			</CollapsibleSection>
-			<CollapsibleSection
-				title="This Month"
-				collapsedHint="Tap to view stats"
-			>
+			<CollapsibleSection title="This Month" collapsedHint="Tap to view stats">
 				<Suspense
 					fallback={
 						<div className="grid grid-cols-2 gap-3 lg:grid-cols-1">

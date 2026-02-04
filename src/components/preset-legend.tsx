@@ -6,10 +6,7 @@ const VISIBLE_COUNT = 4;
 
 type Preset = { id: string; label: string; color: string };
 
-function PresetGroup({
-	label,
-	presets,
-}: { label: string; presets: Preset[] }) {
+function PresetGroup({ label, presets }: { label: string; presets: Preset[] }) {
 	const hasMore = presets.length > VISIBLE_COUNT;
 	const [expanded, setExpanded] = useState(false);
 	const visible = expanded ? presets : presets.slice(0, VISIBLE_COUNT);

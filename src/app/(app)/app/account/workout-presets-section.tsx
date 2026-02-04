@@ -26,6 +26,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DEFAULT_WORKOUT_PRESETS, PRESET_COLORS } from "@/lib/constants/colors";
 import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2 } from "lucide-react";
@@ -211,120 +212,122 @@ export function WorkoutPresetsSection() {
 
 	return (
 		<div className="w-full space-y-4">
-			<div className="space-y-2">
+			<div>
 				{presets.map((preset, index) => (
-					<div
-						key={preset.id}
-						className="flex items-center gap-3 rounded-lg border border-neutral-800 bg-neutral-900/50 p-3 transition-colors hover:bg-neutral-800/50"
-					>
-						<Popover>
-							<PopoverTrigger asChild>
+					<div key={preset.id}>
+						{/* Mobile: Flat with separators | Desktop: Card style */}
+						<div className="flex items-center gap-3 py-3 md:rounded-lg md:border md:border-neutral-800 md:bg-neutral-900/50 md:p-3 md:transition-colors md:hover:bg-neutral-800/50">
+							<Popover>
+								<PopoverTrigger asChild>
+									<button
+										type="button"
+										className="h-6 w-6 rounded-full border-2 border-neutral-700 transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:ring-offset-neutral-900"
+										style={{ backgroundColor: preset.color }}
+										aria-label={`Change color for ${preset.label}`}
+									/>
+								</PopoverTrigger>
+								<PopoverContent className="w-auto p-2" align="start">
+									<div className="grid grid-cols-4 gap-2">
+										{PRESET_COLORS.map((color) => (
+											<button
+												key={color.value}
+												type="button"
+												className="h-8 w-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2"
+												style={{ backgroundColor: color.value }}
+												onClick={() => handleColorChange(preset, color.value)}
+												title={color.name}
+												aria-label={`Select ${color.name} color`}
+											/>
+										))}
+									</div>
+								</PopoverContent>
+							</Popover>
+
+							{editingId === preset.id ? (
+								<Input
+									value={editLabel}
+									onChange={(e) => setEditLabel(e.target.value)}
+									onBlur={() => handleLabelSave(preset)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											handleLabelSave(preset);
+										}
+										if (e.key === "Escape") {
+											setEditingId(null);
+											setEditLabel(preset.label);
+										}
+									}}
+									autoFocus
+									className="flex-1 bg-neutral-800 border-neutral-700"
+								/>
+							) : (
 								<button
 									type="button"
-									className="h-6 w-6 rounded-full border-2 border-neutral-700 transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:ring-offset-neutral-900"
-									style={{ backgroundColor: preset.color }}
-									aria-label={`Change color for ${preset.label}`}
-								/>
-							</PopoverTrigger>
-							<PopoverContent className="w-auto p-2" align="start">
-								<div className="grid grid-cols-4 gap-2">
-									{PRESET_COLORS.map((color) => (
-										<button
-											key={color.value}
-											type="button"
-											className="h-8 w-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2"
-											style={{ backgroundColor: color.value }}
-											onClick={() => handleColorChange(preset, color.value)}
-											title={color.name}
-											aria-label={`Select ${color.name} color`}
-										/>
-									))}
-								</div>
-							</PopoverContent>
-						</Popover>
+									onClick={() => handleLabelEdit(preset)}
+									className="flex-1 text-left text-sm font-medium text-neutral-200 hover:text-neutral-100 transition-colors focus:outline-none"
+								>
+									{preset.label}
+								</button>
+							)}
 
-						{editingId === preset.id ? (
-							<Input
-								value={editLabel}
-								onChange={(e) => setEditLabel(e.target.value)}
-								onBlur={() => handleLabelSave(preset)}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										handleLabelSave(preset);
-									}
-									if (e.key === "Escape") {
-										setEditingId(null);
-										setEditLabel(preset.label);
-									}
-								}}
-								autoFocus
-								className="flex-1 bg-neutral-800 border-neutral-700"
-							/>
-						) : (
-							<button
-								type="button"
-								onClick={() => handleLabelEdit(preset)}
-								className="flex-1 text-left text-sm font-medium text-neutral-200 hover:text-neutral-100 transition-colors focus:outline-none"
-							>
-								{preset.label}
-							</button>
-						)}
-
-						<div className="flex items-center gap-1">
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
-								onClick={() => handleReorder(preset, "up")}
-								disabled={index === 0}
-								aria-label="Move up"
-							>
-								<ArrowUp className="h-4 w-4" />
-							</Button>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
-								onClick={() => handleReorder(preset, "down")}
-								disabled={index === presets.length - 1}
-								aria-label="Move down"
-							>
-								<ArrowDown className="h-4 w-4" />
-							</Button>
-						</div>
-
-						<AlertDialog>
-							<AlertDialogTrigger asChild>
+							<div className="flex items-center gap-1">
 								<Button
 									variant="ghost"
 									size="icon"
-									className="h-7 w-7 text-neutral-500 hover:text-red-400"
-									aria-label="Delete preset"
+									className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
+									onClick={() => handleReorder(preset, "up")}
+									disabled={index === 0}
+									aria-label="Move up"
 								>
-									<Trash2 className="h-4 w-4" />
+									<ArrowUp className="h-4 w-4" />
 								</Button>
-							</AlertDialogTrigger>
-							<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
-								<AlertDialogHeader>
-									<AlertDialogTitle>Delete Preset</AlertDialogTitle>
-									<AlertDialogDescription className="dark:text-neutral-400">
-										Are you sure you want to delete &quot;{preset.label}&quot;?
-										This action cannot be undone.
-									</AlertDialogDescription>
-								</AlertDialogHeader>
-								<AlertDialogFooter>
-									<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
-										Cancel
-									</AlertDialogCancel>
-									<AlertDialogAction
-										onClick={() => handleDelete(preset.id)}
-										className="bg-red-600 hover:bg-red-700"
+								<Button
+									variant="ghost"
+									size="icon"
+									className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
+									onClick={() => handleReorder(preset, "down")}
+									disabled={index === presets.length - 1}
+									aria-label="Move down"
+								>
+									<ArrowDown className="h-4 w-4" />
+								</Button>
+							</div>
+
+							<AlertDialog>
+								<AlertDialogTrigger asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-7 w-7 text-neutral-500 hover:text-red-400"
+										aria-label="Delete preset"
 									>
-										Delete
-									</AlertDialogAction>
-								</AlertDialogFooter>
-							</AlertDialogContent>
-						</AlertDialog>
+										<Trash2 className="h-4 w-4" />
+									</Button>
+								</AlertDialogTrigger>
+								<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
+									<AlertDialogHeader>
+										<AlertDialogTitle>Delete Preset</AlertDialogTitle>
+										<AlertDialogDescription className="dark:text-neutral-400">
+											Are you sure you want to delete &quot;{preset.label}
+											&quot;? This action cannot be undone.
+										</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
+											Cancel
+										</AlertDialogCancel>
+										<AlertDialogAction
+											onClick={() => handleDelete(preset.id)}
+											className="bg-red-600 hover:bg-red-700"
+										>
+											Delete
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
+						</div>
+						{/* Horizontal separator between items on mobile, hidden on last item */}
+						{index < presets.length - 1 && <Separator className="md:hidden" />}
 					</div>
 				))}
 			</div>

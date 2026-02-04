@@ -6,9 +6,19 @@ import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createWorkoutWithPresets } from "./preset-actions";
+import {
+	createCheatMealWithPresets,
+	createWorkoutWithPresets,
+} from "./preset-actions";
 
 type WorkoutInput = {
+	id?: string;
+	label: string;
+	color: string;
+	presetId?: string;
+};
+
+type CheatMealInput = {
 	id?: string;
 	label: string;
 	color: string;
@@ -33,19 +43,20 @@ export async function addDayInfo({
 	let cheatMealResponse = undefined;
 	let gymCheckResponse = undefined;
 
-	// Handle cheat meal creation
-	if (formData.get("cheatMealName")) {
-		cheatMealResponse = await prisma.cheatMeal.create({
-			data: {
-				name: formData.get("cheatMealName") as string,
-				date: date,
-				user: {
-					connect: {
-						id: session.user.id,
-					},
-				},
-			},
-		});
+	// Handle cheat meals JSON from formData
+	const cheatMealsJson = formData.get("cheatMeals") as string;
+	if (cheatMealsJson) {
+		const cheatMeals: CheatMealInput[] = JSON.parse(cheatMealsJson);
+		if (cheatMeals.length > 0) {
+			const cheatMealData = cheatMeals.map((m) => ({
+				name: m.label,
+				presetId: m.presetId,
+			}));
+			cheatMealResponse = await createCheatMealWithPresets({
+				date,
+				cheatMeals: cheatMealData,
+			});
+		}
 	}
 
 	// Handle workouts JSON from formData
@@ -250,6 +261,60 @@ export async function updateWorkoutsForDay({
 	return results;
 }
 
+export async function updateCheatMealsForDay({
+	date,
+	existingCheatMealIds,
+	newCheatMeals,
+	userId,
+}: {
+	date: Date;
+	existingCheatMealIds: string[];
+	newCheatMeals: CheatMealInput[];
+	userId: string;
+}) {
+	const newIds = newCheatMeals.map((m) => m.id).filter(Boolean) as string[];
+
+	const idsToDelete = existingCheatMealIds.filter((id) => !newIds.includes(id));
+	if (idsToDelete.length > 0) {
+		await prisma.cheatMeal.deleteMany({
+			where: {
+				id: { in: idsToDelete },
+				userId,
+				date,
+			},
+		});
+	}
+
+	const results = await Promise.all(
+		newCheatMeals.map(async (meal) => {
+			if (meal.id) {
+				const existing = await prisma.cheatMeal.findFirst({
+					where: { id: meal.id, userId, date },
+				});
+				if (existing) {
+					return prisma.cheatMeal.update({
+						where: { id: meal.id },
+						data: {
+							name: meal.label,
+							presetId: meal.presetId || null,
+						},
+					});
+				}
+			}
+			return prisma.cheatMeal.create({
+				data: {
+					name: meal.label,
+					date,
+					userId,
+					presetId: meal.presetId,
+				},
+			});
+		}),
+	);
+
+	return results;
+}
+
 export async function updateDayInfo({
 	gymCheckId,
 	cheatMealId,
@@ -258,6 +323,8 @@ export async function updateDayInfo({
 	date,
 	workouts,
 	existingWorkoutIds = [],
+	cheatMeals,
+	existingCheatMealIds = [],
 }: {
 	gymCheckId?: string;
 	cheatMealId?: string;
@@ -266,6 +333,8 @@ export async function updateDayInfo({
 	date: Date;
 	workouts?: WorkoutInput[];
 	existingWorkoutIds?: string[];
+	cheatMeals?: CheatMealInput[];
+	existingCheatMealIds?: string[];
 }) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -278,8 +347,16 @@ export async function updateDayInfo({
 	let cheatMealResponse = undefined;
 	let gymCheckResponse = undefined;
 
-	// Handle cheat meal update
-	if (cheatMealName !== undefined) {
+	// Handle cheat meals update using chip-based system
+	if (cheatMeals !== undefined) {
+		cheatMealResponse = await updateCheatMealsForDay({
+			date,
+			existingCheatMealIds,
+			newCheatMeals: cheatMeals,
+			userId: session.user.id,
+		});
+	} else if (cheatMealName !== undefined) {
+		// Fallback for legacy single cheat meal updates
 		cheatMealResponse = await updateCheatMealInfo({
 			userId: session.user.id,
 			cheatMealId,
