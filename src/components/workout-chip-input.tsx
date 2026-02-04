@@ -237,18 +237,18 @@ export const WorkoutChipInput = forwardRef<
 							? "Type to search presets..."
 							: "Add another workout..."
 					}
-					className="w-full pr-10 bg-transparent border-stone-200 dark:border-stone-800"
+					className="w-full pr-10 bg-transparent border-neutral-200 dark:border-neutral-800"
 				/>
-				<Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400 pointer-events-none" />
+				<Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none" />
 
 				{/* Dropdown - Only shown when typing */}
 				{open && inputValue && (
-					<div className="absolute z-50 w-full mt-1 rounded-md border border-stone-200 bg-white shadow-md dark:border-stone-800 dark:bg-stone-950">
+					<div className="absolute z-50 w-full mt-1 rounded-md border border-neutral-200 bg-white shadow-md dark:border-neutral-800 dark:bg-neutral-950">
 						{filteredPresets.length === 0 && !duplicateChip ? (
 							<button
 								type="button"
 								onClick={flushInput}
-								className="flex w-full items-center px-3 py-2 text-sm text-stone-900 hover:bg-stone-100 dark:text-stone-50 dark:hover:bg-stone-800"
+								className="flex w-full items-center px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800"
 							>
 								Create &quot;{inputValue.trim()}&quot;
 							</button>
@@ -259,7 +259,7 @@ export const WorkoutChipInput = forwardRef<
 										key={preset.id}
 										type="button"
 										onClick={() => handleSelect(preset)}
-										className="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-900 hover:bg-stone-100 dark:text-stone-50 dark:hover:bg-stone-800"
+										className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800"
 									>
 										<span
 											className="size-3 rounded-full"

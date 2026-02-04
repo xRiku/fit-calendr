@@ -221,13 +221,13 @@ export function CheatMealPresetsSection() {
 				{presets.map((preset, index) => (
 					<div
 						key={preset.id}
-						className="flex items-center gap-3 rounded-lg border border-stone-800 bg-stone-900/50 p-3 transition-colors hover:bg-stone-800/50"
+						className="flex items-center gap-3 rounded-lg border border-neutral-800 bg-neutral-900/50 p-3 transition-colors hover:bg-neutral-800/50"
 					>
 						<Popover>
 							<PopoverTrigger asChild>
 								<button
 									type="button"
-									className="h-6 w-6 rounded-full border-2 border-stone-700 transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2 focus:ring-offset-stone-900"
+									className="h-6 w-6 rounded-full border-2 border-neutral-700 transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:ring-offset-neutral-900"
 									style={{ backgroundColor: preset.color }}
 									aria-label={`Change color for ${preset.label}`}
 								/>
@@ -238,7 +238,7 @@ export function CheatMealPresetsSection() {
 										<button
 											key={color.value}
 											type="button"
-											className="h-8 w-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2"
+											className="h-8 w-8 rounded-full transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2"
 											style={{ backgroundColor: color.value }}
 											onClick={() => handleColorChange(preset, color.value)}
 											title={color.name}
@@ -264,13 +264,13 @@ export function CheatMealPresetsSection() {
 									}
 								}}
 								autoFocus
-								className="flex-1 bg-stone-800 border-stone-700"
+								className="flex-1 bg-neutral-800 border-neutral-700"
 							/>
 						) : (
 							<button
 								type="button"
 								onClick={() => handleLabelEdit(preset)}
-								className="flex-1 text-left text-sm font-medium text-stone-200 hover:text-stone-100 transition-colors focus:outline-none"
+								className="flex-1 text-left text-sm font-medium text-neutral-200 hover:text-neutral-100 transition-colors focus:outline-none"
 							>
 								{preset.label}
 							</button>
@@ -280,7 +280,7 @@ export function CheatMealPresetsSection() {
 							<Button
 								variant="ghost"
 								size="icon"
-								className="h-7 w-7 text-stone-500 hover:text-stone-300"
+								className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
 								onClick={() => handleReorder(preset, "up")}
 								disabled={index === 0}
 								aria-label="Move up"
@@ -290,7 +290,7 @@ export function CheatMealPresetsSection() {
 							<Button
 								variant="ghost"
 								size="icon"
-								className="h-7 w-7 text-stone-500 hover:text-stone-300"
+								className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
 								onClick={() => handleReorder(preset, "down")}
 								disabled={index === presets.length - 1}
 								aria-label="Move down"
@@ -304,22 +304,22 @@ export function CheatMealPresetsSection() {
 								<Button
 									variant="ghost"
 									size="icon"
-									className="h-7 w-7 text-stone-500 hover:text-red-400"
+									className="h-7 w-7 text-neutral-500 hover:text-red-400"
 									aria-label="Delete preset"
 								>
 									<Trash2 className="h-4 w-4" />
 								</Button>
 							</AlertDialogTrigger>
-							<AlertDialogContent className="dark:border-stone-800 dark:bg-stone-900">
+							<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
 								<AlertDialogHeader>
 									<AlertDialogTitle>Delete Preset</AlertDialogTitle>
-									<AlertDialogDescription className="dark:text-stone-400">
+									<AlertDialogDescription className="dark:text-neutral-400">
 										Are you sure you want to delete &quot;{preset.label}&quot;?
 										This action cannot be undone.
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
-									<AlertDialogCancel className="dark:border-stone-700 dark:bg-stone-800 dark:hover:bg-stone-700">
+									<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
 										Cancel
 									</AlertDialogCancel>
 									<AlertDialogAction
@@ -349,22 +349,22 @@ export function CheatMealPresetsSection() {
 					<AlertDialogTrigger asChild>
 						<Button
 							variant="outline"
-							className="dark:border-stone-700 dark:hover:bg-stone-800"
+							className="dark:border-neutral-700 dark:hover:bg-neutral-800"
 						>
 							<RotateCcw className="mr-2 h-4 w-4" />
 							Reset to Defaults
 						</Button>
 					</AlertDialogTrigger>
-					<AlertDialogContent className="dark:border-stone-800 dark:bg-stone-900">
+					<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
 						<AlertDialogHeader>
 							<AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
-							<AlertDialogDescription className="dark:text-stone-400">
+							<AlertDialogDescription className="dark:text-neutral-400">
 								This will delete all your custom presets and restore the default
 								cheat meals. Are you sure?
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel className="dark:border-stone-700 dark:bg-stone-800 dark:hover:bg-stone-700">
+							<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
 								Cancel
 							</AlertDialogCancel>
 							<AlertDialogAction
