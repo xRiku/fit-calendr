@@ -1,4 +1,5 @@
 import { CheatMealPresetsSection } from "@/app/(app)/app/account/cheat-meal-presets-section";
+import { GoalsSection } from "@/app/(app)/app/account/goals-section";
 import { WorkoutPresetsSection } from "@/app/(app)/app/account/workout-presets-section";
 import H1 from "@/components/h1";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
+import { getUserGoals } from "@/lib/server-utils";
 import { Dumbbell, Utensils } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -25,6 +27,8 @@ export default async function AccountPage() {
 	if (!session) {
 		redirect("/auth/sign-in");
 	}
+
+	const goals = await getUserGoals();
 
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6">
@@ -47,6 +51,22 @@ export default async function AccountPage() {
 						</div>
 						<SignOutButton className="w-full" />
 					</div>
+				</section>
+
+				<Separator />
+
+				{/* Goals Section - Mobile */}
+				<section>
+					<div className="mb-3">
+						<h2 className="text-lg font-semibold">Weekly Goals</h2>
+						<p className="text-muted-foreground text-sm">
+							Set your weekly targets
+						</p>
+					</div>
+					<GoalsSection
+						initialWorkoutGoal={goals.weeklyWorkoutGoal}
+						initialCheatMealBudget={goals.weeklyCheatMealBudget}
+					/>
 				</section>
 
 				<Separator />
@@ -113,6 +133,19 @@ export default async function AccountPage() {
 							</div>
 							<SignOutButton />
 						</div>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Weekly Goals</CardTitle>
+						<CardDescription>Set your weekly targets</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<GoalsSection
+							initialWorkoutGoal={goals.weeklyWorkoutGoal}
+							initialCheatMealBudget={goals.weeklyCheatMealBudget}
+						/>
 					</CardContent>
 				</Card>
 

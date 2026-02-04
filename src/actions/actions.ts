@@ -412,6 +412,36 @@ export async function updateDayInfo({
   });
 }  */
 
+export async function updateUserGoals({
+	weeklyWorkoutGoal,
+	weeklyCheatMealBudget,
+}: {
+	weeklyWorkoutGoal: number;
+	weeklyCheatMealBudget: number;
+}) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
+
+	if (weeklyWorkoutGoal < 1 || weeklyWorkoutGoal > 7) {
+		throw new Error("Weekly workout goal must be between 1 and 7");
+	}
+	if (weeklyCheatMealBudget < 0 || weeklyCheatMealBudget > 7) {
+		throw new Error("Weekly cheat meal budget must be between 0 and 7");
+	}
+
+	await prisma.user.update({
+		where: { id: session.user.id },
+		data: { weeklyWorkoutGoal, weeklyCheatMealBudget },
+	});
+
+	revalidatePath("/app");
+}
+
 export async function updateUserName({
 	name,
 	userId,

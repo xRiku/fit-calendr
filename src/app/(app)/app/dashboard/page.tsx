@@ -1,9 +1,12 @@
 import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
+import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
 import StreakCard from "@/components/dashboard/streak-card";
+import WeeklyGoalCard from "@/components/dashboard/weekly-goal-card";
 import { WeekdayChart } from "@/components/dashboard/weekday-chart";
+import { YearlyHeatmap } from "@/components/dashboard/yearly-heatmap";
 import H2 from "@/components/h2";
 import SelectCheckOptions from "@/components/select-check-options";
 import SelectYear from "@/components/select-year";
@@ -40,8 +43,15 @@ export default async function DashboardPage({
 					<CheckOptionThisYearCard selected={selected} year={year} />
 					<CheckOptionAveragePerMonthCard selected={selected} year={year} />
 					<CheckOptionThisMonthCard selected={selected} year={year} />
-					<StreakCard selected={selected} />
+					{selected === "workout" ? (
+						<StreakCard selected={selected} />
+					) : (
+						<DaysSinceLastCheckOptionCard selected={selected} />
+					)}
+					<WeeklyGoalCard selected={selected} />
 				</div>
+
+				<YearlyHeatmap selected={selected} year={year} />
 
 				<div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
 					<FrequencyChart selected={selected} year={year} />

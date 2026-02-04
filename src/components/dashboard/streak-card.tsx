@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCheatMealStreak, getGymStreak } from "@/lib/server-utils";
+import { getGymStreak } from "@/lib/server-utils";
 import { Flame } from "lucide-react";
 import { Suspense } from "react";
 import { CardSkeleton } from "./card-skeleton";
@@ -7,7 +7,7 @@ import { CardSkeleton } from "./card-skeleton";
 const options: {
 	[key: string]: {
 		title: string;
-		fetchCall: typeof getGymStreak | typeof getCheatMealStreak;
+		fetchCall: typeof getGymStreak;
 		color: string;
 	};
 } = {
@@ -15,11 +15,6 @@ const options: {
 		title: "Workout Streak",
 		fetchCall: getGymStreak,
 		color: "text-vibrant-green",
-	},
-	"cheat-meal": {
-		title: "Cheat Meal Streak",
-		fetchCall: getCheatMealStreak,
-		color: "text-vibrant-orange",
 	},
 };
 
