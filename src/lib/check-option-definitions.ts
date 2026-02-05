@@ -1,5 +1,4 @@
 import {
-	getCheatMealStreak,
 	getCheatMealsByYearGroupedByMonth,
 	getGymChecksByYearGroupedByMonth,
 	getGymStreak,
@@ -39,10 +38,6 @@ export const STREAK_CHECK_OPTIONS = {
 	workout: {
 		...CHECK_OPTIONS.workout,
 		fetchCall: getGymStreak,
-	},
-	"cheat-meal": {
-		...CHECK_OPTIONS["cheat-meal"],
-		fetchCall: getCheatMealStreak,
 	},
 };
 

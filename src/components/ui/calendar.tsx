@@ -26,6 +26,7 @@ function Calendar({
 	workoutDates,
 	workoutColorsByDate,
 	cheatMealDates,
+	cheatMealColorsByDate,
 	gymChecksByDate,
 	onQuickToggle,
 	...props
@@ -34,6 +35,7 @@ function Calendar({
 	workoutDates?: Set<string>;
 	workoutColorsByDate?: Map<string, string[]>;
 	cheatMealDates?: Set<string>;
+	cheatMealColorsByDate?: Map<string, string[]>;
 	gymChecksByDate?: Map<string, { id: string }>;
 	onQuickToggle?: (date: Date, gymCheckId?: string) => void;
 }) {
@@ -175,6 +177,7 @@ function Calendar({
 						workoutDates={workoutDates}
 						workoutColorsByDate={workoutColorsByDate}
 						cheatMealDates={cheatMealDates}
+						cheatMealColorsByDate={cheatMealColorsByDate}
 						gymChecksByDate={gymChecksByDate}
 						onQuickToggle={onQuickToggle}
 					/>
@@ -206,6 +209,7 @@ function CalendarDayButton({
 	workoutDates,
 	workoutColorsByDate,
 	cheatMealDates,
+	cheatMealColorsByDate,
 	gymChecksByDate,
 	onQuickToggle,
 	...props
@@ -213,6 +217,7 @@ function CalendarDayButton({
 	workoutDates?: Set<string>;
 	workoutColorsByDate?: Map<string, string[]>;
 	cheatMealDates?: Set<string>;
+	cheatMealColorsByDate?: Map<string, string[]>;
 	gymChecksByDate?: Map<string, { id: string }>;
 	onQuickToggle?: (date: Date, gymCheckId?: string) => void;
 }) {
@@ -229,6 +234,7 @@ function CalendarDayButton({
 	const hasData = hasWorkout || hasCheatMeal;
 	const gymCheck = gymChecksByDate?.get(dateKey);
 	const workoutColors = workoutColorsByDate?.get(dateKey) ?? [];
+	const cheatMealColors = cheatMealColorsByDate?.get(dateKey) ?? [];
 
 	// Long-press support for mobile quick toggle
 	const [isPressing, setIsPressing] = React.useState(false);
@@ -287,7 +293,8 @@ function CalendarDayButton({
 			data-has-data={hasData}
 			className={cn(
 				"data-[selected-single=true]:bg-neutral-900 data-[selected-single=true]:text-neutral-50 data-[range-middle=true]:bg-neutral-100 data-[range-middle=true]:text-neutral-900 data-[range-start=true]:bg-neutral-900 data-[range-start=true]:text-neutral-50 data-[range-end=true]:bg-neutral-900 data-[range-end=true]:text-neutral-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-neutral-900 flex aspect-square md:aspect-auto size-auto w-full min-w-(--cell-size) min-h-(--cell-size) flex-col gap-0.5 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-neutral-50 dark:data-[selected-single=true]:text-neutral-900 dark:data-[range-middle=true]:bg-neutral-800 dark:data-[range-middle=true]:text-neutral-50 dark:data-[range-start=true]:bg-neutral-50 dark:data-[range-start=true]:text-neutral-900 dark:data-[range-end=true]:bg-neutral-50 dark:data-[range-end=true]:text-neutral-900 dark:dark:hover:text-neutral-50 p-1 sm:p-2 transition-all duration-200",
-				isPressing && "scale-95 bg-neutral-100 dark:bg-neutral-800 ring-2 ring-primary/20",
+				isPressing &&
+					"scale-95 bg-neutral-100 dark:bg-neutral-800 ring-2 ring-primary/20",
 				defaultClassNames.day,
 				className,
 			)}
@@ -298,11 +305,11 @@ function CalendarDayButton({
 			{...props}
 		>
 			{props.children}
-			{(hasData || workoutColors.length > 0) && (
+			{(hasData || workoutColors.length > 0 || cheatMealColors.length > 0) && (
 				<div className="flex gap-0.5 justify-center items-center flex-wrap content-end">
 					{workoutColors.slice(0, 4).map((color, index) => (
 						<span
-							key={index}
+							key={`w-${index}`}
 							className="size-1.5 sm:size-1.5 rounded-full"
 							style={{ backgroundColor: color }}
 						/>
@@ -312,8 +319,20 @@ function CalendarDayButton({
 							+
 						</span>
 					)}
-					{hasCheatMeal && (
-						<span className="size-1.5 sm:size-1.5 rounded-full bg-vibrant-orange shadow-[0_0_4px_var(--vibrant-orange)]" />
+					{cheatMealColors.slice(0, 4).map((color, index) => (
+						<span
+							key={`c-${index}`}
+							className="size-1.5 sm:size-1.5 rounded-full shadow-[0_0_3px_var(--dot-color)]"
+							style={{
+								backgroundColor: color,
+								["--dot-color" as string]: color,
+							}}
+						/>
+					))}
+					{cheatMealColors.length > 4 && (
+						<span className="text-[0.5rem] sm:text-[0.6rem] leading-none font-medium text-neutral-400">
+							+
+						</span>
 					)}
 				</div>
 			)}

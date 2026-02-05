@@ -4,11 +4,19 @@ import {
 } from "@/actions/preset-actions";
 import {
 	getCheatMealsByYearGroupedByMonth,
-	getCheatMealStreak,
 	getGymChecksByYearGroupedByMonth,
 	getGymStreak,
+	getLastCheatMeal,
+	getWeeklyProgress,
 } from "@/lib/server-utils";
-import { Dumbbell, Flame, UtensilsCrossed } from "lucide-react";
+import { differenceInDays } from "date-fns";
+import {
+	Dumbbell,
+	Flame,
+	ShieldCheck,
+	Target,
+	UtensilsCrossed,
+} from "lucide-react";
 import { Suspense } from "react";
 import { CollapsibleSection } from "./collapsible-section";
 import PresetLegend from "./preset-legend";
@@ -75,12 +83,14 @@ async function PresetLegendLoader() {
 }
 
 async function SidebarStats() {
-	const [gymData, cheatData, gymStreak, cheatStreak] = await Promise.all([
-		getGymChecksByYearGroupedByMonth(),
-		getCheatMealsByYearGroupedByMonth(),
-		getGymStreak(),
-		getCheatMealStreak(),
-	]);
+	const [gymData, cheatData, gymStreak, lastCheatMeal, weeklyProgress] =
+		await Promise.all([
+			getGymChecksByYearGroupedByMonth(),
+			getCheatMealsByYearGroupedByMonth(),
+			getGymStreak(),
+			getLastCheatMeal(),
+			getWeeklyProgress(),
+		]);
 	const month = new Date().getMonth();
 	const workoutCount = gymData.hashTable[month]?.length ?? 0;
 	const cheatCount = cheatData.hashTable[month]?.length ?? 0;
@@ -103,9 +113,18 @@ async function SidebarStats() {
 				value={`${gymStreak.currentStreak} day${gymStreak.currentStreak !== 1 ? "s" : ""}`}
 			/>
 			<StatItem
-				icon={<Flame className="size-4 text-vibrant-orange" />}
-				label="Cheat meal streak"
-				value={`${cheatStreak.currentStreak} day${cheatStreak.currentStreak !== 1 ? "s" : ""}`}
+				icon={<ShieldCheck className="size-4 text-vibrant-orange" />}
+				label="Days since cheat meal"
+				value={
+					lastCheatMeal.length
+						? `${differenceInDays(new Date(), lastCheatMeal[0].date)} day${differenceInDays(new Date(), lastCheatMeal[0].date) !== 1 ? "s" : ""}`
+						: "N/A"
+				}
+			/>
+			<StatItem
+				icon={<Target className="size-4 text-vibrant-green" />}
+				label="Workouts this week"
+				value={`${weeklyProgress.workouts}/${weeklyProgress.weeklyWorkoutGoal}`}
 			/>
 		</div>
 	);
@@ -122,13 +141,11 @@ export default function CalendarSidebar() {
 					<PresetLegendLoader />
 				</Suspense>
 			</CollapsibleSection>
-			<CollapsibleSection
-				title="This Month"
-				collapsedHint="Tap to view stats"
-			>
+			<CollapsibleSection title="This Month" collapsedHint="Tap to view stats">
 				<Suspense
 					fallback={
 						<div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
+							<StatSkeleton />
 							<StatSkeleton />
 							<StatSkeleton />
 							<StatSkeleton />

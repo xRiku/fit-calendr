@@ -131,7 +131,7 @@ pnpm dlx prisma studio      # Open GUI
 
 ## Environment Variables
 
-Type-safe via `src/env.ts`. Required: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NEXT_PUBLIC_VERCEL_URL`.
+Type-safe via `src/env.ts`. Required: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `RESEND_API_KEY`, `NEXT_PUBLIC_VERCEL_URL`.
 
 ## Route Groups
 

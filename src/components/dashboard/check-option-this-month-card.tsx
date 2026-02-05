@@ -71,6 +71,8 @@ export default function CheckOptionThisMonthCard({
 		const diffFromLastMonth = await getDiffFromLastMonth();
 		const currentYearVal = new Date().getFullYear();
 		const targetMonth = year === currentYearVal ? new Date().getMonth() : 11;
+		const isPositive = diffFromLastMonth > 0;
+		const isGoodTrend = selected === "cheat-meal" ? !isPositive : isPositive;
 
 		return (
 			<>
@@ -81,11 +83,9 @@ export default function CheckOptionThisMonthCard({
 						</span>
 						{diffFromLastMonth !== 0 && (
 							<p className="text-xs text-muted-foreground">
-								{diffFromLastMonth > 0 ? "Up by " : "Down by "}
+								{isPositive ? "Up by " : "Down by "}
 								<span
-									className={
-										diffFromLastMonth > 0 ? "text-emerald-500" : "text-red-500"
-									}
+									className={isGoodTrend ? "text-emerald-500" : "text-red-500"}
 								>
 									{diffFromLastMonth > 0
 										? `+${diffFromLastMonth.toFixed(1)}`

@@ -29,7 +29,7 @@ export default async function CheckOptionThisYearCard({
 	selected,
 	year = new Date().getFullYear(),
 }: {
-	selected: keyof typeof options;
+	selected: string;
 	year?: number;
 }) {
 	async function CardData() {
@@ -56,6 +56,8 @@ export default async function CheckOptionThisYearCard({
 		};
 
 		const diffFromLastYear = await getDiffFromLastYear();
+		const isPositive = diffFromLastYear > 0;
+		const isGoodTrend = selected === "cheat-meal" ? !isPositive : isPositive;
 
 		return (
 			<>
@@ -66,11 +68,9 @@ export default async function CheckOptionThisYearCard({
 						</span>
 						{diffFromLastYear !== 0 && (
 							<p className="text-xs text-muted-foreground">
-								{diffFromLastYear > 0 ? "Up by " : "Down by "}
+								{isPositive ? "Up by " : "Down by "}
 								<span
-									className={
-										diffFromLastYear > 0 ? "text-emerald-500" : "text-red-500"
-									}
+									className={isGoodTrend ? "text-emerald-500" : "text-red-500"}
 								>
 									{diffFromLastYear > 0
 										? `+${diffFromLastYear.toFixed(1)}`

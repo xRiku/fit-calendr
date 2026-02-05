@@ -236,6 +236,71 @@ function calculateStreak(dates: Date[]): {
 	return { currentStreak, longestStreak };
 }
 
+export const getUserGoals = cache(async () => {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		redirect("/auth/sign-in");
+	}
+
+	const user = await prisma.user.findUniqueOrThrow({
+		where: { id: session.user.id },
+		select: { weeklyWorkoutGoal: true, weeklyCheatMealBudget: true },
+	});
+
+	return user;
+});
+
+export const getWeeklyProgress = cache(async () => {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		redirect("/auth/sign-in");
+	}
+
+	// Get Monday of current week
+	const now = new Date();
+	const day = now.getDay();
+	const diff = day === 0 ? -6 : 1 - day;
+	const monday = new Date(now);
+	monday.setDate(now.getDate() + diff);
+	monday.setHours(0, 0, 0, 0);
+
+	const sunday = new Date(monday);
+	sunday.setDate(monday.getDate() + 6);
+	sunday.setHours(23, 59, 59, 999);
+
+	const [workouts, cheatMeals, user] = await Promise.all([
+		prisma.gymCheck.count({
+			where: {
+				userId: session.user.id,
+				date: { gte: monday, lte: sunday },
+			},
+		}),
+		prisma.cheatMeal.count({
+			where: {
+				userId: session.user.id,
+				date: { gte: monday, lte: sunday },
+			},
+		}),
+		prisma.user.findUniqueOrThrow({
+			where: { id: session.user.id },
+			select: { weeklyWorkoutGoal: true, weeklyCheatMealBudget: true },
+		}),
+	]);
+
+	return {
+		workouts,
+		cheatMeals,
+		weeklyWorkoutGoal: user.weeklyWorkoutGoal,
+		weeklyCheatMealBudget: user.weeklyCheatMealBudget,
+	};
+});
+
 export const getGymStreak = cache(async () => {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -254,26 +319,5 @@ export const getGymStreak = cache(async () => {
 	});
 
 	const dates = gymChecks.map((g) => g.date);
-	return calculateStreak(dates);
-});
-
-export const getCheatMealStreak = cache(async () => {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-
-	if (!session) {
-		redirect("/auth/sign-in");
-	}
-
-	const cheatMeals = await prisma.cheatMeal.findMany({
-		where: {
-			userId: session.user.id,
-		},
-		select: { date: true },
-		orderBy: { date: "asc" },
-	});
-
-	const dates = cheatMeals.map((c) => c.date);
 	return calculateStreak(dates);
 });

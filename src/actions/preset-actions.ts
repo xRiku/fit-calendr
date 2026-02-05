@@ -303,6 +303,38 @@ export async function deleteCheatMealPreset({ id }: { id: string }) {
 	revalidatePath("/app/calendar", "page");
 }
 
+export async function createCheatMealWithPresets({
+	date,
+	cheatMeals,
+}: {
+	date: Date;
+	cheatMeals: { presetId?: string; name: string }[];
+}) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		throw new Error("Unauthorized");
+	}
+
+	const created = await Promise.all(
+		cheatMeals.map((meal) =>
+			prisma.cheatMeal.create({
+				data: {
+					name: meal.name,
+					date,
+					userId: session.user.id,
+					...(meal.presetId && { presetId: meal.presetId }),
+				},
+			}),
+		),
+	);
+
+	revalidatePath("/app/calendar", "page");
+	return created;
+}
+
 export async function getCheatMealPresetUsageCount(presetId: string) {
 	const session = await auth.api.getSession({
 		headers: await headers(),

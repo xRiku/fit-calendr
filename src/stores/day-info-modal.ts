@@ -2,7 +2,7 @@ import type { CheatMeal, GymCheck } from "@/../prisma/generated/client";
 import { create } from "zustand";
 
 export type SelectedDayInfo = {
-	cheatMeal?: Omit<CheatMeal, "date">;
+	cheatMeals: (Omit<CheatMeal, "date"> & { presetColor?: string | null })[];
 	gymChecks: (Omit<GymCheck, "date"> & { presetColor?: string | null })[];
 	date: Date;
 };
