@@ -2,15 +2,16 @@ import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
 import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
+import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
 import StreakCard from "@/components/dashboard/streak-card";
-import WeeklyGoalCard from "@/components/dashboard/weekly-goal-card";
 import { WeekdayChart } from "@/components/dashboard/weekday-chart";
+import WeeklyGoalCard from "@/components/dashboard/weekly-goal-card";
 import { YearlyHeatmap } from "@/components/dashboard/yearly-heatmap";
 import H2 from "@/components/h2";
 import SelectCheckOptions from "@/components/select-check-options";
 import SelectYear from "@/components/select-year";
-import { getAvailableYears } from "@/lib/server-utils";
+import { getAvailableYears, getUserTotalEntries } from "@/lib/server-utils";
 
 export type DashBoardPageProps = {
 	searchParams: Promise<{
@@ -28,6 +29,18 @@ export default async function DashboardPage({
 	const year = params.year
 		? Number.parseInt(params.year, 10)
 		: new Date().getFullYear();
+	const { total } = await getUserTotalEntries();
+
+	if (total === 0) {
+		return (
+			<main className="flex flex-col gap-4">
+				<div className="flex gap-6 items-center flex-wrap">
+					<H2>Dashboard</H2>
+				</div>
+				<DashboardEmptyState />
+			</main>
+		);
+	}
 
 	return (
 		<main className="flex flex-col gap-4 group">

@@ -4,7 +4,7 @@ import type { CheatMeal, GymCheck } from "@/../prisma/generated/client";
 import { quickToggleWorkout } from "@/actions/actions";
 import { Calendar, formatDateKey } from "@/components/ui/calendar";
 import { useModalStore } from "@/stores/day-info-modal";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 type GymCheckWithPreset = GymCheck & {
@@ -18,10 +18,16 @@ type CheatMealWithPreset = CheatMeal & {
 type CalendarsProps = {
 	gymChecks: GymCheckWithPreset[];
 	cheatMeals: CheatMealWithPreset[];
+	autoOpenAdd?: boolean;
 };
 
-export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
+export default function Calendars({
+	gymChecks,
+	cheatMeals,
+	autoOpenAdd = false,
+}: CalendarsProps) {
 	const { setSelectedDayInfo, toggleDayInfoModalState } = useModalStore();
+	const hasAutoOpened = useRef(false);
 
 	// Create date lookup maps for efficient checking
 	const {
@@ -77,6 +83,47 @@ export default function Calendars({ gymChecks, cheatMeals }: CalendarsProps) {
 			cheatMealColorsByDate,
 		};
 	}, [gymChecks, cheatMeals]);
+
+	// Auto-open add dialog if ?add=true
+	useEffect(() => {
+		if (autoOpenAdd && !hasAutoOpened.current) {
+			hasAutoOpened.current = true;
+			const today = new Date();
+			const dateKey = formatDateKey(today);
+			const existingGymChecks = gymChecksByDate.get(dateKey) || [];
+			const existingCheatMeals = cheatMealsByDate.get(dateKey) || [];
+
+			setSelectedDayInfo({
+				date: today,
+				gymChecks: existingGymChecks.map((gymCheck) => ({
+					id: gymCheck.id,
+					description: gymCheck.description,
+					userId: gymCheck.userId,
+					updatedAt: gymCheck.updatedAt,
+					createdAt: gymCheck.createdAt,
+					presetId: gymCheck.presetId,
+					presetColor: gymCheck.preset?.color,
+				})),
+				cheatMeals: existingCheatMeals.map((meal) => ({
+					id: meal.id,
+					name: meal.name,
+					userId: meal.userId,
+					updatedAt: meal.updatedAt,
+					createdAt: meal.createdAt,
+					presetId: meal.presetId,
+					presetColor: meal.preset?.color,
+				})),
+			});
+
+			toggleDayInfoModalState("create");
+		}
+	}, [
+		autoOpenAdd,
+		gymChecksByDate,
+		cheatMealsByDate,
+		setSelectedDayInfo,
+		toggleDayInfoModalState,
+	]);
 
 	const handleDayClick = (date: Date) => {
 		if (date > new Date()) return;
