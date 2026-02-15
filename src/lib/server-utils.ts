@@ -321,3 +321,28 @@ export const getGymStreak = cache(async () => {
 	const dates = gymChecks.map((g) => g.date);
 	return calculateStreak(dates);
 });
+
+export const getUserTotalEntries = cache(async () => {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		redirect("/auth/sign-in");
+	}
+
+	const [workoutCount, cheatMealCount] = await Promise.all([
+		prisma.gymCheck.count({
+			where: { userId: session.user.id },
+		}),
+		prisma.cheatMeal.count({
+			where: { userId: session.user.id },
+		}),
+	]);
+
+	return {
+		total: workoutCount + cheatMealCount,
+		workoutCount,
+		cheatMealCount,
+	};
+});

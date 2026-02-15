@@ -47,8 +47,18 @@ async function getCalendarData() {
 	return { gymChecks, cheatMeals };
 }
 
-export default async function CalendarDataProvider() {
+export default async function CalendarDataProvider({
+	autoOpenAdd = false,
+}: {
+	autoOpenAdd?: boolean;
+}) {
 	const { gymChecks, cheatMeals } = await getCalendarData();
 
-	return <Calendars gymChecks={gymChecks} cheatMeals={cheatMeals} />;
+	return (
+		<Calendars
+			gymChecks={gymChecks}
+			cheatMeals={cheatMeals}
+			autoOpenAdd={autoOpenAdd}
+		/>
+	);
 }

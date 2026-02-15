@@ -5,7 +5,18 @@ import CalendarDataProvider from "./(calendar-display)/calendar-data-provider";
 
 export const dynamic = "force-dynamic";
 
-export default async function CalendarPage() {
+export type CalendarPageProps = {
+	searchParams: Promise<{
+		add?: string;
+	}>;
+};
+
+export default async function CalendarPage({
+	searchParams,
+}: CalendarPageProps) {
+	const params = await searchParams;
+	const autoOpenAdd = params.add === "true";
+
 	return (
 		<div className="flex flex-col h-[calc(100dvh-theme(spacing.14))] -mt-2">
 			<CalendarToolbar />
@@ -16,7 +27,7 @@ export default async function CalendarPage() {
 							<div className="animate-pulse h-80 w-full bg-muted rounded-lg" />
 						}
 					>
-						<CalendarDataProvider />
+						<CalendarDataProvider autoOpenAdd={autoOpenAdd} />
 					</Suspense>
 				</div>
 				<div className="order-2 lg:order-1">
