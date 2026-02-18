@@ -13,7 +13,7 @@ export default async function LandingPageHeader() {
 		<Header>
 			<Button
 				asChild
-				className="bg-[#2adb7a] hover:bg-[#22c96b] text-black font-medium px-6"
+				className="bg-vibrant-green hover:bg-vibrant-green/90 text-black font-semibold tracking-tight px-6 h-9 rounded-full transition-all hover:scale-105 active:scale-95"
 				size="sm"
 			>
 				<Link href={`${session?.user.id ? "/app/dashboard" : "/auth/sign-in"}`}>
