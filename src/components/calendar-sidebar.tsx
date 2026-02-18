@@ -132,7 +132,7 @@ async function SidebarStats() {
 
 export default function CalendarSidebar() {
 	return (
-		<aside className="w-full pb-6 lg:pb-0 lg:w-64 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-6 space-y-6">
+		<aside className="w-full pb-6 lg:pb-0 lg:w-64 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-6 space-y-6 lg:h-full lg:overflow-y-auto">
 			<CollapsibleSection
 				title="Legend"
 				collapsedHint="Tap to view workout types & colors"

@@ -1,12 +1,9 @@
-import CheckOptionAveragePerMonthCard from "@/components/dashboard/check-option-average-this-month-card";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
-import DaysSinceLastCheckOptionCard from "@/components/dashboard/days-since-last-check-option";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FrequencyChart } from "@/components/dashboard/frequency-chart";
 import StreakCard from "@/components/dashboard/streak-card";
 import { WeekdayChart } from "@/components/dashboard/weekday-chart";
-import WeeklyGoalCard from "@/components/dashboard/weekly-goal-card";
 import { YearlyHeatmap } from "@/components/dashboard/yearly-heatmap";
 import H2 from "@/components/h2";
 import SelectCheckOptions from "@/components/select-check-options";
@@ -52,20 +49,21 @@ export default async function DashboardPage({
 				)}
 			</div>
 			<div className="flex flex-col gap-4 group-has-data-pending:animate-pulse">
-				<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-					<CheckOptionThisYearCard selected={selected} year={year} />
-					<CheckOptionAveragePerMonthCard selected={selected} year={year} />
-					<CheckOptionThisMonthCard selected={selected} year={year} />
-					{selected === "workout" ? (
-						<StreakCard selected={selected} />
-					) : (
-						<DaysSinceLastCheckOptionCard selected={selected} />
-					)}
-					<WeeklyGoalCard selected={selected} />
+				{/* Bento: heatmap + 2 stat cards */}
+				<div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:items-stretch">
+					<div className="sm:col-span-3 [&>*]:h-full">
+						<YearlyHeatmap selected={selected} year={year} />
+					</div>
+					<div className="flex flex-col gap-4 [&>*]:flex-1">
+						<CheckOptionThisMonthCard selected={selected} year={year} />
+						<CheckOptionThisYearCard selected={selected} year={year} />
+					</div>
 				</div>
 
-				<YearlyHeatmap selected={selected} year={year} />
+				{/* Status banner */}
+				<StreakCard selected={selected} />
 
+				{/* Charts */}
 				<div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
 					<FrequencyChart selected={selected} year={year} />
 					<WeekdayChart selected={selected} year={year} />
