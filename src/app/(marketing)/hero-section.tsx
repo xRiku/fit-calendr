@@ -172,8 +172,12 @@ function HeroVisual() {
 
 				{/* Calendar Grid */}
 				<div className="grid grid-cols-7 gap-2 text-center text-sm mb-4">
-					{["S", "M", "T", "W", "T", "F", "S"].map((day) => (
-						<div key={day} className="text-neutral-500 font-medium py-2">
+					{["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
+						// biome-ignore lint/suspicious/noArrayIndexKey: static weekday headers
+						<div
+							key={`weekday-${i}`}
+							className="text-neutral-500 font-medium py-2"
+						>
 							{day}
 						</div>
 					))}
