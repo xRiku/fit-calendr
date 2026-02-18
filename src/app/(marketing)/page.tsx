@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
 	return (
-		<div className="min-h-screen bg-black text-white overflow-x-hidden">
+		<div className="min-h-screen bg-black text-white overflow-x-hidden pt-14">
 			<HeroSection />
 			<StatsBar />
 			<HowItWorks />
