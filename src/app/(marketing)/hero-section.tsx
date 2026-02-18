@@ -6,7 +6,6 @@ import {
 	Dumbbell,
 	Lock,
 	Pizza,
-	Sparkles,
 	Target,
 	TrendingUp,
 	Zap,
@@ -35,14 +34,6 @@ export function HeroSection() {
 						transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
 						className="space-y-8"
 					>
-						{/* Badge */}
-						<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-vibrant-green/10 border border-vibrant-green/20">
-							<Sparkles className="w-4 h-4 text-vibrant-green" />
-							<span className="text-sm font-medium text-vibrant-green">
-								Free Forever — No Credit Card Required
-							</span>
-						</div>
-
 						{/* Headline */}
 						<h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
 							Track Fitness.
