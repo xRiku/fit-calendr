@@ -61,10 +61,16 @@ export default async function DashboardPage({
 					) : (
 						<DaysSinceLastCheckOptionCard selected={selected} />
 					)}
-					<WeeklyGoalCard selected={selected} />
 				</div>
 
-				<YearlyHeatmap selected={selected} year={year} />
+				<div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-stretch">
+					<div className="sm:col-span-3">
+						<YearlyHeatmap selected={selected} year={year} />
+					</div>
+					<div className="sm:col-span-1">
+						<WeeklyGoalCard selected={selected} />
+					</div>
+				</div>
 
 				<div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
 					<FrequencyChart selected={selected} year={year} />

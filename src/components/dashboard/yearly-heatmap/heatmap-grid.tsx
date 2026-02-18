@@ -165,6 +165,15 @@ export function HeatmapGrid({
 						})}
 					</div>
 				))}
+
+				{/* Legend */}
+				<div className="flex items-center justify-end gap-1.5 mt-2">
+					<span className="text-[10px] text-muted-foreground">Less</span>
+					{([0, 1, 2, 3] as const).map((level) => (
+						<div key={level} className={cn("w-[13px] h-[13px] rounded-sm", colors[level])} />
+					))}
+					<span className="text-[10px] text-muted-foreground">More</span>
+				</div>
 			</div>
 		</div>
 	);
