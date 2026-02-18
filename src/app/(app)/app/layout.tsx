@@ -6,9 +6,9 @@ import { Toaster } from "@/components/ui/sonner";
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<Providers>
-			<div className="flex flex-col min-h-dvh">
+			<div className="flex flex-col h-dvh overflow-hidden pt-14">
 				<LoggedHeader />
-				<main className="flex flex-col gap-4 pb-8 px-6 pt-6 flex-1">
+				<main className="flex flex-col gap-4 pb-8 px-6 pt-4 flex-1 overflow-y-auto">
 					{children}
 				</main>
 				<DayInfoDrawerDialog />

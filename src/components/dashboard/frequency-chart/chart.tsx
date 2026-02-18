@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { CardContent, CardFooter } from "@/components/ui/card";
 import {
@@ -16,16 +16,19 @@ import { format } from "date-fns";
 const options: {
 	[key: string]: {
 		title: string;
-		color?: string;
+		color: string;
+		gradientId: string;
 	};
 } = {
 	workout: {
 		title: "Workouts (year)",
 		color: "var(--vibrant-green)",
+		gradientId: "workoutGradient",
 	},
 	"cheat-meal": {
 		title: "Cheat meals (year)",
 		color: "var(--vibrant-orange)",
+		gradientId: "cheatMealGradient",
 	},
 };
 
@@ -57,69 +60,90 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 			: new Date().getMonth();
 
 	const chartData = Array.from({ length: lastMonthNumber + 1 }).map(
-		(_, index) => {
-			return {
-				month: format(new Date(1, index), "LLLL"),
-				checkOption: data.hashTable[index]?.length || 0,
-			};
-		},
+		(_, index) => ({
+			month: format(new Date(1, index), "LLLL"),
+			checkOption: data.hashTable[index]?.length || 0,
+		}),
 	);
+
+	const opt = options[selected];
 
 	const chartConfig = {
 		checkOption: {
-			label: options[selected].title,
-			color: `hsl(${options[selected].color})`,
+			label: opt.title,
+			color: opt.color,
 		},
 	} satisfies ChartConfig;
 
+	const maxVal = Math.max(...chartData.map((d) => d.checkOption), 1);
+	const yMin = 0;
+	const yMax = maxVal + Math.ceil(maxVal * 0.2);
+
 	return (
 		<>
-			<CardContent className="h-[200px] sm:h-[300px]">
+			<CardContent className="h-[200px] sm:h-[280px]">
 				<ChartContainer
 					config={chartConfig}
-					className="h-[200px] sm:h-[300px] w-full"
+					className="h-[200px] sm:h-[280px] w-full"
 				>
-					<BarChart
+					<AreaChart
 						accessibilityLayer
 						data={chartData}
-						margin={{
-							top: 20,
-						}}
+						margin={{ top: 8, right: 4, bottom: 0, left: -20 }}
 					>
-						<CartesianGrid vertical={false} />
+						<defs>
+							<linearGradient id={opt.gradientId} x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0%" stopColor={opt.color} stopOpacity={0.25} />
+								<stop offset="100%" stopColor={opt.color} stopOpacity={0} />
+							</linearGradient>
+						</defs>
+						<CartesianGrid
+							vertical={false}
+							strokeDasharray="3 3"
+							stroke="hsl(var(--border))"
+							strokeOpacity={0.4}
+						/>
 						<XAxis
 							dataKey="month"
 							tickLine={false}
 							tickMargin={10}
 							axisLine={false}
+							tick={{ fontSize: 12 }}
 							tickFormatter={(value) => value.slice(0, 3)}
 						/>
-						<ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-						<Bar
-							barSize={100}
+						<YAxis
+							tickLine={false}
+							axisLine={false}
+							allowDecimals={false}
+							domain={[yMin, yMax]}
+							tick={{ fontSize: 12 }}
+							width={32}
+						/>
+						<ChartTooltip
+							cursor={{ stroke: opt.color, strokeWidth: 1, strokeOpacity: 0.3 }}
+							content={<ChartTooltipContent />}
+						/>
+						<Area
+							type="monotone"
 							dataKey="checkOption"
-							fill={options[selected].color}
-							radius={4}
-						>
-							<LabelList position="top" offset={12} fontSize={12} />
-						</Bar>
-					</BarChart>
+							stroke={opt.color}
+							strokeWidth={2}
+							fill={`url(#${opt.gradientId})`}
+							dot={{ r: 3.5, fill: opt.color, strokeWidth: 0 }}
+							activeDot={{
+								r: 5,
+								fill: opt.color,
+								stroke: "hsl(var(--background))",
+								strokeWidth: 2,
+							}}
+						/>
+					</AreaChart>
 				</ChartContainer>
 			</CardContent>
-			<CardFooter>
-				<div className="flex w-full items-start gap-2 text-sm">
-					<div className="grid gap-2">
-						<div className="flex items-center gap-2 leading-none">
-							{chartData.length === 1 &&
-								`${chartData[0].month}
-                ${new Date().getFullYear()}`}
-							{chartData.length > 1 &&
-								`${chartData[0].month} - ${
-									chartData[chartData.length - 1].month
-								} ${new Date().getFullYear()}`}
-						</div>
-					</div>
-				</div>
+			<CardFooter className="text-xs text-muted-foreground">
+				{chartData.length === 1
+					? `${chartData[0].month} ${new Date().getFullYear()}`
+					: `${chartData[0].month} – ${chartData[chartData.length - 1].month} ${new Date().getFullYear()}`}
 			</CardFooter>
 		</>
 	);

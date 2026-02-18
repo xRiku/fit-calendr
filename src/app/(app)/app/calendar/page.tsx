@@ -18,7 +18,7 @@ export default async function CalendarPage({
 	const autoOpenAdd = params.add === "true";
 
 	return (
-		<div className="flex flex-col h-[calc(100dvh-theme(spacing.14))] -mt-2">
+		<div className="flex flex-col h-[calc(100dvh-6.5rem)] -mt-2 lg:overflow-hidden">
 			<CalendarToolbar />
 			<div className="flex flex-col lg:flex-row flex-1 gap-6 min-h-0">
 				<div className="lg:flex-1 min-w-0 order-1 lg:order-2">
@@ -30,7 +30,7 @@ export default async function CalendarPage({
 						<CalendarDataProvider autoOpenAdd={autoOpenAdd} />
 					</Suspense>
 				</div>
-				<div className="order-2 lg:order-1">
+				<div className="order-2 lg:order-1 lg:h-full">
 					<CalendarSidebar />
 				</div>
 			</div>
