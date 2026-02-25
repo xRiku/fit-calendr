@@ -27,13 +27,13 @@ function getIntensity(count: number): 0 | 1 | 2 | 3 {
 
 const colorClasses = {
 	workout: {
-		0: "bg-muted",
+		0: "bg-black/5 dark:bg-white/5",
 		1: "bg-vibrant-green/30",
 		2: "bg-vibrant-green/60",
-		3: "bg-vibrant-green",
+		3: "bg-vibrant-green text-black",
 	},
 	"cheat-meal": {
-		0: "bg-muted",
+		0: "bg-black/5 dark:bg-white/5",
 		1: "bg-vibrant-orange/30",
 		2: "bg-vibrant-orange/60",
 		3: "bg-vibrant-orange",
@@ -122,11 +122,11 @@ export function HeatmapGrid({
 			<div className="inline-flex flex-col gap-1 min-w-fit">
 				{/* Month labels */}
 				<div className="flex ml-8">
-					{weeks.map((_, weekIdx) => {
-						const monthEntry = monthStartWeeks.find((m) => m.week === weekIdx);
+					{weeks.map((_, w) => {
+						const monthEntry = monthStartWeeks.find((m) => m.week === w);
 						return (
 							<div
-								key={weekIdx}
+								key={`month-label-${w}`}
 								className="w-[13px] mx-[1.5px] text-[10px] text-muted-foreground leading-none"
 							>
 								{monthEntry?.label ?? ""}
@@ -136,17 +136,17 @@ export function HeatmapGrid({
 				</div>
 
 				{/* Grid rows (Mon-Sun) */}
-				{Array.from({ length: 7 }).map((_, dayIdx) => (
-					<div key={dayIdx} className="flex items-center gap-0">
+				{Array.from({ length: 7 }).map((_, d) => (
+					<div key={`row-${d}`} className="flex items-center gap-0">
 						<span className="w-8 text-[10px] text-muted-foreground text-right pr-2 leading-none">
-							{DAY_LABELS[dayIdx]}
+							{DAY_LABELS[d]}
 						</span>
-						{weeks.map((week, weekIdx) => {
-							const cell = week.cells.find((c) => c.dayOfWeek === dayIdx);
+						{weeks.map((week, w) => {
+							const cell = week.cells.find((c) => c.dayOfWeek === d);
 							if (!cell || cell.count === -1) {
 								return (
 									<div
-										key={weekIdx}
+										key={`empty-${d}-${w}`}
 										className="w-[13px] h-[13px] mx-[1.5px] rounded-sm"
 									/>
 								);
@@ -154,7 +154,7 @@ export function HeatmapGrid({
 							const intensity = getIntensity(cell.count);
 							return (
 								<div
-									key={weekIdx}
+									key={`cell-${d}-${w}`}
 									title={`${cell.date}: ${cell.count}`}
 									className={cn(
 										"w-[13px] h-[13px] mx-[1.5px] rounded-sm transition-colors",

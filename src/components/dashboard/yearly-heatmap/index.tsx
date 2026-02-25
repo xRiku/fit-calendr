@@ -18,8 +18,8 @@ const options: {
 		title: string;
 		description: string;
 		fetchCall:
-			| typeof getGymChecksByYearGroupedByMonth
-			| typeof getCheatMealsByYearGroupedByMonth;
+		| typeof getGymChecksByYearGroupedByMonth
+		| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
@@ -34,6 +34,27 @@ const options: {
 	},
 };
 
+async function HeatmapData({
+	fetchCallPromise,
+	year,
+	selected,
+}: {
+	fetchCallPromise: ReturnType<typeof getGymChecksByYearGroupedByMonth> | ReturnType<typeof getCheatMealsByYearGroupedByMonth>;
+	year: number;
+	selected: string;
+}) {
+	const grouped = await fetchCallPromise;
+	const data = buildHeatmapData(grouped.hashTable);
+
+	return (
+		<HeatmapGrid
+			data={data}
+			year={year}
+			selected={selected as "workout" | "cheat-meal"}
+		/>
+	);
+}
+
 export function YearlyHeatmap({
 	selected,
 	year = new Date().getFullYear(),
@@ -43,19 +64,6 @@ export function YearlyHeatmap({
 }) {
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
-	async function HeatmapData() {
-		const grouped = await fetchCallPromise;
-		const data = buildHeatmapData(grouped.hashTable);
-
-		return (
-			<HeatmapGrid
-				data={data}
-				year={year}
-				selected={selected as "workout" | "cheat-meal"}
-			/>
-		);
-	}
-
 	return (
 		<Card>
 			<CardHeader>
@@ -64,7 +72,11 @@ export function YearlyHeatmap({
 			</CardHeader>
 			<div className="px-6 pb-6">
 				<Suspense fallback={<HeatmapSkeleton />}>
-					<HeatmapData />
+					<HeatmapData
+						fetchCallPromise={fetchCallPromise}
+						year={year}
+						selected={selected}
+					/>
 				</Suspense>
 			</div>
 		</Card>

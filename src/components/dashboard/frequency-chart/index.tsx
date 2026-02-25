@@ -10,16 +10,20 @@ import {
 	getGymChecksByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { Suspense } from "react";
-import { Chart } from "./chart";
+import dynamic from "next/dynamic";
 import { ChartSkeleton } from "./chart-skeleton";
+
+const Chart = dynamic(() => import("./chart").then((mod) => mod.Chart), {
+	loading: () => <ChartSkeleton />,
+});
 
 const options: {
 	[key: string]: {
 		title: string;
 		description: string;
 		fetchCall:
-			| typeof getGymChecksByYearGroupedByMonth
-			| typeof getCheatMealsByYearGroupedByMonth;
+		| typeof getGymChecksByYearGroupedByMonth
+		| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
@@ -44,7 +48,7 @@ export function FrequencyChart({
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
 	return (
-		<Card className="col-span-6">
+		<Card className="col-span-6 min-w-0 max-w-full overflow-hidden">
 			<CardHeader>
 				<CardTitle>{options[selected].title}</CardTitle>
 				<CardDescription>{options[selected].description}</CardDescription>

@@ -24,8 +24,7 @@ export function HeatmapPreview() {
 		<div className="grid grid-cols-12 gap-1">
 			{heatmapData.map((bgClass, i) => (
 				<div
-					// biome-ignore lint/suspicious/noArrayIndexKey: static grid
-					key={i}
+					key={`heatmap-${bgClass}-${i}`}
 					className={`aspect-square rounded-sm ${bgClass}`}
 				/>
 			))}

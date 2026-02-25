@@ -9,13 +9,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
+import { Suspense } from "react";
 
 type SelectYearProps = {
 	availableYears: number[];
 	selectedYear: number;
 };
 
-export default function SelectYear({
+function SelectYearContent({
 	availableYears,
 	selectedYear,
 }: SelectYearProps) {
@@ -43,7 +44,7 @@ export default function SelectYear({
 				}}
 			>
 				<SelectTrigger className="w-[120px]" isLoading={isPending}>
-					<SelectValue defaultValue={String(selectedYear)} />
+					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
 					{availableYears.map((year) => (
@@ -54,5 +55,13 @@ export default function SelectYear({
 				</SelectContent>
 			</Select>
 		</div>
+	);
+}
+
+export default function SelectYear(props: SelectYearProps) {
+	return (
+		<Suspense fallback={<div className="h-10 w-[120px] bg-muted animate-pulse rounded-md" />}>
+			<SelectYearContent {...props} />
+		</Suspense>
 	);
 }

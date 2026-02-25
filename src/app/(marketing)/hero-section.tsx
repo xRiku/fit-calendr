@@ -164,9 +164,8 @@ function HeroVisual() {
 				{/* Calendar Grid */}
 				<div className="grid grid-cols-7 gap-2 text-center text-sm mb-4">
 					{["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: static weekday headers
 						<div
-							key={`weekday-${i}`}
+							key={`hero-weekday-${day}-${i}`}
 							className="text-neutral-500 font-medium py-2"
 						>
 							{day}
@@ -177,17 +176,15 @@ function HeroVisual() {
 				<div className="grid grid-cols-7 gap-2">
 					{calendarDays.map((day, i) => (
 						<div
-							// biome-ignore lint/suspicious/noArrayIndexKey: static calendar preview
-							key={i}
-							className={`aspect-square rounded-lg flex items-center justify-center text-sm font-medium transition-all ${
-								day?.workout && day?.cheat
-									? "bg-linear-to-br from-vibrant-green to-vibrant-orange text-white shadow-lg shadow-vibrant-green/25"
-									: day?.workout
-										? "bg-vibrant-green text-black shadow-lg shadow-vibrant-green/25"
-										: day?.cheat
-											? "bg-vibrant-orange text-black shadow-lg shadow-vibrant-orange/25"
-											: "bg-neutral-800/50 text-neutral-400 hover:bg-neutral-800"
-							}`}
+							key={`hero-cell-${i}`}
+							className={`aspect-square rounded-lg flex items-center justify-center text-sm font-medium transition-all ${day?.workout && day?.cheat
+								? "bg-linear-to-br from-vibrant-green to-vibrant-orange text-white shadow-lg shadow-vibrant-green/25"
+								: day?.workout
+									? "bg-vibrant-green text-black shadow-lg shadow-vibrant-green/25"
+									: day?.cheat
+										? "bg-vibrant-orange text-black shadow-lg shadow-vibrant-orange/25"
+										: "bg-neutral-800/50 text-neutral-400 hover:bg-neutral-800"
+								}`}
 						>
 							{i + 1}
 						</div>

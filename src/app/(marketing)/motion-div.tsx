@@ -1,15 +1,24 @@
 "use client";
 
-import { type MotionProps, motion } from "motion/react";
+import { m, LazyMotion, domAnimation, useReducedMotion } from "motion/react";
+import type { HTMLMotionProps } from "motion/react";
 
 export default function MotionDiv({
 	children,
 	className,
 	...props
-}: MotionProps & { children: React.ReactNode; className?: string }) {
+}: HTMLMotionProps<"div"> & { children?: React.ReactNode; className?: string }) {
+	const shouldReduceMotion = useReducedMotion();
+
 	return (
-		<motion.div className={className} {...props}>
-			{children}
-		</motion.div>
+		<LazyMotion features={domAnimation}>
+			<m.div
+				className={className}
+				{...props}
+				transition={shouldReduceMotion ? { duration: 0 } : props.transition}
+			>
+				{children}
+			</m.div>
+		</LazyMotion>
 	);
 }

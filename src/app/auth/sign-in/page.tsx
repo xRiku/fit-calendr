@@ -10,6 +10,11 @@ import {
 // import { GoogleSignInButton } from "./google-sign-in-button";
 import { SignInForm } from "./sign-in-form";
 
+export const metadata = {
+	title: "Login | FitCalendr",
+	description: "Login to your FitCalendr account to track your daily habits.",
+};
+
 export default function SignInPage() {
 	return (
 		<Card>

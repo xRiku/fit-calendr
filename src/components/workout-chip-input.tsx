@@ -13,6 +13,7 @@ import {
 	useImperativeHandle,
 	useRef,
 	useState,
+	useEffect,
 } from "react";
 import { toast } from "sonner";
 
@@ -49,18 +50,20 @@ export const WorkoutChipInput = forwardRef<
 	const onChangeRef = useRef(onChange);
 
 	// Keep refs updated
-	inputValueRef.current = inputValue;
-	valueRef.current = value;
-	presetsRef.current = presets;
-	onChangeRef.current = onChange;
+	useEffect(() => {
+		inputValueRef.current = inputValue;
+		valueRef.current = value;
+		presetsRef.current = presets;
+		onChangeRef.current = onChange;
+	});
 
 	// Filter presets based on input (only when user is typing)
 	const filteredPresets = inputValue
 		? presets.filter(
-				(preset) =>
-					preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
-					!value.some((chip) => chip.presetId === preset.id),
-			)
+			(preset) =>
+				preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
+				!value.some((chip) => chip.presetId === preset.id),
+		)
 		: [];
 
 	// Check if input matches an existing preset exactly

@@ -9,15 +9,19 @@ import {
 	getGymChecksByYearGroupedByMonth,
 } from "@/lib/server-utils";
 import { Suspense } from "react";
-import { Chart } from "./chart";
+import dynamic from "next/dynamic";
 import { ChartSkeleton } from "./chart-skeleton";
+
+const Chart = dynamic(() => import("./chart").then((mod) => mod.Chart), {
+	loading: () => <ChartSkeleton />,
+});
 
 const options: {
 	[key: string]: {
 		description: string;
 		fetchCall:
-			| typeof getGymChecksByYearGroupedByMonth
-			| typeof getCheatMealsByYearGroupedByMonth;
+		| typeof getGymChecksByYearGroupedByMonth
+		| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
@@ -40,7 +44,7 @@ export function WeekdayChart({
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
 	return (
-		<Card className="col-span-3">
+		<Card className="col-span-3 min-w-0 max-w-full overflow-hidden">
 			<CardHeader>
 				<CardTitle>Weekday Frequency Chart</CardTitle>
 				<CardDescription>{options[selected].description}</CardDescription>

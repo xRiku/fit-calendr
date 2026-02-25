@@ -15,17 +15,20 @@ export function CollapsibleSection({
 	children: React.ReactNode;
 }) {
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const [expanded, setExpanded] = useState(true);
+	const [mounted, setMounted] = useState(false);
+	const [userExpanded, setUserExpanded] = useState<boolean | null>(null);
 
 	useEffect(() => {
-		setExpanded(isDesktop);
-	}, [isDesktop]);
+		setMounted(true);
+	}, []);
+
+	const expanded = userExpanded ?? isDesktop;
 
 	return (
 		<div>
 			<button
 				type="button"
-				onClick={() => setExpanded(!expanded)}
+				onClick={() => setUserExpanded(!expanded)}
 				className="w-full flex items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 lg:pointer-events-none"
 			>
 				<span>{title}</span>

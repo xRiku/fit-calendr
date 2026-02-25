@@ -89,7 +89,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 					<AreaChart
 						accessibilityLayer
 						data={chartData}
-						margin={{ top: 8, right: 4, bottom: 0, left: -20 }}
+						margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
 					>
 						<defs>
 							<linearGradient id={opt.gradientId} x1="0" y1="0" x2="0" y2="1">

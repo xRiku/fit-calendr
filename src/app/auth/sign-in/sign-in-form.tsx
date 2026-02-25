@@ -66,15 +66,16 @@ export function SignInForm() {
 				startTransition(() => {
 					router.push("/setup");
 				});
+				setIsLoading(false);
 				return;
 			}
 
 			startTransition(() => {
 				router.push("/app/dashboard");
 			});
+			setIsLoading(false);
 		} catch {
 			setHasError(true);
-		} finally {
 			setIsLoading(false);
 		}
 	};

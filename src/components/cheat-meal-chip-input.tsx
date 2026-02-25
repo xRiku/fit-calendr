@@ -13,6 +13,7 @@ import {
 	useImperativeHandle,
 	useRef,
 	useState,
+	useEffect,
 } from "react";
 import { toast } from "sonner";
 
@@ -47,17 +48,19 @@ export const CheatMealChipInput = forwardRef<
 	const presetsRef = useRef(presets);
 	const onChangeRef = useRef(onChange);
 
-	inputValueRef.current = inputValue;
-	valueRef.current = value;
-	presetsRef.current = presets;
-	onChangeRef.current = onChange;
+	useEffect(() => {
+		inputValueRef.current = inputValue;
+		valueRef.current = value;
+		presetsRef.current = presets;
+		onChangeRef.current = onChange;
+	});
 
 	const filteredPresets = inputValue
 		? presets.filter(
-				(preset) =>
-					preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
-					!value.some((chip) => chip.presetId === preset.id),
-			)
+			(preset) =>
+				preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
+				!value.some((chip) => chip.presetId === preset.id),
+		)
 		: [];
 
 	const duplicateChip = value.find(

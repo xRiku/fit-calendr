@@ -121,16 +121,16 @@
 */
 
 :root {
-	--radius: 0.625rem;
+	--radius: 1rem;
 
-	--background: oklch(1 0 0);
+	--background: oklch(0.98 0 0);
 	--foreground: oklch(0.145 0 0);
 	--vibrant-green: oklch(78.54% 0.1928 152.8);
 	--vibrant-green-light: oklch(88% 0.12 152.8);
-	--vibrant-green-bg: oklch(78.54% 0.1928 152.8 / 5%);
+	--vibrant-green-bg: oklch(78.54% 0.1928 152.8 / 10%);
 	--vibrant-orange: oklch(78.18% 0.1637 64.01);
 	--vibrant-orange-light: oklch(88% 0.1 64.01);
-	--vibrant-orange-bg: oklch(78.18% 0.1637 64.01 / 5%);
+	--vibrant-orange-bg: oklch(78.18% 0.1637 64.01 / 10%);
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
@@ -179,17 +179,17 @@
 */
 
 .dark {
-	--background: oklch(0.145 0 0);
+	--background: oklch(0.12 0 0);
 	--foreground: oklch(0.985 0 0);
 	--vibrant-green: oklch(78.54% 0.1928 152.8);
 	--vibrant-green-light: oklch(68% 0.15 152.8);
-	--vibrant-green-bg: oklch(78.54% 0.1928 152.8 / 8%);
+	--vibrant-green-bg: oklch(78.54% 0.1928 152.8 / 15%);
 	--vibrant-orange: oklch(78.18% 0.1637 64.01);
 	--vibrant-orange-light: oklch(68% 0.13 64.01);
-	--vibrant-orange-bg: oklch(78.18% 0.1637 64.01 / 8%);
-	--card: oklch(0.205 0 0);
+	--vibrant-orange-bg: oklch(78.18% 0.1637 64.01 / 15%);
+	--card: oklch(0.16 0 0);
 	--card-foreground: oklch(0.985 0 0);
-	--popover: oklch(0.205 0 0);
+	--popover: oklch(0.16 0 0);
 	--popover-foreground: oklch(0.985 0 0);
 	--primary: oklch(0.922 0 0);
 	--primary-foreground: oklch(0.205 0 0);

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import CheckOptionThisMonthCard from "@/components/dashboard/check-option-this-month-card";
 import CheckOptionThisYearCard from "@/components/dashboard/check-option-this-year-card";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
@@ -31,7 +32,7 @@ export default async function DashboardPage({
 	if (total === 0) {
 		return (
 			<main className="flex flex-col gap-4">
-				<div className="flex gap-6 items-center flex-wrap">
+				<div className="flex py-2 gap-6 items-center flex-wrap">
 					<H2>Dashboard</H2>
 				</div>
 				<DashboardEmptyState />
@@ -41,7 +42,7 @@ export default async function DashboardPage({
 
 	return (
 		<main className="flex flex-col gap-4 group">
-			<div className="flex gap-6 items-center flex-wrap">
+			<div className="flex py-2 gap-6 items-center flex-wrap">
 				<H2>Dashboard</H2>
 				<SelectCheckOptions selected={selected} />
 				{availableYears.length > 1 && (
@@ -49,15 +50,13 @@ export default async function DashboardPage({
 				)}
 			</div>
 			<div className="flex flex-col gap-4 group-has-data-pending:animate-pulse">
-				{/* Bento: heatmap + 2 stat cards */}
-				<div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:items-stretch">
-					<div className="sm:col-span-3 [&>*]:h-full">
-						<YearlyHeatmap selected={selected} year={year} />
-					</div>
-					<div className="flex flex-col gap-4 [&>*]:flex-1">
-						<CheckOptionThisMonthCard selected={selected} year={year} />
-						<CheckOptionThisYearCard selected={selected} year={year} />
-					</div>
+				{/* Overview Heatmap */}
+				<YearlyHeatmap selected={selected} year={year} />
+
+				{/* 2-Column Stat Cards */}
+				<div className="grid grid-cols-2 gap-4">
+					<CheckOptionThisMonthCard selected={selected} year={year} />
+					<CheckOptionThisYearCard selected={selected} year={year} />
 				</div>
 
 				{/* Status banner */}
