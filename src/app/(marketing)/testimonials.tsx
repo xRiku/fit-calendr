@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { Star } from "lucide-react";
 import MotionDiv from "./motion-div";
 
 const testimonials = [
@@ -55,7 +55,7 @@ export function Testimonials() {
 								<CardContent className="p-8 flex flex-col h-full">
 									<div className="flex gap-1 mb-4">
 										{Array.from({ length: 5 }).map((_, j) => (
-											<Sparkles
+											<Star
 												// biome-ignore lint/suspicious/noArrayIndexKey: static stars
 												key={j}
 												className="w-5 h-5 text-vibrant-green fill-vibrant-green"

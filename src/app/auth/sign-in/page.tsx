@@ -17,12 +17,12 @@ export const metadata = {
 
 export default function SignInPage() {
 	return (
-		<Card>
+		<Card className="bg-neutral-900 border-neutral-800 text-white">
 			<CardHeader>
-				<CardTitle className="text-xl font-semibold tracking-tight">
+				<CardTitle className="text-xl font-semibold tracking-tight text-white">
 					Login to FitCalendr
 				</CardTitle>
-				<CardDescription>
+				<CardDescription className="text-neutral-400">
 					Add daily information to keep track of your healthy habits.
 				</CardDescription>
 			</CardHeader>

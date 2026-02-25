@@ -8,22 +8,22 @@ import { Dumbbell, Utensils } from "lucide-react";
 import { useTransition, useState } from "react";
 
 export function GoalsSection({
-	defaultWorkoutGoal,
-	defaultCheatMealBudget,
+	initialWorkoutGoal,
+	initialCheatMealBudget,
 }: {
-	defaultWorkoutGoal: number;
-	defaultCheatMealBudget: number;
+	initialWorkoutGoal: number;
+	initialCheatMealBudget: number;
 }) {
 	const [isPending, startTransition] = useTransition();
-	const [workoutGoal, setWorkoutGoal] = useState(() => defaultWorkoutGoal);
+	const [workoutGoal, setWorkoutGoal] = useState(() => initialWorkoutGoal);
 	const [cheatMealBudget, setCheatMealBudget] = useState(
-		() => defaultCheatMealBudget,
+		() => initialCheatMealBudget,
 	);
 	const [saved, setSaved] = useState(false);
 
 	const hasChanges =
-		workoutGoal !== defaultWorkoutGoal ||
-		cheatMealBudget !== defaultCheatMealBudget;
+		workoutGoal !== initialWorkoutGoal ||
+		cheatMealBudget !== initialCheatMealBudget;
 
 	function handleSave() {
 		startTransition(async () => {

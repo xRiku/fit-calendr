@@ -4,7 +4,7 @@ const stats = [
 	{ value: "10K+", label: "Workouts Logged" },
 	{ value: "30 Days", label: "Avg. Streak" },
 	{ value: "100%", label: "Free Forever" },
-	{ value: "0", label: "Credit Card Required" },
+	{ value: "No", label: "Credit Card Required" },
 ];
 
 export function StatsBar() {

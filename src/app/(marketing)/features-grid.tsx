@@ -84,7 +84,7 @@ export function FeaturesGrid() {
 									<div className="w-12 h-12 rounded-lg bg-vibrant-green/10 flex items-center justify-center mb-4 group-hover:bg-vibrant-green/20 transition-colors duration-300">
 										<feature.icon className="w-6 h-6 text-vibrant-green" />
 									</div>
-									<h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+									<h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
 									<p className="text-neutral-400 leading-relaxed">
 										{feature.description}
 									</p>
