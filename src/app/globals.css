@@ -13,6 +13,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
 	*,
 	::after,
 	::before,
@@ -39,7 +40,8 @@
 		/* --chart-1: 29 94% 38%;
     --chart-2: 30 97% 45%;
     --chart-3: 31 97% 52%; */
-		--chart-4: 32 100% 59%; /* true color */
+		--chart-4: 32 100% 59%;
+		/* true color */
 		--chart-5: 147 71% 51%;
 		/* --chart-5: 33 100% 66%; */
 		--chart-6: 34 100% 72%;
@@ -125,18 +127,18 @@
 
 	--background: oklch(0.98 0 0);
 	--foreground: oklch(0.145 0 0);
-	--vibrant-green: oklch(78.54% 0.1928 152.8);
-	--vibrant-green-light: oklch(88% 0.12 152.8);
-	--vibrant-green-bg: oklch(78.54% 0.1928 152.8 / 10%);
-	--vibrant-orange: oklch(78.18% 0.1637 64.01);
-	--vibrant-orange-light: oklch(88% 0.1 64.01);
-	--vibrant-orange-bg: oklch(78.18% 0.1637 64.01 / 10%);
+	--vibrant-green: oklch(0.94 0.23 130);
+	--vibrant-green-light: oklch(0.98 0.1 130);
+	--vibrant-green-bg: oklch(0.94 0.23 130 / 10%);
+	--vibrant-orange: oklch(0.65 0.25 35);
+	--vibrant-orange-light: oklch(0.8 0.15 35);
+	--vibrant-orange-bg: oklch(0.65 0.25 35 / 10%);
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.145 0 0);
-	--primary: oklch(0.205 0 0);
-	--primary-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.94 0.23 130);
+	--primary-foreground: oklch(0.145 0 0);
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
 	--muted: oklch(0.97 0 0);
@@ -146,24 +148,38 @@
 	--destructive: oklch(0.577 0.245 27.325);
 	--border: oklch(0.922 0 0);
 	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
+	--ring: oklch(0.94 0.23 130);
 	/* Workout chart colors - based on vibrant-green (152.80 hue) */
-	--chart-Monday-workout: oklch(0.78 0.19 152.8); /* Base vibrant-green */
-	--chart-Tuesday-workout: oklch(0.7 0.18 152.8); /* Lighter */
-	--chart-Wednesday-workout: oklch(0.62 0.17 152.8); /* Medium */
-	--chart-Thursday-workout: oklch(0.54 0.16 152.8); /* Darker */
-	--chart-Friday-workout: oklch(0.46 0.15 152.8); /* Darkest */
-	--chart-Saturday-workout: oklch(0.88 0.14 152.8); /* Lightest */
-	--chart-Sunday-workout: oklch(0.3 0.2 152.8); /* Deepest */
+	--chart-Monday-workout: oklch(0.78 0.19 152.8);
+	/* Base vibrant-green */
+	--chart-Tuesday-workout: oklch(0.7 0.18 152.8);
+	/* Lighter */
+	--chart-Wednesday-workout: oklch(0.62 0.17 152.8);
+	/* Medium */
+	--chart-Thursday-workout: oklch(0.54 0.16 152.8);
+	/* Darker */
+	--chart-Friday-workout: oklch(0.46 0.15 152.8);
+	/* Darkest */
+	--chart-Saturday-workout: oklch(0.88 0.14 152.8);
+	/* Lightest */
+	--chart-Sunday-workout: oklch(0.3 0.2 152.8);
+	/* Deepest */
 
 	/* Cheat meal chart colors - based on vibrant-orange (64.01 hue) */
-	--chart-Monday-cheat-meal: oklch(0.78 0.16 64.01); /* Base vibrant-orange */
-	--chart-Tuesday-cheat-meal: oklch(0.7 0.15 64.01); /* Lighter */
-	--chart-Wednesday-cheat-meal: oklch(0.62 0.14 64.01); /* Medium */
-	--chart-Thursday-cheat-meal: oklch(0.54 0.13 64.01); /* Darker */
-	--chart-Friday-cheat-meal: oklch(0.46 0.12 64.01); /* Darkest */
-	--chart-Saturday-cheat-meal: oklch(0.88 0.11 64.01); /* Lightest */
-	--chart-Sunday-cheat-meal: oklch(0.3 0.17 64.01); /* Deepest */
+	--chart-Monday-cheat-meal: oklch(0.78 0.16 64.01);
+	/* Base vibrant-orange */
+	--chart-Tuesday-cheat-meal: oklch(0.7 0.15 64.01);
+	/* Lighter */
+	--chart-Wednesday-cheat-meal: oklch(0.62 0.14 64.01);
+	/* Medium */
+	--chart-Thursday-cheat-meal: oklch(0.54 0.13 64.01);
+	/* Darker */
+	--chart-Friday-cheat-meal: oklch(0.46 0.12 64.01);
+	/* Darkest */
+	--chart-Saturday-cheat-meal: oklch(0.88 0.11 64.01);
+	/* Lightest */
+	--chart-Sunday-cheat-meal: oklch(0.3 0.17 64.01);
+	/* Deepest */
 	--sidebar: oklch(0.985 0 0);
 	--sidebar-foreground: oklch(0.145 0 0);
 	--sidebar-primary: oklch(0.205 0 0);
@@ -179,47 +195,61 @@
 */
 
 .dark {
-	--background: oklch(0.12 0 0);
+	--background: oklch(0.14 0 0);
 	--foreground: oklch(0.985 0 0);
-	--vibrant-green: oklch(78.54% 0.1928 152.8);
-	--vibrant-green-light: oklch(68% 0.15 152.8);
-	--vibrant-green-bg: oklch(78.54% 0.1928 152.8 / 15%);
-	--vibrant-orange: oklch(78.18% 0.1637 64.01);
-	--vibrant-orange-light: oklch(68% 0.13 64.01);
-	--vibrant-orange-bg: oklch(78.18% 0.1637 64.01 / 15%);
-	--card: oklch(0.16 0 0);
+	--vibrant-green: oklch(0.94 0.23 130);
+	--vibrant-green-light: oklch(0.85 0.2 130);
+	--vibrant-green-bg: oklch(0.94 0.23 130 / 15%);
+	--vibrant-orange: oklch(0.65 0.25 35);
+	--vibrant-orange-light: oklch(0.75 0.2 35);
+	--vibrant-orange-bg: oklch(0.65 0.25 35 / 15%);
+	--card: oklch(0.17 0 0);
 	--card-foreground: oklch(0.985 0 0);
-	--popover: oklch(0.16 0 0);
+	--popover: oklch(0.17 0 0);
 	--popover-foreground: oklch(0.985 0 0);
-	--primary: oklch(0.922 0 0);
-	--primary-foreground: oklch(0.205 0 0);
-	--secondary: oklch(0.269 0 0);
+	--primary: oklch(0.94 0.23 130);
+	--primary-foreground: oklch(0.14 0 0);
+	--secondary: oklch(0.22 0 0);
 	--secondary-foreground: oklch(0.985 0 0);
-	--muted: oklch(0.269 0 0);
+	--muted: oklch(0.22 0 0);
 	--muted-foreground: oklch(0.708 0 0);
-	--accent: oklch(0.269 0 0);
+	--accent: oklch(0.22 0 0);
 	--accent-foreground: oklch(0.985 0 0);
 	--destructive: oklch(0.704 0.191 22.216);
-	--border: oklch(1 0 0 / 10%);
-	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.556 0 0);
+	--border: oklch(0.25 0 0);
+	--input: oklch(0.25 0 0);
+	--ring: oklch(0.94 0.23 130);
 	/* Workout chart colors for dark mode - based on vibrant-green (152.80 hue) */
-	--chart-1-workout: oklch(0.68 0.22 152.8); /* Base vibrant-green */
-	--chart-2-workout: oklch(0.6 0.21 152.8); /* Lighter */
-	--chart-3-workout: oklch(0.52 0.2 152.8); /* Medium */
-	--chart-4-workout: oklch(0.44 0.19 152.8); /* Darker */
-	--chart-5-workout: oklch(0.36 0.18 152.8); /* Darkest */
-	--chart-6-workout: oklch(0.78 0.17 152.8); /* Lightest */
-	--chart-7-workout: oklch(0.25 0.23 152.8); /* Deepest */
+	--chart-1-workout: oklch(0.68 0.22 152.8);
+	/* Base vibrant-green */
+	--chart-2-workout: oklch(0.6 0.21 152.8);
+	/* Lighter */
+	--chart-3-workout: oklch(0.52 0.2 152.8);
+	/* Medium */
+	--chart-4-workout: oklch(0.44 0.19 152.8);
+	/* Darker */
+	--chart-5-workout: oklch(0.36 0.18 152.8);
+	/* Darkest */
+	--chart-6-workout: oklch(0.78 0.17 152.8);
+	/* Lightest */
+	--chart-7-workout: oklch(0.25 0.23 152.8);
+	/* Deepest */
 
 	/* Cheat meal chart colors for dark mode - based on vibrant-orange (64.01 hue) */
-	--chart-1-cheatmeal: oklch(0.68 0.19 64.01); /* Base vibrant-orange */
-	--chart-2-cheatmeal: oklch(0.6 0.18 64.01); /* Lighter */
-	--chart-3-cheatmeal: oklch(0.52 0.17 64.01); /* Medium */
-	--chart-4-cheatmeal: oklch(0.44 0.16 64.01); /* Darker */
-	--chart-5-cheatmeal: oklch(0.36 0.15 64.01); /* Darkest */
-	--chart-6-cheatmeal: oklch(0.78 0.14 64.01); /* Lightest */
-	--chart-7-cheatmeal: oklch(0.25 0.2 64.01); /* Deepest */
+	--chart-1-cheatmeal: oklch(0.68 0.19 64.01);
+	/* Base vibrant-orange */
+	--chart-2-cheatmeal: oklch(0.6 0.18 64.01);
+	/* Lighter */
+	--chart-3-cheatmeal: oklch(0.52 0.17 64.01);
+	/* Medium */
+	--chart-4-cheatmeal: oklch(0.44 0.16 64.01);
+	/* Darker */
+	--chart-5-cheatmeal: oklch(0.36 0.15 64.01);
+	/* Darkest */
+	--chart-6-cheatmeal: oklch(0.78 0.14 64.01);
+	/* Lightest */
+	--chart-7-cheatmeal: oklch(0.25 0.2 64.01);
+	/* Deepest */
 	--sidebar: oklch(0.205 0 0);
 	--sidebar-foreground: oklch(0.985 0 0);
 	--sidebar-primary: oklch(0.488 0.243 264.376);
@@ -238,6 +268,7 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}

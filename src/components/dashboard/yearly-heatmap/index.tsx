@@ -65,10 +65,10 @@ export function YearlyHeatmap({
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>{options[selected].title}</CardTitle>
-				<CardDescription>{options[selected].description}</CardDescription>
+		<Card className="hover:border-primary/20 transition-colors duration-300">
+			<CardHeader className="pb-4">
+				<CardTitle className="text-xl font-bold tracking-tight text-white/90">{options[selected].title}</CardTitle>
+				<CardDescription className="text-white/60">{options[selected].description}</CardDescription>
 			</CardHeader>
 			<div className="px-6 pb-6">
 				<Suspense fallback={<HeatmapSkeleton />}>

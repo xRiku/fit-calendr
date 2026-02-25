@@ -62,7 +62,7 @@ export function PresetItem({
     return (
         <div>
             {/* Mobile: Flat with separators | Desktop: Card style */}
-            <div className="flex items-center gap-3 py-3 md:rounded-lg md:border md:border-neutral-800 md:bg-neutral-900/50 md:p-3 md:transition-colors md:hover:bg-neutral-800/50">
+            <div className="flex items-center gap-3 py-3 px-4 rounded-xl border border-white/5 bg-white/5 backdrop-blur-lg shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 group">
                 <Popover>
                     <PopoverTrigger asChild>
                         <button
@@ -119,11 +119,11 @@ export function PresetItem({
                     </button>
                 )}
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
+                        className="h-7 w-7 text-neutral-400 hover:text-white hover:bg-white/10"
                         onClick={() => onReorder(preset, "up")}
                         disabled={isFirst}
                         aria-label="Move up"
@@ -133,7 +133,7 @@ export function PresetItem({
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
+                        className="h-7 w-7 text-neutral-400 hover:text-white hover:bg-white/10"
                         onClick={() => onReorder(preset, "down")}
                         disabled={isLast}
                         aria-label="Move down"

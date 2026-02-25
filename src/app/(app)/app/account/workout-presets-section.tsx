@@ -193,7 +193,7 @@ export function WorkoutPresetsSection() {
 
 	return (
 		<div className="w-full space-y-4">
-			<div>
+			<div className="flex flex-col gap-2">
 				{presets.map((preset, index) => (
 					<PresetItem
 						key={preset.id}
@@ -208,11 +208,11 @@ export function WorkoutPresetsSection() {
 				))}
 			</div>
 
-			<div className="flex gap-3 pt-2">
+			<div className="flex gap-3 pt-4">
 				<Button
 					onClick={handleAddPreset}
 					disabled={isCreating}
-					className="flex-1"
+					className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-all"
 				>
 					<Plus className="mr-2 h-4 w-4" />
 					Add Preset
@@ -222,27 +222,27 @@ export function WorkoutPresetsSection() {
 					<AlertDialogTrigger asChild>
 						<Button
 							variant="outline"
-							className="dark:border-neutral-700 dark:hover:bg-neutral-800"
+							className="border-white/10 hover:bg-white/5"
 						>
 							<RotateCcw className="mr-2 h-4 w-4" />
-							Reset to Defaults
+							Reset Defaults
 						</Button>
 					</AlertDialogTrigger>
-					<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
+					<AlertDialogContent className="border-white/10 bg-background/95 backdrop-blur-xl">
 						<AlertDialogHeader>
 							<AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
-							<AlertDialogDescription className="dark:text-neutral-400">
+							<AlertDialogDescription className="text-white/60">
 								This will delete all your custom presets and restore the default
 								workouts. Are you sure?
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
+							<AlertDialogCancel className="border-white/10 bg-white/5 hover:bg-white/10 text-white">
 								Cancel
 							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={handleResetDefaults}
-								className="bg-red-600 hover:bg-red-700"
+								className="bg-destructive hover:bg-destructive/90 text-white"
 							>
 								Reset
 							</AlertDialogAction>

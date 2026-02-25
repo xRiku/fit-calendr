@@ -27,16 +27,16 @@ function getIntensity(count: number): 0 | 1 | 2 | 3 {
 
 const colorClasses = {
 	workout: {
-		0: "bg-black/5 dark:bg-white/5",
-		1: "bg-vibrant-green/30",
-		2: "bg-vibrant-green/60",
-		3: "bg-vibrant-green text-black",
+		0: "bg-white/5 dark:bg-white/5 border border-white/5 shadow-inner",
+		1: "bg-primary/30 border border-primary/20",
+		2: "bg-primary/60 border border-primary/40 shadow-[0_0_8px_rgba(var(--primary),0.3)]",
+		3: "bg-primary border border-primary/60 shadow-[0_0_12px_rgba(var(--primary),0.6)] text-primary-foreground",
 	},
 	"cheat-meal": {
-		0: "bg-black/5 dark:bg-white/5",
-		1: "bg-vibrant-orange/30",
-		2: "bg-vibrant-orange/60",
-		3: "bg-vibrant-orange",
+		0: "bg-white/5 dark:bg-white/5 border border-white/5 shadow-inner",
+		1: "bg-vibrant-orange/30 border border-vibrant-orange/20",
+		2: "bg-vibrant-orange/60 border border-vibrant-orange/40 shadow-[0_0_8px_rgba(var(--vibrant-orange),0.3)]",
+		3: "bg-vibrant-orange border border-vibrant-orange/60 shadow-[0_0_12px_rgba(var(--vibrant-orange),0.6)] text-white",
 	},
 } as const;
 
@@ -157,7 +157,7 @@ export function HeatmapGrid({
 									key={`cell-${d}-${w}`}
 									title={`${cell.date}: ${cell.count}`}
 									className={cn(
-										"w-[13px] h-[13px] mx-[1.5px] rounded-sm transition-colors",
+										"w-[13px] h-[13px] mx-[1.5px] rounded-[3px] transition-all duration-300 hover:scale-125 hover:z-10 group",
 										colors[intensity],
 									)}
 								/>
