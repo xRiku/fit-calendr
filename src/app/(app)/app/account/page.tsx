@@ -32,16 +32,16 @@ export default async function AccountPage() {
 
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6">
-			<H1>Settings</H1>
+			<H1>System Preferences</H1>
 
 			{/* Mobile: Flat layout with separators | Desktop: Cards */}
 			<div className="md:hidden space-y-6">
 				{/* Profile Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Profile</h2>
-						<p className="text-muted-foreground text-sm">
-							Manage your account information
+						<h2 className="text-lg font-bold uppercase tracking-wider text-primary">Player Profile</h2>
+						<p className="text-primary/70 font-mono text-sm tracking-tight">
+							Manage your player data
 						</p>
 					</div>
 					<div className="flex flex-col gap-4">
@@ -58,9 +58,9 @@ export default async function AccountPage() {
 				{/* Goals Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Weekly Goals</h2>
-						<p className="text-muted-foreground text-sm">
-							Set your weekly targets
+						<h2 className="text-lg font-bold uppercase tracking-wider text-vibrant-green">Mission Objectives</h2>
+						<p className="text-vibrant-green/70 font-mono text-sm tracking-tight">
+							Set your weekly XP and HP targets
 						</p>
 					</div>
 					<GoalsSection
@@ -74,9 +74,9 @@ export default async function AccountPage() {
 				{/* Presets Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Presets</h2>
-						<p className="text-muted-foreground text-sm">
-							Quick access to your frequently used items
+						<h2 className="text-lg font-bold uppercase tracking-wider text-white">Loadouts</h2>
+						<p className="text-white/60 font-mono text-sm tracking-tight">
+							Configure quick access items
 						</p>
 					</div>
 					<Tabs defaultValue="workouts" className="w-full">
@@ -107,23 +107,23 @@ export default async function AccountPage() {
 				{/* Data & Privacy Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Data & Privacy</h2>
-						<p className="text-muted-foreground text-sm">
-							Manage your data and privacy settings
+						<h2 className="text-lg font-bold uppercase tracking-wider text-white">Save Data</h2>
+						<p className="text-white/60 font-mono text-sm tracking-tight">
+							Export your complete stat history
 						</p>
 					</div>
-					<Button variant="outline" disabled>
-						Export Data
+					<Button variant="outline" disabled className="font-mono uppercase tracking-widest text-xs border-primary/20">
+						Export Save File
 					</Button>
 				</section>
 			</div>
 
 			{/* Desktop: Card layout */}
 			<div className="hidden md:flex md:flex-col md:gap-6">
-				<Card>
+				<Card className="rounded-none border-primary/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(0,240,255,0.05)]">
 					<CardHeader>
-						<CardTitle>Profile</CardTitle>
-						<CardDescription>Manage your account information</CardDescription>
+						<CardTitle className="uppercase tracking-widest text-primary text-xl">Player Profile</CardTitle>
+						<CardDescription className="font-mono text-primary/60">Manage your player data</CardDescription>
 					</CardHeader>
 					<CardContent className="flex flex-col gap-4">
 						<div className="flex items-center justify-between">
@@ -136,10 +136,10 @@ export default async function AccountPage() {
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className="rounded-none border-vibrant-green/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(var(--vibrant-green),0.05)]">
 					<CardHeader>
-						<CardTitle>Weekly Goals</CardTitle>
-						<CardDescription>Set your weekly targets</CardDescription>
+						<CardTitle className="uppercase tracking-widest text-vibrant-green text-xl">Mission Objectives</CardTitle>
+						<CardDescription className="font-mono text-vibrant-green/60">Set your weekly XP and HP targets</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<GoalsSection
@@ -149,11 +149,11 @@ export default async function AccountPage() {
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className="rounded-none border-primary/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(0,240,255,0.05)]">
 					<CardHeader>
-						<CardTitle>Presets</CardTitle>
-						<CardDescription>
-							Quick access to your frequently used items
+						<CardTitle className="uppercase tracking-widest text-white text-xl">Loadouts</CardTitle>
+						<CardDescription className="font-mono text-white/50">
+							Configure quick access items
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -184,16 +184,16 @@ export default async function AccountPage() {
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className="rounded-none border-primary/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(0,240,255,0.05)]">
 					<CardHeader>
-						<CardTitle>Data & Privacy</CardTitle>
-						<CardDescription>
-							Manage your data and privacy settings
+						<CardTitle className="uppercase tracking-widest text-white text-xl">Save Data</CardTitle>
+						<CardDescription className="font-mono text-white/50">
+							Export your complete stat history
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<Button variant="outline" disabled>
-							Export Data
+						<Button variant="outline" disabled className="font-mono uppercase tracking-widest text-xs border-primary/20">
+							Export Save File
 						</Button>
 					</CardContent>
 				</Card>

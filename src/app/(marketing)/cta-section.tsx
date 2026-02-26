@@ -15,28 +15,28 @@ export function CTASection() {
 					className="relative"
 				>
 					{/* Background Glow */}
-					<div className="absolute -inset-px bg-linear-to-r from-vibrant-green/30 via-vibrant-green/10 to-vibrant-orange/20 rounded-3xl blur-xl" />
+					<div className="absolute -inset-px bg-linear-to-r from-primary/30 via-vibrant-green/10 to-vibrant-orange/20 rounded-none blur-xl" />
 
-					<div className="relative bg-neutral-900/90 backdrop-blur-xl rounded-3xl border border-neutral-800 p-12 md:p-16 text-center">
-						<h2 className="text-4xl md:text-5xl font-bold mb-6">
-							Ready to Start Your
+					<div className="relative bg-[#05050A]/90 backdrop-blur-xl rounded-none border border-primary/30 p-12 md:p-16 text-center shadow-[inset_0_0_50px_rgba(0,240,255,0.05)]">
+						<h2 className="text-4xl md:text-5xl font-bold mb-6 uppercase tracking-widest">
+							Ready to Begin Your
 							<br />
-							<span className="text-vibrant-green">Fitness Journey?</span>
+							<span className="text-vibrant-green drop-shadow-[0_0_10px_rgba(var(--vibrant-green),0.8)]">Mission?</span>
 						</h2>
 
-						<p className="text-xl text-neutral-300 mb-8 max-w-2xl mx-auto">
-							Join thousands of people tracking their workouts and staying
-							balanced. It's free, it's simple, and it works.
+						<p className="text-xl text-primary/70 font-mono mb-8 max-w-2xl mx-auto">
+							Join thousands of players tracking their stats and leveling up.
+							It's free to play, simple to start, and highly addictive.
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
 							<Button
 								asChild
 								size="lg"
-								className="bg-vibrant-green hover:bg-vibrant-green/90 text-black font-bold text-lg px-10 py-7 rounded-full transition-all hover:scale-105 active:scale-95 group"
+								className="bg-primary hover:bg-primary/90 text-black shadow-[0_0_20px_rgba(var(--primary),0.4)] font-bold text-lg px-10 py-7 rounded-none transition-all hover:scale-105 active:scale-95 group uppercase tracking-widest"
 							>
 								<Link href="/auth/sign-in" className="flex items-center gap-2">
-									Create Free Account
+									Initialize Account
 									<ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
 								</Link>
 							</Button>

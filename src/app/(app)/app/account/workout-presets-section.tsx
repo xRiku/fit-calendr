@@ -208,43 +208,43 @@ export function WorkoutPresetsSection() {
 				))}
 			</div>
 
-			<div className="flex gap-3 pt-4">
+			<div className="flex gap-3 pt-4 font-mono">
 				<Button
 					onClick={handleAddPreset}
 					disabled={isCreating}
-					className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-all"
+					className="flex-1 bg-primary text-black hover:bg-primary/90 font-bold shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-all rounded-none uppercase tracking-widest"
 				>
 					<Plus className="mr-2 h-4 w-4" />
-					Add Preset
+					Add Loadout
 				</Button>
 
 				<AlertDialog>
 					<AlertDialogTrigger asChild>
 						<Button
 							variant="outline"
-							className="border-white/10 hover:bg-white/5"
+							className="border-primary/20 bg-[#05050A]/80 hover:bg-primary/10 hover:text-primary rounded-none uppercase tracking-widest text-xs"
 						>
 							<RotateCcw className="mr-2 h-4 w-4" />
 							Reset Defaults
 						</Button>
 					</AlertDialogTrigger>
-					<AlertDialogContent className="border-white/10 bg-background/95 backdrop-blur-xl">
+					<AlertDialogContent className="border-primary/20 bg-[#05050A]/95 backdrop-blur-xl rounded-none shadow-[0_0_30px_rgba(0,240,255,0.1)]">
 						<AlertDialogHeader>
-							<AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
-							<AlertDialogDescription className="text-white/60">
-								This will delete all your custom presets and restore the default
-								workouts. Are you sure?
+							<AlertDialogTitle className="uppercase tracking-widest text-primary font-mono">Reset to Defaults</AlertDialogTitle>
+							<AlertDialogDescription className="text-white/60 font-mono">
+								This will delete all your custom loadouts and restore the default
+								stats. Are you sure?
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel className="border-white/10 bg-white/5 hover:bg-white/10 text-white">
+							<AlertDialogCancel className="border-primary/20 bg-transparent hover:bg-white/5 text-white rounded-none font-mono tracking-widest uppercase text-xs">
 								Cancel
 							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={handleResetDefaults}
-								className="bg-destructive hover:bg-destructive/90 text-white"
+								className="bg-destructive hover:bg-destructive/90 text-white rounded-none font-mono tracking-widest uppercase shadow-[0_0_15px_rgba(255,0,0,0.3)]"
 							>
-								Reset
+								Reset System
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>

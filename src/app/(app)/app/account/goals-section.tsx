@@ -41,10 +41,10 @@ export function GoalsSection({
 			<div className="flex flex-col gap-2">
 				<Label
 					htmlFor="workout-goal"
-					className="flex items-center gap-2 text-sm"
+					className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-vibrant-green"
 				>
 					<Dumbbell className="size-4 text-vibrant-green" />
-					Weekly workout goal
+					Weekly XP Target (Workouts)
 				</Label>
 				<Input
 					id="workout-goal"
@@ -66,10 +66,10 @@ export function GoalsSection({
 			<div className="flex flex-col gap-2">
 				<Label
 					htmlFor="cheat-meal-budget"
-					className="flex items-center gap-2 text-sm"
+					className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-vibrant-orange"
 				>
 					<Utensils className="size-4 text-vibrant-orange" />
-					Weekly cheat meal budget
+					Weekly HP Budget (Cheat Meals)
 				</Label>
 				<Input
 					id="cheat-meal-budget"
@@ -93,10 +93,11 @@ export function GoalsSection({
 					onClick={handleSave}
 					disabled={isPending || !hasChanges}
 					size="sm"
+					className="font-bold uppercase tracking-widest text-xs rounded-none"
 				>
-					{isPending ? "Saving..." : "Save goals"}
+					{isPending ? "Saving..." : "Save Objectives"}
 				</Button>
-				{saved && <span className="text-sm text-muted-foreground">Saved</span>}
+				{saved && <span className="text-sm font-mono text-vibrant-green animate-pulse">Saved</span>}
 			</div>
 		</div>
 	);

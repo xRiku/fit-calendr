@@ -12,39 +12,39 @@ import MotionDiv from "./motion-div";
 const features = [
 	{
 		icon: CalendarDays,
-		title: "Interactive Calendar",
+		title: "Interactive Datapad",
 		description:
-			"Beautiful monthly view with visual indicators. Click any day to add or edit entries instantly.",
+			"Beautiful monthly view with glowing indicators. Click any day to log your progress instantly.",
 	},
 	{
 		icon: Dumbbell,
-		title: "Custom Workout Presets",
+		title: "Custom Loadouts",
 		description:
-			"Create presets for Leg Day, Cardio, Yoga, or any activity you do regularly. One-click logging.",
+			"Create presets for Leg Day, Cardio, or any mission you run regularly. One-click equipping.",
 	},
 	{
 		icon: Pizza,
-		title: "Cheat Meal Tracking",
+		title: "HP Budget Tracking",
 		description:
-			"Log burgers, pizza, or any indulgence. Keep tabs on your treats with the weekly budget feature.",
+			"Log cheat meals or any indulgence. Keep tabs on your treats with the weekly HP budget feature.",
 	},
 	{
 		icon: Flame,
-		title: "Streak Counter",
+		title: "Streak Multiplier",
 		description:
-			"Stay motivated with current and longest streak tracking. Don't break the chain!",
+			"Stay motivated with current and longest streak tracking. Don't break the combo chain!",
 	},
 	{
 		icon: TrendingUp,
 		title: "Yearly Heatmap",
 		description:
-			"GitHub-style visualization of your entire year. Spot patterns and celebrate consistency at a glance.",
+			"Contribution-style visualization of your entire year. Spot patterns and celebrate levels reached at a glance.",
 	},
 	{
 		icon: Target,
-		title: "Weekly Goals",
+		title: "Weekly Objectives",
 		description:
-			"Set targets for workouts and budgets for cheat meals. Visual progress bars keep you accountable.",
+			"Set targets for workouts (XP) and budgets for cheat meals (HP). Visual progress bars keep you accountable.",
 	},
 ];
 
@@ -52,7 +52,7 @@ export function FeaturesGrid() {
 	return (
 		<section
 			id="features"
-			className="py-24 lg:py-32 border-t border-neutral-800"
+			className="py-24 lg:py-32 border-t border-primary/20 bg-black"
 		>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<MotionDiv
@@ -62,11 +62,11 @@ export function FeaturesGrid() {
 					transition={{ duration: 0.6 }}
 					className="text-center mb-16"
 				>
-					<h2 className="text-4xl md:text-5xl font-bold mb-4">
-						Everything You Need
+					<h2 className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-wider text-white">
+						<span className="text-transparent border-b-2 border-primary pb-2 text-white">System Tools</span>
 					</h2>
-					<p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-						Powerful features, beautifully simple. Nothing more, nothing less.
+					<p className="text-xl text-primary/70 max-w-2xl mx-auto font-mono mt-8">
+						Powerful features, beautifully designed. Everything you need to conquer your goals.
 					</p>
 				</MotionDiv>
 
@@ -79,13 +79,13 @@ export function FeaturesGrid() {
 							viewport={{ once: true }}
 							transition={{ duration: 0.5, delay: i * 0.1 }}
 						>
-							<Card className="bg-neutral-900/50 backdrop-blur-sm border-neutral-800 hover:border-vibrant-green/30 transition-all duration-300 h-full group">
+							<Card className="bg-[#05050A]/60 backdrop-blur-md border border-primary/20 hover:border-vibrant-green/50 hover:shadow-[0_0_20px_rgba(var(--vibrant-green),0.15)] transition-all duration-300 h-full group rounded-none">
 								<CardContent className="p-6">
-									<div className="w-12 h-12 rounded-lg bg-vibrant-green/10 flex items-center justify-center mb-4 group-hover:bg-vibrant-green/20 transition-colors duration-300">
-										<feature.icon className="w-6 h-6 text-vibrant-green" />
+									<div className="w-12 h-12 rounded-none border border-primary/30 bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-vibrant-green/20 group-hover:border-vibrant-green/40 transition-colors duration-300 shadow-[inset_0_0_10px_rgba(0,240,255,0.1)] group-hover:shadow-[inset_0_0_15px_rgba(var(--vibrant-green),0.3)]">
+										<feature.icon className="w-6 h-6 text-primary group-hover:text-vibrant-green drop-shadow-[0_0_5px_rgba(var(--primary),0.8)] group-hover:drop-shadow-[0_0_8px_rgba(var(--vibrant-green),0.8)] transition-all" />
 									</div>
-									<h3 className="text-xl font-bold mb-2 text-white">{feature.title}</h3>
-									<p className="text-neutral-400 leading-relaxed">
+									<h3 className="text-xl font-bold mb-2 text-white uppercase tracking-wide group-hover:text-vibrant-green transition-colors">{feature.title}</h3>
+									<p className="text-white/60 leading-relaxed font-mono text-sm">
 										{feature.description}
 									</p>
 								</CardContent>

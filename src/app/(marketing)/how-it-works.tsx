@@ -5,23 +5,23 @@ const steps = [
 	{
 		icon: CalendarDays,
 		step: "01",
-		title: "Log Your Day",
+		title: "Log Your Mission",
 		description:
-			"Click any day on the calendar to add workouts or cheat meals. Use quick presets for common activities.",
+			"Click any day on the datapad to add workouts or cheat meals. Use quick presets for common activities.",
 	},
 	{
 		icon: Target,
 		step: "02",
-		title: "Set Your Goals",
+		title: "Define Objectives",
 		description:
-			"Define your weekly workout target and cheat meal budget. We'll help you stay on track with visual progress bars.",
+			"Set your weekly workout target (XP) and cheat meal budget (HP). We'll help you stay on track with visual HUD bars.",
 	},
 	{
 		icon: TrendingUp,
 		step: "03",
-		title: "Watch Progress",
+		title: "Analyze Stats",
 		description:
-			"See your entire year at a glance with the heatmap. Track streaks, analyze patterns, and stay motivated.",
+			"See your entire year at a glance with the glowing heatmap. Track streaks, analyze patterns, and level up.",
 	},
 ];
 
@@ -36,9 +36,9 @@ export function HowItWorks() {
 					transition={{ duration: 0.6 }}
 					className="text-center mb-16"
 				>
-					<h2 className="text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
-					<p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-						Start tracking in seconds. No complex setup, no learning curve.
+					<h2 className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-wider drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">How to Play</h2>
+					<p className="text-xl text-primary/70 max-w-2xl mx-auto font-mono">
+						Start tracking in seconds. No complex setup, just pure stat-building.
 					</p>
 				</MotionDiv>
 
@@ -52,18 +52,18 @@ export function HowItWorks() {
 							transition={{ duration: 0.6, delay: i * 0.15 }}
 							className="relative group"
 						>
-							<div className="absolute -inset-px bg-linear-to-b from-vibrant-green/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-							<div className="relative bg-neutral-900/50 backdrop-blur-sm border border-neutral-800 rounded-2xl p-8 h-full hover:border-vibrant-green/30 transition-colors duration-300">
+							<div className="absolute -inset-px bg-linear-to-b from-primary/30 to-transparent rounded-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+							<div className="relative bg-[#05050A]/80 backdrop-blur-md border border-primary/20 p-8 h-full hover:border-primary/60 transition-colors duration-300 shadow-[inset_0_0_20px_rgba(0,240,255,0.02)] group-hover:shadow-[0_0_30px_rgba(0,240,255,0.15)]">
 								<div className="flex items-center justify-between mb-6">
-									<div className="w-14 h-14 rounded-xl bg-vibrant-green/10 flex items-center justify-center">
-										<item.icon className="w-7 h-7 text-vibrant-green" />
+									<div className="w-14 h-14 bg-primary/10 flex items-center justify-center border border-primary/30 shadow-[inset_0_0_10px_rgba(0,240,255,0.2)]">
+										<item.icon className="w-7 h-7 text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.8)]" />
 									</div>
-									<span className="text-5xl font-bold text-neutral-800 group-hover:text-vibrant-green/20 transition-colors duration-300">
+									<span className="text-5xl font-mono font-bold text-primary/10 group-hover:text-primary/30 transition-colors duration-300">
 										{item.step}
 									</span>
 								</div>
-								<h3 className="text-2xl font-bold mb-3">{item.title}</h3>
-								<p className="text-neutral-400 leading-relaxed">
+								<h3 className="text-2xl font-bold mb-3 uppercase tracking-wide text-white/90">{item.title}</h3>
+								<p className="text-white/60 leading-relaxed font-mono text-sm">
 									{item.description}
 								</p>
 							</div>

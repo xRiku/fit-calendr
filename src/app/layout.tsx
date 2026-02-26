@@ -11,7 +11,7 @@ const onest = Onest({
 export const viewport: Viewport = {
 	themeColor: [
 		{ media: "(prefers-color-scheme: light)", color: "#F5F5F5" },
-		{ media: "(prefers-color-scheme: dark)", color: "#121212" },
+		{ media: "(prefers-color-scheme: dark)", color: "#000000" },
 	],
 	width: "device-width",
 	initialScale: 1,
@@ -53,7 +53,7 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning className={`${onest.variable}`}>
 			<body
 				className={
-					"dark:bg-[#121212] bg-[#F5F5F5] antialiased flex min-h-[100dvh] flex-col overscroll-none onest selection:bg-green-500/30"
+					"antialiased flex min-h-[100dvh] flex-col overscroll-none onest selection:bg-primary/30"
 				}
 			>
 				<ThemeProvider

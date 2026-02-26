@@ -33,7 +33,7 @@ export default async function DashboardPage({
 		return (
 			<main className="flex flex-col gap-4">
 				<div className="flex py-2 gap-6 items-center flex-wrap">
-					<H2>Dashboard</H2>
+					<H2 className="font-mono uppercase tracking-widest text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.8)]">Command Center</H2>
 				</div>
 				<DashboardEmptyState />
 			</main>
@@ -43,7 +43,7 @@ export default async function DashboardPage({
 	return (
 		<main className="flex flex-col gap-4 group">
 			<div className="flex py-2 gap-6 items-center flex-wrap">
-				<H2>Dashboard</H2>
+				<H2 className="font-mono uppercase tracking-widest text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.8)]">Command Center</H2>
 				<SelectCheckOptions selected={selected} />
 				{availableYears.length > 1 && (
 					<SelectYear availableYears={availableYears} selectedYear={year} />

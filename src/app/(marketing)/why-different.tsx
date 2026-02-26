@@ -12,7 +12,7 @@ const benefits = [
 
 export function WhyDifferent() {
 	return (
-		<section className="py-24 lg:py-32 border-t border-neutral-800 bg-neutral-900/20">
+		<section className="py-24 lg:py-32 border-t border-primary/20 bg-black/80">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="grid lg:grid-cols-2 gap-16 items-center">
 					<MotionDiv
@@ -21,12 +21,12 @@ export function WhyDifferent() {
 						viewport={{ once: true }}
 						transition={{ duration: 0.6 }}
 					>
-						<h2 className="text-4xl md:text-5xl font-bold mb-6">
-							Built for <span className="text-vibrant-green">Real Life</span>
+						<h2 className="text-4xl md:text-5xl font-bold mb-6 uppercase tracking-wider">
+							Built for <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-vibrant-green drop-shadow-[0_0_10px_rgba(0,240,255,0.3)]">Real Players</span>
 						</h2>
-						<p className="text-xl text-neutral-300 mb-8 leading-relaxed">
+						<p className="text-xl text-primary/70 mb-8 leading-relaxed font-mono">
 							Most fitness apps are either too complex or too restrictive. We
-							believe in balance — train hard, enjoy life, and track it all
+							believe in balance — run your missions, enjoy your loot, and track it all
 							without the headache.
 						</p>
 
@@ -47,16 +47,16 @@ export function WhyDifferent() {
 						whileInView={{ opacity: 1, x: 0 }}
 						viewport={{ once: true }}
 						transition={{ duration: 0.6, delay: 0.2 }}
-						className="relative"
+						className="relative font-mono"
 					>
 						{/* Heatmap Preview */}
 						<div className="relative">
-							<div className="absolute -inset-4 bg-vibrant-green/10 rounded-3xl blur-2xl" />
-							<div className="relative bg-neutral-900/90 backdrop-blur-xl rounded-2xl border border-neutral-800 p-6 shadow-2xl">
-								<h3 className="text-lg font-semibold mb-2">
-									Your Year at a Glance
+							<div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-2xl" />
+							<div className="relative bg-[#05050A]/90 backdrop-blur-xl rounded-none border border-primary/30 p-6 shadow-[0_0_30px_rgba(var(--primary),0.05)]">
+								<h3 className="text-lg font-bold mb-2 uppercase text-primary tracking-widest">
+									Player Activity
 								</h3>
-								<p className="text-sm text-neutral-400 mb-6">
+								<p className="text-sm text-primary/50 mb-6">
 									Consistency is key. See your entire fitness journey
 									visualized.
 								</p>

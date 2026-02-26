@@ -27,13 +27,13 @@ const options: {
 	};
 } = {
 	workout: {
-		title: "Workout Frequency Chart",
-		description: "Showing workout frequency for this year",
+		title: "Mission Logs (Monthly)",
+		description: "XP gain distribution across the months",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		title: "Cheat Meal Frequency Chart",
-		description: "Showing cheat meal frequency for this year",
+		title: "Damage Logs (Monthly)",
+		description: "HP damage distribution across the months",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };
@@ -48,10 +48,14 @@ export function FrequencyChart({
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
 	return (
-		<Card className="col-span-6 min-w-0 max-w-full overflow-hidden">
-			<CardHeader>
-				<CardTitle>{options[selected].title}</CardTitle>
-				<CardDescription>{options[selected].description}</CardDescription>
+		<Card className="col-span-6 min-w-0 max-w-full overflow-hidden rounded-none border-primary/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(0,240,255,0.05)] hover:border-primary/50 hover:shadow-[0_0_20px_rgba(var(--primary),0.15)] transition-all group relative">
+			<div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+			<CardHeader className="relative z-10">
+				<CardTitle className="uppercase tracking-widest text-primary font-mono drop-shadow-[0_0_8px_rgba(var(--primary),0.8)] flex items-center gap-3">
+					<div className="w-2 h-2 bg-primary rounded-sm shadow-[0_0_5px_rgba(var(--primary),0.8)] animate-pulse" />
+					{options[selected].title}
+				</CardTitle>
+				<CardDescription className="font-mono text-primary/60 tracking-tight">{options[selected].description}</CardDescription>
 			</CardHeader>
 			<Suspense fallback={<ChartSkeleton />}>
 				<Chart selected={selected} fetchCallPromise={fetchCallPromise} />

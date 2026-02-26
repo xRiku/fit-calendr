@@ -15,11 +15,11 @@ const options: {
 	};
 } = {
 	workout: {
-		title: "Workouts (month)",
+		title: "XP GAINED (MONTH)",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		title: "Cheat meals (month)",
+		title: "HP DAMAGE (MONTH)",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };
@@ -74,21 +74,21 @@ async function CardData({
 		<>
 			{gymChecksGroupedByMonth && (
 				<>
-					<span className="text-2xl font-bold">
+					<span className="text-3xl font-bold font-mono tracking-tight text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
 						{gymChecksGroupedByMonth.hashTable[targetMonth]?.length || 0}
 					</span>
 					{diffFromLastMonth !== 0 && (
-						<p className="text-xs text-muted-foreground">
-							{isPositive ? "Up by " : "Down by "}
+						<p className="text-[10px] font-mono mt-1 text-white/50 tracking-widest uppercase">
+							{isPositive ? "↑ " : "↓ "}
 							<span
-								className={isGoodTrend ? "text-emerald-500" : "text-red-500"}
+								className={isGoodTrend ? "text-vibrant-green drop-shadow-[0_0_5px_rgba(var(--vibrant-green),0.8)]" : "text-destructive drop-shadow-[0_0_5px_rgba(255,0,0,0.8)]"}
 							>
 								{diffFromLastMonth > 0
 									? `+${diffFromLastMonth.toFixed(1)}`
 									: diffFromLastMonth.toFixed(1)}
 								%
 							</span>{" "}
-							vs last month
+							VS PREV LEVEL
 						</p>
 					)}
 				</>
@@ -106,13 +106,15 @@ export default function CheckOptionThisMonthCard({
 }) {
 
 	return (
-		<Card>
-			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-				<CardTitle className="text-base font-semibold">
+		<Card className="rounded-none border border-primary/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(0,240,255,0.02)] transition-all hover:border-primary/50 hover:shadow-[0_0_20px_rgba(var(--primary),0.15)] group relative overflow-hidden">
+			<div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+				<CardTitle className="text-sm font-mono tracking-widest text-primary flex items-center gap-2">
+					<div className="w-2 h-2 rounded-sm bg-primary animate-pulse shadow-[0_0_5px_rgba(var(--primary),0.8)]" />
 					{options[selected]?.title}
 				</CardTitle>
 			</CardHeader>
-			<CardContent className="space-y-1">
+			<CardContent className="space-y-1 relative z-10 pt-2">
 				<Suspense fallback={<CardSkeleton />}>
 					<CardData selected={selected} year={year} />
 				</Suspense>

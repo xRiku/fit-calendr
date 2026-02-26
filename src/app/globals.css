@@ -195,69 +195,63 @@
 */
 
 .dark {
-	--background: oklch(0.14 0 0);
+	--background: oklch(0 0 0);
+	/* Absolute Black */
 	--foreground: oklch(0.985 0 0);
-	--vibrant-green: oklch(0.94 0.23 130);
-	--vibrant-green-light: oklch(0.85 0.2 130);
-	--vibrant-green-bg: oklch(0.94 0.23 130 / 15%);
-	--vibrant-orange: oklch(0.65 0.25 35);
-	--vibrant-orange-light: oklch(0.75 0.2 35);
-	--vibrant-orange-bg: oklch(0.65 0.25 35 / 15%);
-	--card: oklch(0.17 0 0);
+	--vibrant-green: oklch(0.88 0.26 142);
+	/* Neon Lime */
+	--vibrant-green-light: oklch(0.9 0.2 142);
+	--vibrant-green-bg: oklch(0.88 0.26 142 / 15%);
+	--vibrant-orange: oklch(0.66 0.27 340);
+	/* Cyberpunk Neon Pink (replacing old orange) */
+	--vibrant-orange-light: oklch(0.7 0.2 340);
+	--vibrant-orange-bg: oklch(0.66 0.27 340 / 15%);
+	--card: oklch(0.12 0.01 260);
+	/* Deep space blue-black */
 	--card-foreground: oklch(0.985 0 0);
-	--popover: oklch(0.17 0 0);
+	--popover: oklch(0.12 0.01 260);
 	--popover-foreground: oklch(0.985 0 0);
-	--primary: oklch(0.94 0.23 130);
-	--primary-foreground: oklch(0.14 0 0);
-	--secondary: oklch(0.22 0 0);
+	--primary: oklch(0.85 0.17 220);
+	/* Electric Cyan */
+	--primary-foreground: oklch(0 0 0);
+	--secondary: oklch(0.15 0.02 260);
 	--secondary-foreground: oklch(0.985 0 0);
-	--muted: oklch(0.22 0 0);
-	--muted-foreground: oklch(0.708 0 0);
-	--accent: oklch(0.22 0 0);
+	--muted: oklch(0.2 0.02 260);
+	--muted-foreground: oklch(0.6 0.01 260);
+	--accent: oklch(0.2 0.02 260);
 	--accent-foreground: oklch(0.985 0 0);
-	--destructive: oklch(0.704 0.191 22.216);
-	--border: oklch(0.25 0 0);
-	--input: oklch(0.25 0 0);
-	--ring: oklch(0.94 0.23 130);
-	/* Workout chart colors for dark mode - based on vibrant-green (152.80 hue) */
-	--chart-1-workout: oklch(0.68 0.22 152.8);
-	/* Base vibrant-green */
-	--chart-2-workout: oklch(0.6 0.21 152.8);
-	/* Lighter */
-	--chart-3-workout: oklch(0.52 0.2 152.8);
-	/* Medium */
-	--chart-4-workout: oklch(0.44 0.19 152.8);
-	/* Darker */
-	--chart-5-workout: oklch(0.36 0.18 152.8);
-	/* Darkest */
-	--chart-6-workout: oklch(0.78 0.17 152.8);
-	/* Lightest */
-	--chart-7-workout: oklch(0.25 0.23 152.8);
-	/* Deepest */
+	--destructive: oklch(0.6 0.25 15);
+	/* Cyberpunk Crimson */
+	--border: oklch(0.2 0.02 260);
+	--input: oklch(0.2 0.02 260);
+	--ring: oklch(0.85 0.17 220);
 
-	/* Cheat meal chart colors for dark mode - based on vibrant-orange (64.01 hue) */
-	--chart-1-cheatmeal: oklch(0.68 0.19 64.01);
-	/* Base vibrant-orange */
-	--chart-2-cheatmeal: oklch(0.6 0.18 64.01);
-	/* Lighter */
-	--chart-3-cheatmeal: oklch(0.52 0.17 64.01);
-	/* Medium */
-	--chart-4-cheatmeal: oklch(0.44 0.16 64.01);
-	/* Darker */
-	--chart-5-cheatmeal: oklch(0.36 0.15 64.01);
-	/* Darkest */
-	--chart-6-cheatmeal: oklch(0.78 0.14 64.01);
-	/* Lightest */
-	--chart-7-cheatmeal: oklch(0.25 0.2 64.01);
-	/* Deepest */
-	--sidebar: oklch(0.205 0 0);
+	/* Workout chart colors for dark mode - based on Neon Lime */
+	--chart-1-workout: oklch(0.68 0.26 142);
+	--chart-2-workout: oklch(0.6 0.26 142);
+	--chart-3-workout: oklch(0.52 0.26 142);
+	--chart-4-workout: oklch(0.44 0.26 142);
+	--chart-5-workout: oklch(0.36 0.26 142);
+	--chart-6-workout: oklch(0.78 0.26 142);
+	--chart-7-workout: oklch(0.25 0.26 142);
+
+	/* Cheat meal chart colors for dark mode - based on Neon Pink */
+	--chart-1-cheatmeal: oklch(0.66 0.27 340);
+	--chart-2-cheatmeal: oklch(0.58 0.27 340);
+	--chart-3-cheatmeal: oklch(0.5 0.27 340);
+	--chart-4-cheatmeal: oklch(0.42 0.27 340);
+	--chart-5-cheatmeal: oklch(0.34 0.27 340);
+	--chart-6-cheatmeal: oklch(0.74 0.27 340);
+	--chart-7-cheatmeal: oklch(0.26 0.27 340);
+
+	--sidebar: oklch(0.12 0.01 260);
 	--sidebar-foreground: oklch(0.985 0 0);
-	--sidebar-primary: oklch(0.488 0.243 264.376);
-	--sidebar-primary-foreground: oklch(0.985 0 0);
-	--sidebar-accent: oklch(0.269 0 0);
+	--sidebar-primary: oklch(0.85 0.17 220);
+	--sidebar-primary-foreground: oklch(0 0 0);
+	--sidebar-accent: oklch(0.2 0.02 260);
 	--sidebar-accent-foreground: oklch(0.985 0 0);
-	--sidebar-border: oklch(1 0 0 / 10%);
-	--sidebar-ring: oklch(0.556 0 0);
+	--sidebar-border: oklch(0.2 0.02 260);
+	--sidebar-ring: oklch(0.85 0.17 220);
 }
 
 /*

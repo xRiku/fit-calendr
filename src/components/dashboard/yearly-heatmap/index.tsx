@@ -23,13 +23,13 @@ const options: {
 	};
 } = {
 	workout: {
-		title: "Workout Heatmap",
-		description: "Daily workout activity for the year",
+		title: "Yearly XP Contribution",
+		description: "Daily XP activity logged for the given year",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		title: "Cheat Meal Heatmap",
-		description: "Daily cheat meal activity for the year",
+		title: "Yearly HP Damage",
+		description: "Daily HP damage logged for the given year",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };
@@ -65,10 +65,14 @@ export function YearlyHeatmap({
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
 	return (
-		<Card className="hover:border-primary/20 transition-colors duration-300">
-			<CardHeader className="pb-4">
-				<CardTitle className="text-xl font-bold tracking-tight text-white/90">{options[selected].title}</CardTitle>
-				<CardDescription className="text-white/60">{options[selected].description}</CardDescription>
+		<Card className="rounded-none border-primary/20 bg-[#05050A]/80 shadow-[0_0_15px_rgba(0,240,255,0.05)] hover:border-primary/50 hover:shadow-[0_0_20px_rgba(var(--primary),0.15)] transition-all duration-300 overflow-hidden group relative">
+			<div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+			<CardHeader className="pb-4 relative z-10">
+				<CardTitle className="text-xl tracking-widest uppercase font-mono text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.8)] flex items-center gap-3">
+					<div className="w-2 h-2 bg-primary rounded-sm shadow-[0_0_5px_rgba(var(--primary),0.8)]" />
+					{options[selected].title}
+				</CardTitle>
+				<CardDescription className="text-primary/60 font-mono tracking-tight">{options[selected].description}</CardDescription>
 			</CardHeader>
 			<div className="px-6 pb-6">
 				<Suspense fallback={<HeatmapSkeleton />}>
