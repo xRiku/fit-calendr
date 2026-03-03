@@ -346,3 +346,42 @@ export const getUserTotalEntries = cache(async () => {
 		cheatMealCount,
 	};
 });
+
+// ─── Groups ───────────────────────────────────────────────────────────────────
+
+export const getUserGroups = cache(async () => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const memberships = await prisma.groupMember.findMany({
+		where: { userId: session.user.id },
+		include: {
+			group: {
+				include: {
+					_count: { select: { members: true } },
+				},
+			},
+		},
+		orderBy: { joinedAt: "desc" },
+	});
+
+	return memberships.map((m) => ({ ...m.group, role: m.role }));
+});
+
+export const isGroupMember = cache(async (groupId: string): Promise<boolean> => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) return false;
+
+	const member = await prisma.groupMember.findUnique({
+		where: { groupId_userId: { groupId, userId: session.user.id } },
+	});
+	return !!member;
+});
+
+export async function getGroupByInviteCode(inviteCode: string) {
+	return prisma.group.findUnique({
+		where: { inviteCode },
+		include: { _count: { select: { members: true } } },
+	});
+}
+

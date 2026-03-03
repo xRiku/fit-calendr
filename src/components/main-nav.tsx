@@ -28,6 +28,16 @@ export default function MainNav() {
 			>
 				Dashboard
 			</Link>
+			<Link
+				href="/app/groups"
+				className={`relative h-9 px-4 flex items-center text-sm font-medium transition-colors hover:text-white ${
+					pathname.startsWith("/app/groups")
+						? "text-white bg-white/10 rounded-full"
+						: "text-neutral-400 hover:bg-white/5 rounded-full"
+				} `}
+			>
+				Groups
+			</Link>
 		</nav>
 	);
 }

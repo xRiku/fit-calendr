@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, Settings, BarChart2 } from "lucide-react";
+import { CalendarDays, Settings, BarChart2, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function BottomNav() {
@@ -18,6 +18,11 @@ export function BottomNav() {
             name: "Dashboard",
             href: "/app/dashboard",
             icon: BarChart2,
+        },
+        {
+            name: "Groups",
+            href: "/app/groups",
+            icon: Users,
         },
         {
             name: "Settings",
