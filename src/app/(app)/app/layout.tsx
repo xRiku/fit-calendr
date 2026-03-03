@@ -3,6 +3,7 @@ import LoggedHeader from "@/components/logged-header";
 import { BottomNav } from "@/components/bottom-nav";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { GroupNotificationWatcher } from "@/components/group-notification-watcher";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
@@ -16,6 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				</main>
 				<BottomNav />
 				<DayInfoDrawerDialog />
+				<GroupNotificationWatcher />
 				<Toaster />
 			</div>
 		</Providers>

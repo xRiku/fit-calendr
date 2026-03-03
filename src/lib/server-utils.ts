@@ -385,3 +385,45 @@ export async function getGroupByInviteCode(inviteCode: string) {
 	});
 }
 
+export async function getGroupWithMembers(groupId: string) {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const membership = await prisma.groupMember.findUnique({
+		where: { groupId_userId: { groupId, userId: session.user.id } },
+	});
+	if (!membership) redirect("/app/groups");
+
+	const group = await prisma.group.findUnique({
+		where: { id: groupId },
+		include: {
+			members: {
+				include: {
+					user: { select: { id: true, name: true, username: true, avatarUrl: true } },
+				},
+				orderBy: { joinedAt: "asc" },
+			},
+		},
+	});
+	if (!group) redirect("/app/groups");
+
+	// Count workouts per member within challenge period
+	const rangeEnd = new Date(group.endDate) < new Date() ? group.endDate : new Date();
+	const workoutCounts = await prisma.gymCheck.groupBy({
+		by: ["userId"],
+		where: {
+			userId: { in: group.members.map((m) => m.userId) },
+			date: { gte: group.startDate, lte: rangeEnd },
+		},
+		_count: { id: true },
+	});
+
+	const countMap = new Map(workoutCounts.map((w) => [w.userId, w._count.id]));
+
+	const leaderboard = group.members
+		.map((m) => ({ ...m, workoutCount: countMap.get(m.userId) ?? 0 }))
+		.sort((a, b) => b.workoutCount - a.workoutCount);
+
+	return { group, leaderboard, currentUserId: session.user.id, currentUserRole: membership.role };
+}
+
