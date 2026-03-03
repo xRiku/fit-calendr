@@ -2,7 +2,7 @@ import { CheatMealPresetsSection } from "@/app/(app)/app/account/cheat-meal-pres
 import { GoalsSection } from "@/app/(app)/app/account/goals-section";
 import { WorkoutPresetsSection } from "@/app/(app)/app/account/workout-presets-section";
 import { UsernameSection } from "@/app/(app)/app/account/username-section";
-import H1 from "@/components/h1";
+import H2 from "@/components/h2";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -44,7 +44,9 @@ export default async function AccountPage() {
 
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6">
-			<H1>Settings</H1>
+			<div className="flex py-2 items-center flex-wrap gap-4">
+				<H2>Settings</H2>
+			</div>
 
 			{/* Mobile: Flat layout with separators | Desktop: Cards */}
 			<div className="md:hidden space-y-6">

@@ -1,7 +1,7 @@
 import { getGroupWithMembers } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
-import { Trophy, Users, CalendarDays, Medal } from "lucide-react";
+import { Trophy, Users, CalendarDays, Medal, ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -50,6 +50,14 @@ export default async function GroupPage({ params }: Props) {
 
 	return (
 		<div className="flex flex-col gap-6 w-full max-w-2xl mx-auto">
+			{/* Back link */}
+			<Link
+				href="/app/groups"
+				className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
+			>
+				<ChevronLeft className="size-4" />
+				Groups
+			</Link>
 			{/* Header */}
 			<div className="flex flex-col gap-3">
 				<div className="flex items-start justify-between gap-4">

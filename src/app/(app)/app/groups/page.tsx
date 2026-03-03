@@ -1,5 +1,5 @@
 import { getUserGroups } from "@/lib/server-utils";
-import H1 from "@/components/h1";
+import H2 from "@/components/h2";
 import { CreateGroupDialog } from "./create-group-dialog";
 import { GroupCard } from "./group-card";
 
@@ -12,8 +12,8 @@ export default async function GroupsPage() {
 
 	return (
 		<div className="flex flex-col gap-6 w-full max-w-2xl mx-auto">
-			<div className="flex items-center justify-between">
-				<H1>Groups</H1>
+			<div className="flex py-2 items-center justify-between flex-wrap gap-4">
+				<H2>Groups</H2>
 				<CreateGroupDialog />
 			</div>
 
