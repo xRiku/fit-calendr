@@ -1,6 +1,7 @@
 import { CheatMealPresetsSection } from "@/app/(app)/app/account/cheat-meal-presets-section";
 import { GoalsSection } from "@/app/(app)/app/account/goals-section";
 import { WorkoutPresetsSection } from "@/app/(app)/app/account/workout-presets-section";
+import { UsernameSection } from "@/app/(app)/app/account/username-section";
 import H1 from "@/components/h1";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,12 +13,15 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { auth } from "@/lib/auth";
 import { getUserGoals } from "@/lib/server-utils";
 import { Dumbbell, Utensils } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import SignOutButton from "./signout-button";
+import prisma from "@/lib/db";
 
 export default async function AccountPage() {
 	const session = await auth.api.getSession({
@@ -29,6 +33,14 @@ export default async function AccountPage() {
 	}
 
 	const goals = await getUserGoals();
+	const userRecord = await prisma.user.findUnique({
+		where: { id: session.user.id },
+		select: { username: true },
+	});
+
+	function getInitials(name: string) {
+		return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+	}
 
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6">
@@ -45,11 +57,24 @@ export default async function AccountPage() {
 						</p>
 					</div>
 					<div className="flex flex-col gap-4">
-						<div className="flex flex-col gap-1">
-							<span className="text-muted-foreground text-sm">Email</span>
-							<span className="font-medium">{session.user.email}</span>
+						<div className="flex items-center gap-3">
+							<Avatar className="size-12">
+								<AvatarFallback className="bg-neutral-800 text-sm">
+									{getInitials(session.user.name)}
+								</AvatarFallback>
+							</Avatar>
+							<div className="flex flex-col gap-0.5">
+								<span className="font-medium">{session.user.name}</span>
+								<span className="text-muted-foreground text-sm">{session.user.email}</span>
+							</div>
 						</div>
-						<SignOutButton className="w-full" />
+						<UsernameSection currentUsername={userRecord?.username ?? null} />
+						<div className="flex items-center justify-between">
+							<Link href="/app/groups" className="text-sm text-vibrant-green hover:underline">
+								My groups →
+							</Link>
+							<SignOutButton />
+						</div>
 					</div>
 				</section>
 
@@ -125,14 +150,26 @@ export default async function AccountPage() {
 						<CardTitle>Profile</CardTitle>
 						<CardDescription>Manage your account information</CardDescription>
 					</CardHeader>
-					<CardContent className="flex flex-col gap-4">
+					<CardContent className="flex flex-col gap-5">
 						<div className="flex items-center justify-between">
-							<div className="flex flex-col gap-1">
-								<span className="text-muted-foreground text-sm">Email</span>
-								<span className="font-medium">{session.user.email}</span>
+							<div className="flex items-center gap-3">
+								<Avatar className="size-12">
+									<AvatarFallback className="bg-neutral-800 text-sm">
+										{getInitials(session.user.name)}
+									</AvatarFallback>
+								</Avatar>
+								<div className="flex flex-col gap-0.5">
+									<span className="font-medium">{session.user.name}</span>
+									<span className="text-muted-foreground text-sm">{session.user.email}</span>
+								</div>
 							</div>
 							<SignOutButton />
 						</div>
+						<Separator />
+						<UsernameSection currentUsername={userRecord?.username ?? null} />
+						<Link href="/app/groups" className="text-sm text-vibrant-green hover:underline self-start">
+							My groups →
+						</Link>
 					</CardContent>
 				</Card>
 

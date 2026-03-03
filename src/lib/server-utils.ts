@@ -378,6 +378,105 @@ export const isGroupMember = cache(async (groupId: string): Promise<boolean> => 
 	return !!member;
 });
 
+export async function getMemberProfile(groupId: string, targetUserId: string) {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	// Viewer must be in the group
+	const viewerMembership = await prisma.groupMember.findUnique({
+		where: { groupId_userId: { groupId, userId: session.user.id } },
+	});
+	if (!viewerMembership) redirect("/app/groups");
+
+	// Target must also be in the group
+	const targetMembership = await prisma.groupMember.findUnique({
+		where: { groupId_userId: { groupId, userId: targetUserId } },
+		include: { user: { select: { id: true, name: true, username: true, avatarUrl: true } } },
+	});
+	if (!targetMembership) redirect(`/app/groups/${groupId}`);
+
+	const group = await prisma.group.findUnique({ where: { id: groupId } });
+	if (!group) redirect("/app/groups");
+
+	const year = new Date().getFullYear();
+
+	// All workouts for heatmap (current year)
+	const allWorkouts = await prisma.gymCheck.findMany({
+		where: {
+			userId: targetUserId,
+			date: { gte: new Date(year, 0, 1), lte: new Date(year, 11, 31, 23, 59, 59) },
+		},
+		select: { date: true },
+		orderBy: { date: "asc" },
+	});
+
+	// Build heatmap map directly
+	const heatmapData = new Map<string, number>();
+	for (const w of allWorkouts) {
+		const d = new Date(w.date);
+		const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+		heatmapData.set(key, (heatmapData.get(key) ?? 0) + 1);
+	}
+
+	// Workouts within challenge period
+	const rangeEnd = new Date(group.endDate) < new Date() ? group.endDate : new Date();
+	const challengeWorkouts = await prisma.gymCheck.count({
+		where: { userId: targetUserId, date: { gte: group.startDate, lte: rangeEnd } },
+	});
+
+	// All-time workouts for streak calculation
+	const allTimeWorkouts = await prisma.gymCheck.findMany({
+		where: { userId: targetUserId },
+		select: { date: true },
+		orderBy: { date: "asc" },
+	});
+
+	// Streak calculation (reuse logic inline)
+	const normalizeDate = (d: Date) => {
+		const nd = new Date(d);
+		nd.setUTCHours(0, 0, 0, 0);
+		return nd.getTime();
+	};
+	const today = normalizeDate(new Date());
+	const sortedDates = allTimeWorkouts.map((w) => w.date);
+	let longestStreak = sortedDates.length > 0 ? 1 : 0;
+	let currentLongestRun = 1;
+	for (let i = 1; i < sortedDates.length; i++) {
+		const diff = (normalizeDate(sortedDates[i]) - normalizeDate(sortedDates[i - 1])) / 86400000;
+		if (diff === 1) { currentLongestRun++; longestStreak = Math.max(longestStreak, currentLongestRun); }
+		else if (diff > 1) currentLongestRun = 1;
+	}
+	let currentStreak = 0;
+	if (sortedDates.length > 0) {
+		const hasToday = sortedDates.some((d) => normalizeDate(d) === today);
+		const hasYesterday = sortedDates.some((d) => normalizeDate(d) === today - 86400000);
+		if (hasToday || hasYesterday) {
+			currentStreak = 1;
+			for (let i = sortedDates.length - 2; i >= 0; i--) {
+				const diff = (normalizeDate(sortedDates[i + 1]) - normalizeDate(sortedDates[i])) / 86400000;
+				if (diff === 1) currentStreak++;
+				else break;
+			}
+		}
+	}
+
+	return {
+		user: targetMembership.user,
+		group,
+		joinedAt: targetMembership.joinedAt,
+		role: targetMembership.role,
+		stats: {
+			currentStreak,
+			longestStreak,
+			totalWorkouts: allTimeWorkouts.length,
+			challengeWorkouts,
+		},
+		heatmapData,
+		year,
+		isOwnProfile: session.user.id === targetUserId,
+	};
+}
+
 export async function getGroupByInviteCode(inviteCode: string) {
 	return prisma.group.findUnique({
 		where: { inviteCode },
