@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { joinGroupByCode } from "@/actions/group-actions";
+import db from "@/lib/db";
 import { isPast, format, formatDistanceToNow } from "date-fns";
 import { Trophy, Users, CalendarDays } from "lucide-react";
 import { JoinGroupButton } from "./join-group-button";
@@ -24,11 +25,9 @@ export default async function JoinGroupPage({ params }: Props) {
 	if (session) {
 		const { alreadyMember } = await joinGroupByCode(code).catch(() => ({ alreadyMember: false }));
 		// joinGroupByCode throws if ended, so only redirect if they're already a member
-		const existingCheck = await import("@/lib/db").then((m) =>
-			m.default.groupMember.findUnique({
-				where: { groupId_userId: { groupId: group.id, userId: session.user.id } },
-			}),
-		);
+		const existingCheck = await db.groupMember.findUnique({
+			where: { groupId_userId: { groupId: group.id, userId: session.user.id } },
+		});
 		if (existingCheck) redirect(`/app/groups/${group.id}`);
 	}
 

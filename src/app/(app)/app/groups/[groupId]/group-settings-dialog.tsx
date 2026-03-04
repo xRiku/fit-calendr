@@ -49,6 +49,14 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState(currentName);
 	const [endDate, setEndDate] = useState<Date>(new Date(currentEndDate));
+
+	function handleOpenChange(value: boolean) {
+		if (value) {
+			setName(currentName);
+			setEndDate(new Date(currentEndDate));
+		}
+		setOpen(value);
+	}
 	const [calendarOpen, setCalendarOpen] = useState(false);
 	const [isPending, startTransition] = useTransition();
 
@@ -100,7 +108,7 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
 				<Button variant="outline" size="sm" className="gap-2">
 					<Settings className="size-4" />
