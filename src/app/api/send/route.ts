@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const body = await new Response(req.body).json();
 		const { data, error } = await resend.emails.send({
-			from: "OTP <fitcalendr@phmarques.com>",
+			from: "OTP <fitcalendr@mail.phmarques.com>",
 			to: [body.email],
 			subject: "Your one-time password for FitCalendr",
 			react: EmailTemplate({

@@ -3,6 +3,7 @@ import LoggedHeader from "@/components/logged-header";
 import { BottomNav } from "@/components/bottom-nav";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { GroupNotificationWatcher } from "@/components/group-notification-watcher";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
@@ -11,11 +12,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				<div className="hidden md:block">
 					<LoggedHeader />
 				</div>
-				<main className="flex flex-col gap-4 pb-20 md:pb-8 px-4 md:px-6 pt-safe md:pt-4 flex-1 overflow-y-auto w-full max-w-7xl mx-auto">
+				<main className="flex flex-col gap-4 pb-20 md:pb-8 px-4 md:px-6 pt-[max(env(safe-area-inset-top),1rem)] md:pt-4 flex-1 overflow-y-auto w-full max-w-7xl mx-auto">
 					{children}
 				</main>
 				<BottomNav />
 				<DayInfoDrawerDialog />
+				<GroupNotificationWatcher />
 				<Toaster />
 			</div>
 		</Providers>
