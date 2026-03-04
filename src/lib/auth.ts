@@ -38,7 +38,13 @@ export const auth = betterAuth({
 	plugins: [
 		nextCookies(),
 		emailOTP({
+			...(process.env.NODE_ENV !== "production" && {
+				generateOTP: () => "0000",
+			}),
 			async sendVerificationOTP({ email, otp }) {
+				if (process.env.NODE_ENV !== "production") {
+					return; // OTP is always "0000" in dev — no email needed
+				}
 				await fetch(`${env.BETTER_AUTH_URL}/api/send`, {
 					method: "POST",
 					body: JSON.stringify({

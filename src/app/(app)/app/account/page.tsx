@@ -3,7 +3,6 @@ import { GoalsSection } from "@/app/(app)/app/account/goals-section";
 import { WorkoutPresetsSection } from "@/app/(app)/app/account/workout-presets-section";
 import { UsernameSection } from "@/app/(app)/app/account/username-section";
 import H2 from "@/components/h2";
-import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -16,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { auth } from "@/lib/auth";
 import { getUserGoals } from "@/lib/server-utils";
+import { getInitials } from "@/lib/utils";
 import { Dumbbell, Utensils } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -37,10 +37,6 @@ export default async function AccountPage() {
 		where: { id: session.user.id },
 		select: { username: true },
 	});
-
-	function getInitials(name: string) {
-		return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
-	}
 
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6">
@@ -132,17 +128,6 @@ export default async function AccountPage() {
 				<Separator />
 
 				{/* Data & Privacy Section - Mobile */}
-				<section>
-					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Data & Privacy</h2>
-						<p className="text-muted-foreground text-sm">
-							Manage your data and privacy settings
-						</p>
-					</div>
-					<Button variant="outline" disabled>
-						Export Data
-					</Button>
-				</section>
 			</div>
 
 			{/* Desktop: Card layout */}
@@ -223,19 +208,6 @@ export default async function AccountPage() {
 					</CardContent>
 				</Card>
 
-				<Card>
-					<CardHeader>
-						<CardTitle>Data & Privacy</CardTitle>
-						<CardDescription>
-							Manage your data and privacy settings
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Button variant="outline" disabled>
-							Export Data
-						</Button>
-					</CardContent>
-				</Card>
 			</div>
 		</main>
 	);

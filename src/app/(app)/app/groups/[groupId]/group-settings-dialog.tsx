@@ -47,8 +47,8 @@ interface Props {
 export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isActive }: Props) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const [name, setName] = useState(currentName);
-	const [endDate, setEndDate] = useState<Date>(new Date(currentEndDate));
+	const [name, setName] = useState("");
+	const [endDate, setEndDate] = useState<Date>(() => new Date(currentEndDate));
 
 	function handleOpenChange(value: boolean) {
 		if (value) {

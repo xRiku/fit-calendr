@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useReducer, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,13 +41,45 @@ function getPreviewEndDate(duration: GroupDuration, customDate?: Date): Date | n
 	}
 }
 
+type DialogState = {
+	open: boolean;
+	name: string;
+	duration: GroupDuration;
+	customDate: Date | undefined;
+	calendarOpen: boolean;
+};
+
+type DialogAction =
+	| { type: "SET_OPEN"; open: boolean }
+	| { type: "SET_NAME"; name: string }
+	| { type: "SET_DURATION"; duration: GroupDuration }
+	| { type: "SET_CUSTOM_DATE"; date: Date | undefined }
+	| { type: "SET_CALENDAR_OPEN"; open: boolean }
+	| { type: "RESET" };
+
+const initialState: DialogState = {
+	open: false,
+	name: "",
+	duration: "90d",
+	customDate: undefined,
+	calendarOpen: false,
+};
+
+function reducer(state: DialogState, action: DialogAction): DialogState {
+	switch (action.type) {
+		case "SET_OPEN": return { ...state, open: action.open };
+		case "SET_NAME": return { ...state, name: action.name };
+		case "SET_DURATION": return { ...state, duration: action.duration };
+		case "SET_CUSTOM_DATE": return { ...state, customDate: action.date };
+		case "SET_CALENDAR_OPEN": return { ...state, calendarOpen: action.open };
+		case "RESET": return initialState;
+	}
+}
+
 export function CreateGroupDialog() {
 	const router = useRouter();
-	const [open, setOpen] = useState(false);
-	const [name, setName] = useState("");
-	const [duration, setDuration] = useState<GroupDuration>("90d");
-	const [customDate, setCustomDate] = useState<Date | undefined>();
-	const [calendarOpen, setCalendarOpen] = useState(false);
+	const [state, dispatch] = useReducer(reducer, initialState);
+	const { open, name, duration, customDate, calendarOpen } = state;
 	const [isPending, startTransition] = useTransition();
 
 	const previewEnd = getPreviewEndDate(duration, customDate);
@@ -58,10 +90,7 @@ export function CreateGroupDialog() {
 			try {
 				const group = await createGroup({ name, duration, customEndDate: customDate });
 				toast.success(`"${group.name}" created!`);
-				setOpen(false);
-				setName("");
-				setDuration("90d");
-				setCustomDate(undefined);
+				dispatch({ type: "RESET" });
 				router.push(`/app/groups/${group.id}`);
 			} catch {
 				toast.error("Failed to create group");
@@ -70,7 +99,7 @@ export function CreateGroupDialog() {
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={(o) => dispatch({ type: "SET_OPEN", open: o })}>
 			<DialogTrigger asChild>
 				<Button size="sm" className="gap-2">
 					<Plus className="size-4" />
@@ -89,7 +118,7 @@ export function CreateGroupDialog() {
 							id="group-name"
 							placeholder="e.g. 90 Day Summer Challenge"
 							value={name}
-							onChange={(e) => setName(e.target.value)}
+							onChange={(e) => dispatch({ type: "SET_NAME", name: e.target.value })}
 							maxLength={60}
 						/>
 					</div>
@@ -101,7 +130,7 @@ export function CreateGroupDialog() {
 								<button
 									key={opt.value}
 									type="button"
-									onClick={() => setDuration(opt.value)}
+									onClick={() => dispatch({ type: "SET_DURATION", duration: opt.value })}
 									className={cn(
 										"flex flex-col items-start gap-0.5 rounded-lg border px-3 py-2.5 text-left text-sm transition-colors",
 										duration === opt.value
@@ -119,7 +148,10 @@ export function CreateGroupDialog() {
 					{duration === "custom" && (
 						<div className="flex flex-col gap-2">
 							<Label>End date</Label>
-							<Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+							<Popover
+								open={calendarOpen}
+								onOpenChange={(o) => dispatch({ type: "SET_CALENDAR_OPEN", open: o })}
+							>
 								<PopoverTrigger asChild>
 									<Button
 										variant="outline"
@@ -137,8 +169,8 @@ export function CreateGroupDialog() {
 										mode="single"
 										selected={customDate}
 										onSelect={(d) => {
-											setCustomDate(d);
-											setCalendarOpen(false);
+											dispatch({ type: "SET_CUSTOM_DATE", date: d });
+											dispatch({ type: "SET_CALENDAR_OPEN", open: false });
 										}}
 										disabled={(d) => d <= new Date()}
 										initialFocus

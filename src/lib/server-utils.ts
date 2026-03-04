@@ -431,34 +431,7 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 		orderBy: { date: "asc" },
 	});
 
-	// Streak calculation (reuse logic inline)
-	const normalizeDate = (d: Date) => {
-		const nd = new Date(d);
-		nd.setUTCHours(0, 0, 0, 0);
-		return nd.getTime();
-	};
-	const today = normalizeDate(new Date());
-	const sortedDates = allTimeWorkouts.map((w) => w.date);
-	let longestStreak = sortedDates.length > 0 ? 1 : 0;
-	let currentLongestRun = 1;
-	for (let i = 1; i < sortedDates.length; i++) {
-		const diff = (normalizeDate(sortedDates[i]) - normalizeDate(sortedDates[i - 1])) / 86400000;
-		if (diff === 1) { currentLongestRun++; longestStreak = Math.max(longestStreak, currentLongestRun); }
-		else if (diff > 1) currentLongestRun = 1;
-	}
-	let currentStreak = 0;
-	if (sortedDates.length > 0) {
-		const hasToday = sortedDates.some((d) => normalizeDate(d) === today);
-		const hasYesterday = sortedDates.some((d) => normalizeDate(d) === today - 86400000);
-		if (hasToday || hasYesterday) {
-			currentStreak = 1;
-			for (let i = sortedDates.length - 2; i >= 0; i--) {
-				const diff = (normalizeDate(sortedDates[i + 1]) - normalizeDate(sortedDates[i])) / 86400000;
-				if (diff === 1) currentStreak++;
-				else break;
-			}
-		}
-	}
+	const { currentStreak, longestStreak } = calculateStreak(allTimeWorkouts.map((w) => w.date));
 
 	return {
 		user: targetMembership.user,

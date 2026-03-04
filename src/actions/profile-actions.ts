@@ -19,15 +19,23 @@ export async function updateUsername(username: string) {
 		);
 	}
 
-	const existing = await prisma.user.findUnique({ where: { username: trimmed } });
-	if (existing && existing.id !== session.user.id) {
-		throw new Error("That username is already taken.");
+	try {
+		await prisma.user.update({
+			where: { id: session.user.id },
+			data: { username: trimmed },
+		});
+	} catch (e) {
+		// Prisma unique constraint violation code
+		if (
+			typeof e === "object" &&
+			e !== null &&
+			"code" in e &&
+			(e as { code: string }).code === "P2002"
+		) {
+			throw new Error("That username is already taken.");
+		}
+		throw e;
 	}
-
-	await prisma.user.update({
-		where: { id: session.user.id },
-		data: { username: trimmed },
-	});
 
 	revalidatePath("/app/account");
 }

@@ -8,8 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { GroupSettingsDialog } from "./group-settings-dialog";
 import { LeaveGroupButton } from "./leave-group-button";
 import { CopyInviteButton } from "./copy-invite-button";
-import { cn } from "@/lib/utils";
-import { headers } from "next/headers";
+import { cn, getInitials } from "@/lib/utils";
 import { env } from "@/env";
 import Link from "next/link";
 
@@ -24,15 +23,6 @@ function RankIcon({ rank }: { rank: number }) {
 	return <span className="text-sm font-medium text-muted-foreground w-4 text-center">{rank}</span>;
 }
 
-function getInitials(name: string) {
-	return name
-		.split(" ")
-		.map((n) => n[0])
-		.join("")
-		.toUpperCase()
-		.slice(0, 2);
-}
-
 export default async function GroupPage({ params }: Props) {
 	const { groupId } = await params;
 	const data = await getGroupWithMembers(groupId);
@@ -43,10 +33,7 @@ export default async function GroupPage({ params }: Props) {
 	const isOwner = currentUserRole === "owner";
 	const ended = isPast(new Date(group.endDate));
 
-	const headersList = await headers();
-	const host = headersList.get("host") ?? "fitcalendr.com";
-	const protocol = host.includes("localhost") ? "http" : "https";
-	const inviteUrl = `${protocol}://${host}/app/groups/join/${group.inviteCode}`;
+	const inviteUrl = `${env.BETTER_AUTH_URL}/app/groups/join/${group.inviteCode}`;
 
 	return (
 		<div className="flex flex-col gap-6 w-full max-w-2xl mx-auto">

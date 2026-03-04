@@ -6,18 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import { HeatmapGrid } from "@/components/dashboard/yearly-heatmap/heatmap-grid";
 import { ChevronLeft, Flame, Trophy, Dumbbell, CalendarDays } from "lucide-react";
 import Link from "next/link";
+import { getInitials } from "@/lib/utils";
 
 interface Props {
 	params: Promise<{ groupId: string; userId: string }>;
-}
-
-function getInitials(name: string) {
-	return name
-		.split(" ")
-		.map((n) => n[0])
-		.join("")
-		.toUpperCase()
-		.slice(0, 2);
 }
 
 function StatCard({

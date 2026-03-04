@@ -2,7 +2,6 @@ import { getGroupByInviteCode } from "@/lib/server-utils";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { joinGroupByCode } from "@/actions/group-actions";
 import db from "@/lib/db";
 import { isPast, format, formatDistanceToNow } from "date-fns";
 import { Trophy, Users, CalendarDays } from "lucide-react";
@@ -21,14 +20,12 @@ export default async function JoinGroupPage({ params }: Props) {
 	const session = await auth.api.getSession({ headers: await headers() });
 	const ended = isPast(new Date(group.endDate));
 
-	// If already a member, redirect straight to group
+	// If already a member, redirect straight to group (read-only check — no writes during render)
 	if (session) {
-		const { alreadyMember } = await joinGroupByCode(code).catch(() => ({ alreadyMember: false }));
-		// joinGroupByCode throws if ended, so only redirect if they're already a member
-		const existingCheck = await db.groupMember.findUnique({
+		const existingMembership = await db.groupMember.findUnique({
 			where: { groupId_userId: { groupId: group.id, userId: session.user.id } },
 		});
-		if (existingCheck) redirect(`/app/groups/${group.id}`);
+		if (existingMembership) redirect(`/app/groups/${group.id}`);
 	}
 
 	return (
