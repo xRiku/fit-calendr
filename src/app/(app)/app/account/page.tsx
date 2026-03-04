@@ -67,12 +67,9 @@ export default async function AccountPage() {
 							</div>
 						</div>
 						<UsernameSection currentUsername={userRecord?.username ?? null} />
-						<div className="flex items-center justify-between">
-							<Link href="/app/groups" className="text-sm text-vibrant-green hover:underline">
-								My groups →
-							</Link>
-							<SignOutButton />
-						</div>
+						<Link href="/app/groups" className="text-sm text-vibrant-green hover:underline pt-1">
+							My groups →
+						</Link>
 					</div>
 				</section>
 
@@ -127,7 +124,10 @@ export default async function AccountPage() {
 
 				<Separator />
 
-				{/* Data & Privacy Section - Mobile */}
+				{/* Account Actions Section - Mobile */}
+				<section className="pt-2 pb-6">
+					<SignOutButton className="w-full" />
+				</section>
 			</div>
 
 			{/* Desktop: Card layout */}
@@ -138,19 +138,16 @@ export default async function AccountPage() {
 						<CardDescription>Manage your account information</CardDescription>
 					</CardHeader>
 					<CardContent className="flex flex-col gap-5">
-						<div className="flex items-center justify-between">
-							<div className="flex items-center gap-3">
-								<Avatar className="size-12">
-									<AvatarFallback className="bg-neutral-800 text-sm">
-										{getInitials(session.user.name)}
-									</AvatarFallback>
-								</Avatar>
-								<div className="flex flex-col gap-0.5">
-									<span className="font-medium">{session.user.name}</span>
-									<span className="text-muted-foreground text-sm">{session.user.email}</span>
-								</div>
+						<div className="flex items-center gap-3">
+							<Avatar className="size-12">
+								<AvatarFallback className="bg-neutral-800 text-sm">
+									{getInitials(session.user.name)}
+								</AvatarFallback>
+							</Avatar>
+							<div className="flex flex-col gap-0.5">
+								<span className="font-medium">{session.user.name}</span>
+								<span className="text-muted-foreground text-sm">{session.user.email}</span>
 							</div>
-							<SignOutButton />
 						</div>
 						<Separator />
 						<UsernameSection currentUsername={userRecord?.username ?? null} />
@@ -205,6 +202,18 @@ export default async function AccountPage() {
 								<CheatMealPresetsSection />
 							</TabsContent>
 						</Tabs>
+					</CardContent>
+				</Card>
+
+				<Card className="border-destructive/20">
+					<CardHeader>
+						<CardTitle className="text-destructive">Account Management</CardTitle>
+						<CardDescription>
+							Sign out of your account on this device
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<SignOutButton />
 					</CardContent>
 				</Card>
 
