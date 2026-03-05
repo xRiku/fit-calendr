@@ -4,12 +4,12 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+	ResponsiveDialog,
+	ResponsiveDialogContent,
+	ResponsiveDialogHeader,
+	ResponsiveDialogTitle,
+	ResponsiveDialogTrigger,
+} from "@/components/ui/responsive-dialog";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -30,6 +30,7 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
 	updateGroupName,
 	updateGroupEndDate,
@@ -55,6 +56,7 @@ export function GroupSettingsDialog({
 	isActive,
 }: Props) {
 	const router = useRouter();
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState("");
 	const [endDate, setEndDate] = useState<Date>(() => new Date(currentEndDate));
@@ -119,19 +121,19 @@ export function GroupSettingsDialog({
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogTrigger asChild>
+		<ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
+			<ResponsiveDialogTrigger asChild>
 				<Button variant="outline" size="sm" className="gap-2">
 					<Settings className="size-4" />
 					Configurações
 				</Button>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-md">
-				<DialogHeader>
-					<DialogTitle>Configurações do Grupo</DialogTitle>
-				</DialogHeader>
+			</ResponsiveDialogTrigger>
+			<ResponsiveDialogContent className="sm:max-w-md">
+				<ResponsiveDialogHeader>
+					<ResponsiveDialogTitle>Configurações do Grupo</ResponsiveDialogTitle>
+				</ResponsiveDialogHeader>
 
-				<div className="flex flex-col gap-5 pt-2">
+				<div className="flex flex-col gap-5 p-4 pt-2">
 					<div className="flex flex-col gap-2">
 						<Label htmlFor="group-name-edit">Nome do grupo</Label>
 						<div className="flex gap-2">
@@ -153,44 +155,69 @@ export function GroupSettingsDialog({
 
 					<div className="flex flex-col gap-2">
 						<Label>Data final</Label>
-						<div className="flex gap-2">
-							<Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-								<PopoverTrigger asChild>
-									<Button
-										variant="outline"
-										className={cn("flex-1 justify-start gap-2 font-normal")}
-									>
-										<CalendarIcon className="size-4" />
-										{format(endDate, "PPP")}
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className="w-auto p-0" align="start">
-									<Calendar
-										mode="single"
-										selected={endDate}
-										onSelect={(d) => {
-											if (d) {
-												setEndDate(d);
-												setCalendarOpen(false);
-											}
-										}}
-										disabled={(d) => d <= new Date()}
-										initialFocus
-									/>
-								</PopoverContent>
-							</Popover>
-							<Button
-								size="sm"
-								onClick={handleSaveEndDate}
-								disabled={
-									isPending ||
-									endDate.toDateString() ===
-										new Date(currentEndDate).toDateString()
-								}
-							>
-								Salvar
-							</Button>
-						</div>
+						{isDesktop ? (
+							<div className="flex gap-2">
+								<Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+									<PopoverTrigger asChild>
+										<Button
+											variant="outline"
+											className={cn("flex-1 justify-start gap-2 font-normal")}
+										>
+											<CalendarIcon className="size-4" />
+											{format(endDate, "PPP")}
+										</Button>
+									</PopoverTrigger>
+									<PopoverContent className="w-auto p-0" align="start">
+										<Calendar
+											mode="single"
+											selected={endDate}
+											onSelect={(d) => {
+												if (d) {
+													setEndDate(d);
+													setCalendarOpen(false);
+												}
+											}}
+											disabled={(d) => d <= new Date()}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+								<Button
+									size="sm"
+									onClick={handleSaveEndDate}
+									disabled={
+										isPending ||
+										endDate.toDateString() ===
+											new Date(currentEndDate).toDateString()
+									}
+								>
+									Salvar
+								</Button>
+							</div>
+						) : (
+							<>
+								<Calendar
+									mode="single"
+									selected={endDate}
+									onSelect={(d) => {
+										if (d) setEndDate(d);
+									}}
+									disabled={(d) => d <= new Date()}
+									className="rounded-md border self-center"
+								/>
+								<Button
+									size="sm"
+									onClick={handleSaveEndDate}
+									disabled={
+										isPending ||
+										endDate.toDateString() ===
+											new Date(currentEndDate).toDateString()
+									}
+								>
+									Salvar
+								</Button>
+							</>
+						)}
 						<p className="text-xs text-muted-foreground">
 							Todos os membros serão notificados quando você alterar isso.
 						</p>
@@ -254,7 +281,7 @@ export function GroupSettingsDialog({
 						</AlertDialog>
 					</div>
 				</div>
-			</DialogContent>
-		</Dialog>
+			</ResponsiveDialogContent>
+		</ResponsiveDialog>
 	);
 }

@@ -4,12 +4,12 @@ import { useReducer, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+	ResponsiveDialog,
+	ResponsiveDialogContent,
+	ResponsiveDialogHeader,
+	ResponsiveDialogTitle,
+	ResponsiveDialogTrigger,
+} from "@/components/ui/responsive-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,6 +18,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { createGroup, type GroupDuration } from "@/actions/group-actions";
 import { toast } from "sonner";
 import { Plus, CalendarIcon } from "lucide-react";
@@ -114,6 +115,7 @@ function reducer(state: DialogState, action: DialogAction): DialogState {
 
 export function CreateGroupDialog() {
 	const router = useRouter();
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const { open, name, duration, customDate, calendarOpen } = state;
 	const [isPending, startTransition] = useTransition();
@@ -140,22 +142,22 @@ export function CreateGroupDialog() {
 	}
 
 	return (
-		<Dialog
+		<ResponsiveDialog
 			open={open}
 			onOpenChange={(o) => dispatch({ type: "SET_OPEN", open: o })}
 		>
-			<DialogTrigger asChild>
+			<ResponsiveDialogTrigger asChild>
 				<Button size="sm" className="gap-2">
 					<Plus className="size-4" />
 					Novo Grupo
 				</Button>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-md">
-				<DialogHeader>
-					<DialogTitle>Criar um Grupo de Desafio</DialogTitle>
-				</DialogHeader>
+			</ResponsiveDialogTrigger>
+			<ResponsiveDialogContent className="sm:max-w-md">
+				<ResponsiveDialogHeader>
+					<ResponsiveDialogTitle>Criar um Grupo de Desafio</ResponsiveDialogTitle>
+				</ResponsiveDialogHeader>
 
-				<div className="flex flex-col gap-5 pt-2">
+				<div className="flex flex-col gap-5 p-4 pt-2">
 					<div className="flex flex-col gap-2">
 						<Label htmlFor="group-name">Nome do grupo</Label>
 						<Input
@@ -196,39 +198,52 @@ export function CreateGroupDialog() {
 					{duration === "custom" && (
 						<div className="flex flex-col gap-2">
 							<Label>Data final</Label>
-							<Popover
-								open={calendarOpen}
-								onOpenChange={(o) =>
-									dispatch({ type: "SET_CALENDAR_OPEN", open: o })
-								}
-							>
-								<PopoverTrigger asChild>
-									<Button
-										variant="outline"
-										className={cn(
-											"justify-start gap-2 font-normal",
-											!customDate && "text-muted-foreground",
-										)}
-									>
-										<CalendarIcon className="size-4" />
-										{customDate
-											? format(customDate, "PPP", { locale: ptBR })
-											: "Escolha uma data"}
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className="w-auto p-0" align="start">
-									<Calendar
-										mode="single"
-										selected={customDate}
-										onSelect={(d) => {
-											dispatch({ type: "SET_CUSTOM_DATE", date: d });
-											dispatch({ type: "SET_CALENDAR_OPEN", open: false });
-										}}
-										disabled={(d) => d <= new Date()}
-										initialFocus
-									/>
-								</PopoverContent>
-							</Popover>
+							{isDesktop ? (
+								<Popover
+									open={calendarOpen}
+									onOpenChange={(o) =>
+										dispatch({ type: "SET_CALENDAR_OPEN", open: o })
+									}
+								>
+									<PopoverTrigger asChild>
+										<Button
+											variant="outline"
+											className={cn(
+												"justify-start gap-2 font-normal",
+												!customDate && "text-muted-foreground",
+											)}
+										>
+											<CalendarIcon className="size-4" />
+											{customDate
+												? format(customDate, "PPP", { locale: ptBR })
+												: "Escolha uma data"}
+										</Button>
+									</PopoverTrigger>
+									<PopoverContent className="w-auto p-0" align="start">
+										<Calendar
+											mode="single"
+											selected={customDate}
+											onSelect={(d) => {
+												dispatch({ type: "SET_CUSTOM_DATE", date: d });
+												dispatch({ type: "SET_CALENDAR_OPEN", open: false });
+											}}
+											disabled={(d) => d <= new Date()}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+							) : (
+								<Calendar
+									mode="single"
+									selected={customDate}
+									onSelect={(d) =>
+										dispatch({ type: "SET_CUSTOM_DATE", date: d })
+									}
+									disabled={(d) => d <= new Date()}
+									locale={ptBR}
+									className="rounded-md border self-center"
+								/>
+							)}
 						</div>
 					)}
 
@@ -245,7 +260,7 @@ export function CreateGroupDialog() {
 						{isPending ? "Criando…" : "Criar Grupo"}
 					</Button>
 				</div>
-			</DialogContent>
-		</Dialog>
+			</ResponsiveDialogContent>
+		</ResponsiveDialog>
 	);
 }
