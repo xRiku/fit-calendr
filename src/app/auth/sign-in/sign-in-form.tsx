@@ -9,6 +9,11 @@ import { signInWithCredentials, verifyOtp } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+	CardHeader,
+	CardTitle,
+	CardDescription,
+} from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { OTPInput } from "./otp-input"; // Import the new OTPInput component
@@ -80,51 +85,61 @@ export function SignInForm() {
 		}
 	};
 
-	if (shouldShowOtpField) {
-		return (
-			<OTPInput
-				otpCode={otpCode}
-				setOtpCode={setOtpCode}
-				handleOnComplete={handleOnComplete}
-				hasError={hasError}
-				// setHasError={setHasError}
-				isLoading={isLoading}
-				isNavigating={isNavigating}
-				setShouldShowOtpField={setShouldShowOtpField}
-			/>
-		);
-	}
-
 	return (
-		<form action={formAction} className="space-y-4">
-			<div className="space-y-2">
-				<Label htmlFor="email">E-mail</Label>
-				<Input
-					placeholder="Digite seu e-mail"
-					id="email"
-					type="email"
-					{...register("email")}
+		<>
+			<CardHeader>
+				<CardTitle className="text-xl font-semibold tracking-tight text-white">
+					Entrar no FitCalendr
+				</CardTitle>
+				<CardDescription className="text-neutral-400">
+					{shouldShowOtpField
+						? "Um código foi enviado para o seu e-mail. Digite-o abaixo para continuar."
+						: "Adicione informações diárias para acompanhar seus hábitos saudáveis."}
+				</CardDescription>
+			</CardHeader>
+			{shouldShowOtpField ? (
+				<OTPInput
+					otpCode={otpCode}
+					setOtpCode={setOtpCode}
+					handleOnComplete={handleOnComplete}
+					hasError={hasError}
+					// setHasError={setHasError}
+					isLoading={isLoading}
+					isNavigating={isNavigating}
+					setShouldShowOtpField={setShouldShowOtpField}
 				/>
+			) : (
+				<form action={formAction} className="space-y-4">
+					<div className="space-y-2">
+						<Label htmlFor="email">E-mail</Label>
+						<Input
+							placeholder="Digite seu e-mail"
+							id="email"
+							type="email"
+							{...register("email")}
+						/>
 
-				{errors.email && (
-					<p className="text-sm font-medium text-red-500 dark:text-red-400">
-						{errors.email.message}
-					</p>
-				)}
-			</div>
+						{errors.email && (
+							<p className="text-sm font-medium text-red-500 dark:text-red-400">
+								{errors.email.message}
+							</p>
+						)}
+					</div>
 
-			<Button
-				type="submit"
-				className="w-full bg-vibrant-green! font-semibold"
-				disabled={isPendingSubmit}
-			>
-				{isPendingSubmit ? (
-					<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-				) : (
-					<LogIn className="mr-2 h-4 w-4" />
-				)}
-				Continuar
-			</Button>
-		</form>
+					<Button
+						type="submit"
+						className="w-full bg-vibrant-green! font-semibold"
+						disabled={isPendingSubmit}
+					>
+						{isPendingSubmit ? (
+							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						) : (
+							<LogIn className="mr-2 h-4 w-4" />
+						)}
+						Continuar
+					</Button>
+				</form>
+			)}
+		</>
 	);
 }
