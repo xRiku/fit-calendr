@@ -10,7 +10,8 @@ export default function SignOutButton({
 }) {
 	return (
 		<Button
-			variant="destructive"
+			variant="outline"
+			size="sm"
 			className={className}
 			onClick={async () => {
 				await logOut();

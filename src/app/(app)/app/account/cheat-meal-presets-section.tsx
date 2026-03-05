@@ -217,7 +217,7 @@ export function CheatMealPresetsSection() {
 				))}
 			</div>
 
-			<div className="flex gap-3 pt-2">
+			<div className="flex flex-wrap gap-3 pt-2">
 				<Button
 					onClick={handleAddPreset}
 					disabled={isCreating}
@@ -231,7 +231,7 @@ export function CheatMealPresetsSection() {
 					<AlertDialogTrigger asChild>
 						<Button
 							variant="outline"
-							className="dark:border-neutral-700 dark:hover:bg-neutral-800"
+							className="flex-1 dark:border-neutral-700 dark:hover:bg-neutral-800"
 						>
 							<RotateCcw className="mr-2 h-4 w-4" />
 							Restaurar Padrões

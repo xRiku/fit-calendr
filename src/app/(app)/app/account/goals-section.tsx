@@ -2,9 +2,8 @@
 
 import { updateUserGoals } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dumbbell, Utensils } from "lucide-react";
+import { Dumbbell, Minus, Plus, Utensils } from "lucide-react";
 import { useState, useTransition } from "react";
 
 export function GoalsSection({
@@ -39,54 +38,66 @@ export function GoalsSection({
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="flex flex-col gap-2">
-				<Label
-					htmlFor="workout-goal"
-					className="flex items-center gap-2 text-sm"
-				>
+				<Label className="flex items-center gap-2 text-sm">
 					<Dumbbell className="size-4 text-vibrant-green" />
 					Meta semanal de treinos
 				</Label>
-				<Input
-					id="workout-goal"
-					type="number"
-					min={1}
-					max={7}
-					value={workoutGoal}
-					onChange={(e) =>
-						setWorkoutGoal(
-							Math.min(
-								7,
-								Math.max(1, Number.parseInt(e.target.value, 10) || 1),
-							),
-						)
-					}
-					className="w-20"
-				/>
+				<div className="flex items-center gap-2">
+					<Button
+						variant="outline"
+						size="icon"
+						type="button"
+						onClick={() => setWorkoutGoal((v) => Math.max(1, v - 1))}
+						disabled={workoutGoal <= 1}
+						className="size-9 shrink-0"
+					>
+						<Minus className="size-4" />
+					</Button>
+					<span className="w-8 text-center font-medium tabular-nums text-sm">
+						{workoutGoal}
+					</span>
+					<Button
+						variant="outline"
+						size="icon"
+						type="button"
+						onClick={() => setWorkoutGoal((v) => Math.min(7, v + 1))}
+						disabled={workoutGoal >= 7}
+						className="size-9 shrink-0"
+					>
+						<Plus className="size-4" />
+					</Button>
+				</div>
 			</div>
 			<div className="flex flex-col gap-2">
-				<Label
-					htmlFor="cheat-meal-budget"
-					className="flex items-center gap-2 text-sm"
-				>
+				<Label className="flex items-center gap-2 text-sm">
 					<Utensils className="size-4 text-vibrant-orange" />
 					Orçamento semanal de refeições livres
 				</Label>
-				<Input
-					id="cheat-meal-budget"
-					type="number"
-					min={0}
-					max={7}
-					value={cheatMealBudget}
-					onChange={(e) =>
-						setCheatMealBudget(
-							Math.min(
-								7,
-								Math.max(0, Number.parseInt(e.target.value, 10) || 0),
-							),
-						)
-					}
-					className="w-20"
-				/>
+				<div className="flex items-center gap-2">
+					<Button
+						variant="outline"
+						size="icon"
+						type="button"
+						onClick={() => setCheatMealBudget((v) => Math.max(0, v - 1))}
+						disabled={cheatMealBudget <= 0}
+						className="size-9 shrink-0"
+					>
+						<Minus className="size-4" />
+					</Button>
+					<span className="w-8 text-center font-medium tabular-nums text-sm">
+						{cheatMealBudget}
+					</span>
+					<Button
+						variant="outline"
+						size="icon"
+						type="button"
+						onClick={() => setCheatMealBudget((v) => Math.min(7, v + 1))}
+						disabled={cheatMealBudget >= 7}
+						className="size-9 shrink-0"
+					>
+						<Plus className="size-4" />
+					</Button>
+				</div>
 			</div>
 			<div className="flex items-center gap-3">
 				<Button

@@ -3,19 +3,18 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+    ResponsiveDialog,
+    ResponsiveDialogTrigger,
+    ResponsiveDialogContent,
+    ResponsiveDialogHeader,
+    ResponsiveDialogTitle,
+    ResponsiveDialogDescription,
+    ResponsiveDialogFooter,
+    ResponsiveDialogClose,
+} from "@/components/ui/responsive-dialog";
 import { deleteAccount } from "@/actions/profile-actions";
 import { toast } from "sonner";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 
 export function DeleteAccountSection() {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -32,59 +31,54 @@ export function DeleteAccountSection() {
     };
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex items-start gap-4 p-4 border border-destructive/30 bg-destructive/5 rounded-xl">
-                <div className="p-2 bg-destructive/10 rounded-full text-destructive">
-                    <AlertCircle className="w-5 h-5" />
+        <ResponsiveDialog>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex items-start gap-3 flex-1">
+                    <Trash2 className="size-5 text-destructive mt-0.5 shrink-0" />
+                    <div>
+                        <p className="text-sm font-medium">Excluir Conta</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">
+                            Remove permanentemente todos os seus dados. Esta ação não pode ser desfeita.
+                        </p>
+                    </div>
                 </div>
-                <div className="flex-1">
-                    <h3 className="text-base font-semibold text-destructive">
-                        Excluir Conta
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        A exclusão da sua conta remove permanentemente todos os seus dados,
-                        incluindo hábitos, grupos e configurações. Esta ação não pode ser
-                        desfeita.
-                    </p>
-
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="destructive" className="mt-4 w-full sm:w-auto">
-                                Excluir Conta Permanentemente
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle className="text-destructive flex items-center gap-2">
-                                    <AlertCircle className="w-5 h-5" />
-                                    Você tem certeza absoluta?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Esta ação não pode ser desfeita. Isso excluirá permanentemente sua
-                                    conta e removerá seus dados de nossos servidores.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={handleDelete}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                    disabled={isDeleting}
-                                >
-                                    {isDeleting ? (
-                                        <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Excluindo...
-                                        </>
-                                    ) : (
-                                        "Sim, excluir minha conta"
-                                    )}
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                </div>
+                <ResponsiveDialogTrigger asChild>
+                    <Button variant="destructive" size="sm" className="shrink-0 sm:self-center">
+                        Excluir conta
+                    </Button>
+                </ResponsiveDialogTrigger>
+            <ResponsiveDialogContent>
+                <ResponsiveDialogHeader>
+                    <ResponsiveDialogTitle className="text-destructive flex items-center gap-2">
+                        <Trash2 className="w-5 h-5" />
+                        Você tem certeza absoluta?
+                    </ResponsiveDialogTitle>
+                    <ResponsiveDialogDescription>
+                        Esta ação não pode ser desfeita. Isso excluirá permanentemente sua
+                        conta e removerá seus dados de nossos servidores.
+                    </ResponsiveDialogDescription>
+                </ResponsiveDialogHeader>
+                <ResponsiveDialogFooter>
+                    <ResponsiveDialogClose asChild>
+                        <Button variant="outline" disabled={isDeleting}>Cancelar</Button>
+                    </ResponsiveDialogClose>
+                    <Button
+                        variant="destructive"
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                    >
+                        {isDeleting ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Excluindo...
+                            </>
+                        ) : (
+                            "Sim, excluir minha conta"
+                        )}
+                    </Button>
+                </ResponsiveDialogFooter>
+            </ResponsiveDialogContent>
             </div>
-        </div>
+        </ResponsiveDialog>
     );
 }

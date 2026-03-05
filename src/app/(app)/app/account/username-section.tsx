@@ -34,7 +34,7 @@ export function UsernameSection({
 	return (
 		<div className="flex flex-col gap-2">
 			<Label htmlFor="username">Nome de usuário</Label>
-			<div className="flex gap-2">
+			<div className="flex items-center gap-2">
 				<div className="relative flex-1">
 					<AtSign className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
 					<Input
