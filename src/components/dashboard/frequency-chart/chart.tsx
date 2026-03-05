@@ -12,6 +12,7 @@ import {
 import { use } from "react";
 
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const options: {
 	[key: string]: {
@@ -21,12 +22,12 @@ const options: {
 	};
 } = {
 	workout: {
-		title: "Workouts (year)",
+		title: "Treinos (ano)",
 		color: "var(--vibrant-green)",
 		gradientId: "workoutGradient",
 	},
 	"cheat-meal": {
-		title: "Cheat meals (year)",
+		title: "Refeições livres (ano)",
 		color: "var(--vibrant-orange)",
 		gradientId: "cheatMealGradient",
 	},
@@ -61,7 +62,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 
 	const chartData = Array.from({ length: lastMonthNumber + 1 }).map(
 		(_, index) => ({
-			month: format(new Date(1, index), "LLLL"),
+			month: format(new Date(1, index), "LLLL", { locale: ptBR }),
 			checkOption: data.hashTable[index]?.length || 0,
 		}),
 	);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { formatDistanceToNow, isPast } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Trophy, Users, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,8 +44,8 @@ export function GroupCard({ group }: { group: GroupWithCount }) {
 						)}
 					>
 						{ended
-							? `Encerrado ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true })}`
-							: `Termina ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true })}`}
+							? `Encerrado ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true, locale: ptBR })}`
+							: `Termina ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true, locale: ptBR })}`}
 					</span>
 				</div>
 			</div>

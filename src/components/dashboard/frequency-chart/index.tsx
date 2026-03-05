@@ -22,18 +22,18 @@ const options: {
 		title: string;
 		description: string;
 		fetchCall:
-			| typeof getGymChecksByYearGroupedByMonth
-			| typeof getCheatMealsByYearGroupedByMonth;
+		| typeof getGymChecksByYearGroupedByMonth
+		| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
-		title: "Workout Frequency Chart",
-		description: "Showing workout frequency for this year",
+		title: "Frequência de Treinos",
+		description: "Mostrando a frequência de treinos neste ano",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		title: "Cheat Meal Frequency Chart",
-		description: "Showing cheat meal frequency for this year",
+		title: "Frequência de Refeições Livres",
+		description: "Mostrando a frequência de refeições livres neste ano",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };

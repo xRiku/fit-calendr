@@ -39,3 +39,38 @@ export async function updateUsername(username: string) {
 
 	revalidatePath("/app/account");
 }
+
+export async function deleteAccount() {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) throw new Error("Unauthorized");
+
+	const userId = session.user.id;
+
+	try {
+		// Clean up user's data first
+		await prisma.gymCheck.deleteMany({
+			where: { userId },
+		});
+		await prisma.cheatMeal.deleteMany({
+			where: { userId },
+		});
+		await prisma.workoutPreset.deleteMany({
+			where: { userId },
+		});
+		await prisma.cheatMealPreset.deleteMany({
+			where: { userId },
+		});
+		// Delete the user record
+		await prisma.user.delete({
+			where: { id: userId },
+		});
+
+		// Sign out
+		await auth.api.signOut({
+			headers: await headers(),
+		});
+	} catch (error) {
+		console.error("Error deleting account:", error);
+		throw new Error("Failed to delete account");
+	}
+}

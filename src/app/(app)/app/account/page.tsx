@@ -2,6 +2,7 @@ import { CheatMealPresetsSection } from "@/app/(app)/app/account/cheat-meal-pres
 import { GoalsSection } from "@/app/(app)/app/account/goals-section";
 import { WorkoutPresetsSection } from "@/app/(app)/app/account/workout-presets-section";
 import { UsernameSection } from "@/app/(app)/app/account/username-section";
+import { DeleteAccountSection } from "@/app/(app)/app/account/delete-account-section";
 import H2 from "@/components/h2";
 import {
 	Card,
@@ -16,7 +17,7 @@ import { AvatarUpload } from "@/app/(app)/app/account/avatar-upload";
 import { auth } from "@/lib/auth";
 import { getUserGoals } from "@/lib/server-utils";
 import { getInitials } from "@/lib/utils";
-import { Dumbbell, Utensils } from "lucide-react";
+import { Dumbbell, Utensils, AlertTriangle } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -130,6 +131,23 @@ export default async function AccountPage() {
 				<Separator />
 
 				{/* Account Actions Section - Mobile */}
+				<section className="pt-2">
+					<div className="mb-4">
+						<h2 className="text-lg font-semibold text-destructive flex items-center gap-2">
+							<AlertTriangle className="h-5 w-5" />
+							Zona de Perigo
+						</h2>
+						<p className="text-muted-foreground text-sm">
+							Ações destrutivas e irreversíveis
+						</p>
+					</div>
+					<div className="flex flex-col gap-4">
+						<DeleteAccountSection />
+					</div>
+				</section>
+
+				<Separator />
+
 				<section className="pt-2 pb-6">
 					<SignOutButton className="w-full" />
 				</section>
@@ -219,17 +237,22 @@ export default async function AccountPage() {
 
 				<Card className="border-destructive/20">
 					<CardHeader>
-						<CardTitle className="text-destructive">
-							Gerenciamento da Conta
+						<CardTitle className="text-destructive flex items-center gap-2">
+							<AlertTriangle className="h-5 w-5" />
+							Zona de Perigo
 						</CardTitle>
 						<CardDescription>
-							Sair da sua conta neste dispositivo
+							Ações destrutivas e irreversíveis relacionadas à sua conta
 						</CardDescription>
 					</CardHeader>
-					<CardContent>
-						<SignOutButton />
+					<CardContent className="flex flex-col gap-6">
+						<DeleteAccountSection />
 					</CardContent>
 				</Card>
+
+				<div className="flex justify-end pt-2">
+					<SignOutButton />
+				</div>
 			</div>
 		</main>
 	);

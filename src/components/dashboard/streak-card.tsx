@@ -37,10 +37,11 @@ async function BannerContent({
 	isWorkout,
 	selected,
 }: { isWorkout: boolean; selected: string }) {
-	const progress = await getWeeklyProgress();
-
 	if (isWorkout) {
-		const { currentStreak, longestStreak } = await getGymStreak();
+		const [progress, { currentStreak, longestStreak }] = await Promise.all([
+			getWeeklyProgress(),
+			getGymStreak(),
+		]);
 		const current = progress.workouts;
 		const goal = progress.weeklyWorkoutGoal;
 		const pct = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
@@ -51,10 +52,10 @@ async function BannerContent({
 					<CardContent className="py-4 flex justify-between items-center">
 						<div className="flex items-center gap-3">
 							<Flame className="size-5 text-vibrant-green" />
-							<span className="font-semibold">Workout Streak</span>
+							<span className="font-semibold">Sequência de Treinos</span>
 						</div>
 						<span className="text-sm text-muted-foreground font-medium">
-							{currentStreak} day{currentStreak !== 1 ? "s" : ""}
+							{currentStreak} dia{currentStreak !== 1 ? "s" : ""}
 						</span>
 					</CardContent>
 				</Card>
@@ -64,7 +65,7 @@ async function BannerContent({
 						<div className="flex justify-between items-center">
 							<div className="flex items-center gap-3">
 								<Target className="size-5 text-vibrant-green" />
-								<span className="font-semibold">Weekly Goal</span>
+								<span className="font-semibold">Meta Semanal</span>
 							</div>
 							<span className="text-sm text-muted-foreground font-medium">
 								{current} / {goal}
@@ -78,7 +79,7 @@ async function BannerContent({
 								/>
 							</div>
 							<span className="text-[10px] text-muted-foreground uppercase font-semibold shrink-0">
-								this week
+								nesta semana
 							</span>
 						</div>
 					</CardContent>
@@ -88,7 +89,10 @@ async function BannerContent({
 	}
 
 	// Cheat meal mode
-	const lastCheatMeal = await getLastCheatMeal();
+	const [progress, lastCheatMeal] = await Promise.all([
+		getWeeklyProgress(),
+		getLastCheatMeal(),
+	]);
 	const daysSince =
 		lastCheatMeal.length > 0
 			? differenceInDays(new Date(), lastCheatMeal[0].date)
@@ -104,10 +108,10 @@ async function BannerContent({
 				<CardContent className="py-4 flex justify-between items-center">
 					<div className="flex items-center gap-3">
 						<Flame className="size-5 text-vibrant-orange" />
-						<span className="font-semibold">Days since last</span>
+						<span className="font-semibold">Dias desde a última</span>
 					</div>
 					<span className="text-sm text-muted-foreground font-medium">
-						{daysSince} day{daysSince !== 1 ? "s" : ""}
+						{daysSince} dia{daysSince !== 1 ? "s" : ""}
 					</span>
 				</CardContent>
 			</Card>
@@ -117,7 +121,7 @@ async function BannerContent({
 					<div className="flex justify-between items-center">
 						<div className="flex items-center gap-3">
 							<Target className="size-5 text-vibrant-orange" />
-							<span className="font-semibold">Weekly Budget</span>
+							<span className="font-semibold">Cota Semanal</span>
 						</div>
 						<span className="text-sm text-muted-foreground font-medium">
 							{current} / {budget}
@@ -134,7 +138,7 @@ async function BannerContent({
 							/>
 						</div>
 						<span className="text-[10px] text-muted-foreground uppercase font-semibold shrink-0">
-							this week
+							nesta semana
 						</span>
 					</div>
 				</CardContent>

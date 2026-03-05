@@ -121,9 +121,9 @@ export default function DayInfoForm() {
 								date: selectedDayInfo?.date ?? new Date(),
 							}),
 							{
-								loading: "Adding day info...",
-								success: "Day info added",
-								error: "Error",
+								loading: "Adicionando informações...",
+								success: "Informações adicionadas",
+								error: "Erro",
 							},
 						);
 					}
@@ -143,9 +143,9 @@ export default function DayInfoForm() {
 								date: selectedDayInfo?.date ?? new Date(),
 							}),
 							{
-								loading: "Editing day info...",
-								success: "Day info updated",
-								error: "Error",
+								loading: "Editando informações...",
+								success: "Informações atualizadas",
+								error: "Erro",
 							},
 						);
 					}
@@ -156,7 +156,7 @@ export default function DayInfoForm() {
 			>
 				<FormItem className="w-full">
 					<FormLabel className="font-bold">
-						Workouts <span className="text-xs font-normal">(Optional)</span>
+						Treinos <span className="text-xs font-normal">(Opcional)</span>
 					</FormLabel>
 					<FormControl>
 						<WorkoutChipInput
@@ -170,7 +170,7 @@ export default function DayInfoForm() {
 				</FormItem>
 				<FormItem className="w-full">
 					<FormLabel className="font-bold">
-						Cheat meals <span className="text-xs font-normal">(Optional)</span>
+						Refeições livres <span className="text-xs font-normal">(Opcional)</span>
 					</FormLabel>
 					<FormControl>
 						<CheatMealChipInput
@@ -195,7 +195,7 @@ export default function DayInfoForm() {
 					}
 					form="day-info-form"
 				>
-					Save
+					Salvar
 				</Button>
 				<Button
 					variant="outline"
@@ -203,7 +203,7 @@ export default function DayInfoForm() {
 					className="h-12 text-base"
 					onClick={() => toggleDayInfoModalState()}
 				>
-					Cancel
+					Cancelar
 				</Button>
 			</div>
 			<div className="hidden sm:flex sm:justify-center gap-4">
@@ -212,7 +212,7 @@ export default function DayInfoForm() {
 					className="w-1/4"
 					onClick={() => toggleDayInfoModalState()}
 				>
-					Cancel
+					Cancelar
 				</Button>
 				<Button
 					type="submit"
@@ -224,7 +224,7 @@ export default function DayInfoForm() {
 					className="w-1/4"
 					form="day-info-form"
 				>
-					Save
+					Salvar
 				</Button>
 			</div>
 		</Form>

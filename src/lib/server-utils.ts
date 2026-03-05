@@ -391,33 +391,53 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 	if (!viewerMembership) redirect("/app/groups");
 
 	// Target must also be in the group
-	const targetMembership = await prisma.groupMember.findUnique({
-		where: { groupId_userId: { groupId, userId: targetUserId } },
-		include: {
-			user: {
-				select: { id: true, name: true, username: true, avatarUrl: true },
+	const [targetMembership, group] = await Promise.all([
+		prisma.groupMember.findUnique({
+			where: { groupId_userId: { groupId, userId: targetUserId } },
+			include: {
+				user: {
+					select: { id: true, name: true, username: true, avatarUrl: true },
+				},
 			},
-		},
-	});
+		}),
+		prisma.group.findUnique({ where: { id: groupId } }),
+	]);
 	if (!targetMembership) redirect(`/app/groups/${groupId}`);
-
-	const group = await prisma.group.findUnique({ where: { id: groupId } });
 	if (!group) redirect("/app/groups");
 
 	const year = new Date().getFullYear();
 
-	// All workouts for heatmap (current year)
-	const allWorkouts = await prisma.gymCheck.findMany({
-		where: {
-			userId: targetUserId,
-			date: {
-				gte: new Date(year, 0, 1),
-				lte: new Date(year, 11, 31, 23, 59, 59),
+	const rangeEnd =
+		new Date(group.endDate) < new Date() ? group.endDate : new Date();
+
+	// Parallel DB fetches
+	const [allWorkouts, challengeWorkouts, allTimeWorkouts] = await Promise.all([
+		// All workouts for heatmap (current year)
+		prisma.gymCheck.findMany({
+			where: {
+				userId: targetUserId,
+				date: {
+					gte: new Date(year, 0, 1),
+					lte: new Date(year, 11, 31, 23, 59, 59),
+				},
 			},
-		},
-		select: { date: true },
-		orderBy: { date: "asc" },
-	});
+			select: { date: true },
+			orderBy: { date: "asc" },
+		}),
+		// Workouts within challenge period
+		prisma.gymCheck.count({
+			where: {
+				userId: targetUserId,
+				date: { gte: group.startDate, lte: rangeEnd },
+			},
+		}),
+		// All-time workouts for streak calculation
+		prisma.gymCheck.findMany({
+			where: { userId: targetUserId },
+			select: { date: true },
+			orderBy: { date: "asc" },
+		}),
+	]);
 
 	// Build heatmap map directly
 	const heatmapData = new Map<string, number>();
@@ -426,23 +446,6 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 		const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 		heatmapData.set(key, (heatmapData.get(key) ?? 0) + 1);
 	}
-
-	// Workouts within challenge period
-	const rangeEnd =
-		new Date(group.endDate) < new Date() ? group.endDate : new Date();
-	const challengeWorkouts = await prisma.gymCheck.count({
-		where: {
-			userId: targetUserId,
-			date: { gte: group.startDate, lte: rangeEnd },
-		},
-	});
-
-	// All-time workouts for streak calculation
-	const allTimeWorkouts = await prisma.gymCheck.findMany({
-		where: { userId: targetUserId },
-		select: { date: true },
-		orderBy: { date: "asc" },
-	});
 
 	const { currentStreak, longestStreak } = calculateStreak(
 		allTimeWorkouts.map((w) => w.date),

@@ -23,11 +23,13 @@ export default async function DashboardPage({
 }: DashBoardPageProps) {
 	const params = await searchParams;
 	const selected = params.selected ?? "workout";
-	const availableYears = await getAvailableYears();
+	const [availableYears, { total }] = await Promise.all([
+		getAvailableYears(),
+		getUserTotalEntries(),
+	]);
 	const year = params.year
 		? Number.parseInt(params.year, 10)
 		: new Date().getFullYear();
-	const { total } = await getUserTotalEntries();
 
 	if (total === 0) {
 		return (

@@ -47,7 +47,7 @@ function SelectCheckOptionsContent({ selected }: { selected: string }) {
 				)}
 			>
 				<Dumbbell className="size-4" />
-				Workouts
+				Treinos
 			</button>
 			<button
 				type="button"
@@ -63,7 +63,7 @@ function SelectCheckOptionsContent({ selected }: { selected: string }) {
 				)}
 			>
 				<Utensils className="size-4" />
-				Cheat Meals
+				Refeições Livres
 			</button>
 		</div>
 	);

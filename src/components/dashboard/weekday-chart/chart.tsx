@@ -14,6 +14,7 @@ import type { ChartConfig } from "@/components/ui/chart";
 import { use } from "react";
 
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const options: {
 	[key: string]: {
@@ -22,11 +23,11 @@ const options: {
 	};
 } = {
 	workout: {
-		title: "Workouts",
+		title: "Treinos",
 		color: "var(--primary)",
 	},
 	"cheat-meal": {
-		title: "Cheat meals",
+		title: "Refeições Livres",
 		color: "var(--secondary)",
 	},
 };
@@ -54,7 +55,9 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 
 	const weekdaysTable: { [key: string]: number } = {};
 	for (const checkOption of Object.values(hashTable).flat()) {
-		const weekday = format((checkOption as { date: Date }).date, "eeee");
+		const weekday = format((checkOption as { date: Date }).date, "eeee", {
+			locale: ptBR,
+		});
 		if (weekdaysTable[weekday]) {
 			weekdaysTable[weekday] += 1;
 		} else {
@@ -75,7 +78,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 
 		i -= 1;
 		if (i === 4) {
-			weekdaysTable.Others = totalOthersSum;
+			weekdaysTable.Outros = totalOthersSum;
 		}
 	}
 

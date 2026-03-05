@@ -18,18 +18,18 @@ const options: {
 		title: string;
 		description: string;
 		fetchCall:
-			| typeof getGymChecksByYearGroupedByMonth
-			| typeof getCheatMealsByYearGroupedByMonth;
+		| typeof getGymChecksByYearGroupedByMonth
+		| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
-		title: "Workout Heatmap",
-		description: "Daily workout activity for the year",
+		title: "Mapa de Calor de Treinos",
+		description: "Atividade diária de treinos no ano",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		title: "Cheat Meal Heatmap",
-		description: "Daily cheat meal activity for the year",
+		title: "Mapa de Calor das Refeições",
+		description: "Refeições livres diárias no ano",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };
@@ -40,8 +40,8 @@ async function HeatmapData({
 	selected,
 }: {
 	fetchCallPromise:
-		| ReturnType<typeof getGymChecksByYearGroupedByMonth>
-		| ReturnType<typeof getCheatMealsByYearGroupedByMonth>;
+	| ReturnType<typeof getGymChecksByYearGroupedByMonth>
+	| ReturnType<typeof getCheatMealsByYearGroupedByMonth>;
 	year: number;
 	selected: string;
 }) {

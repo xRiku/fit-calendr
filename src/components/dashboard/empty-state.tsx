@@ -8,10 +8,10 @@ export function DashboardEmptyState() {
 			<div className="bg-neutral-900/50 p-6 rounded-full mb-6">
 				<CalendarDays className="w-12 h-12 text-vibrant-green" />
 			</div>
-			<h3 className="text-2xl font-bold mb-3">Start Tracking Your Habits</h3>
+			<h3 className="text-2xl font-bold mb-3">Comece a Monitorar Seus Hábitos</h3>
 			<p className="text-neutral-400 mb-8 max-w-md">
-				Your dashboard will show insights once you add your first workout or
-				cheat meal. It only takes a few seconds to get started.
+				Seu dashboard mostrará os resultados assim que você adicionar seu primeiro treino ou
+				refeição livre.
 			</p>
 			<div className="flex flex-col sm:flex-row gap-4">
 				<Button
@@ -20,11 +20,11 @@ export function DashboardEmptyState() {
 				>
 					<Link href="/app/calendar?add=true">
 						<PlusCircle className="w-4 h-4 mr-2" />
-						Add Your First Entry
+						Adicione seu Primeiro Registro
 					</Link>
 				</Button>
 				<Button asChild variant="outline">
-					<Link href="/app/calendar">Browse Calendar</Link>
+					<Link href="/app/calendar">Navegar no Calendário</Link>
 				</Button>
 			</div>
 		</div>

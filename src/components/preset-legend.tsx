@@ -36,7 +36,7 @@ function PresetGroup({ label, presets }: { label: string; presets: Preset[] }) {
 					onClick={() => setExpanded(!expanded)}
 					className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
 				>
-					{expanded ? "Show less" : `+${hiddenCount} more`}
+					{expanded ? "Mostrar menos" : `+${hiddenCount} mais`}
 				</button>
 			)}
 		</div>
@@ -52,8 +52,8 @@ export default function PresetLegend({
 }) {
 	return (
 		<div className="space-y-3">
-			<PresetGroup label="Activities" presets={workoutPresets} />
-			<PresetGroup label="Cheat Meals" presets={cheatMealPresets} />
+			<PresetGroup label="Treinos" presets={workoutPresets} />
+			<PresetGroup label="Refeições Livres" presets={cheatMealPresets} />
 		</div>
 	);
 }

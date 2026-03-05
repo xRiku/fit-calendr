@@ -1,6 +1,7 @@
 import { getGroupWithMembers } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Trophy, Users, CalendarDays, Medal, ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -66,15 +67,15 @@ export default async function GroupPage({ params }: Props) {
 							<span className="flex items-center gap-1.5">
 								<CalendarDays className="size-3.5" />
 								{ended
-									? `Encerrado em ${format(new Date(group.endDate), "MMM d, yyyy")}`
-									: `Termina em ${format(new Date(group.endDate), "MMM d, yyyy")}`}
+									? `Encerrado em ${format(new Date(group.endDate), "d 'de' MMM, yyyy", { locale: ptBR })}`
+									: `Termina em ${format(new Date(group.endDate), "d 'de' MMM, yyyy", { locale: ptBR })}`}
 							</span>
 							{!ended && (
 								<Badge
 									variant="outline"
 									className="text-vibrant-green border-vibrant-green/30 text-xs"
 								>
-									{formatDistanceToNow(new Date(group.endDate))} restante
+									{formatDistanceToNow(new Date(group.endDate), { locale: ptBR })} restante
 								</Badge>
 							)}
 							{ended && (
@@ -134,7 +135,7 @@ export default async function GroupPage({ params }: Props) {
 									className={cn(
 										"flex items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/5",
 										isCurrentUser &&
-											"bg-vibrant-green/5 border border-vibrant-green/20",
+										"bg-vibrant-green/5 border border-vibrant-green/20",
 									)}
 								>
 									<div className="flex items-center justify-center w-5 shrink-0">
@@ -195,8 +196,8 @@ export default async function GroupPage({ params }: Props) {
 			</div>
 
 			<div className="text-xs text-muted-foreground text-center pb-4">
-				Treinos registrados entre {format(new Date(group.startDate), "MMM d")} –{" "}
-				{format(new Date(group.endDate), "MMM d, yyyy")}
+				Treinos registrados entre {format(new Date(group.startDate), "d 'de' MMM", { locale: ptBR })} –{" "}
+				{format(new Date(group.endDate), "d 'de' MMM, yyyy", { locale: ptBR })}
 			</div>
 		</div>
 	);

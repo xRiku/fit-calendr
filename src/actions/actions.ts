@@ -389,22 +389,22 @@ export async function updateDayInfo({
 
 /* export async function deleteCheatMeal(id: string) {
   const existingCheatMeal = await prisma.cheatMeal.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-    },
+	where: {
+	  id,
+	},
+	select: {
+	  id: true,
+	},
   });
 
   if (!existingCheatMeal) {
-    throw new Error(`Cheat Meal with specified id: ${id} does not exist.`);
+	throw new Error(`Cheat Meal with specified id: ${id} does not exist.`);
   }
 
   await prisma.cheatMeal.delete({
-    where: {
-      id,
-    },
+	where: {
+	  id,
+	},
   });
 }  */
 
@@ -447,23 +447,18 @@ export async function updateUserName({
 	name: string;
 	userId: string;
 }) {
-	const user = await prisma.user.findUnique({
-		where: {
-			id: userId,
-		},
-	});
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) throw new Error("Não autenticado");
+	if (session.user.id !== userId) throw new Error("Não autorizado");
 
+	const user = await prisma.user.findUnique({ where: { id: userId } });
 	if (!user) {
 		throw Error(`Usuário com id ${userId} não existe`);
 	}
 
 	return await prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			name,
-		},
+		where: { id: userId },
+		data: { name },
 	});
 }
 
@@ -528,4 +523,44 @@ export async function quickToggleWorkout({
 
 	revalidatePath("/app/calendar", "page");
 	return { success: true };
+}
+
+export async function deleteProgressInRange(startDate: Date, endDate: Date) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		throw new Error("Não autorizado");
+	}
+
+	const userId = session.user.id;
+
+	try {
+		await prisma.gymCheck.deleteMany({
+			where: {
+				userId,
+				date: {
+					gte: startDate,
+					lte: endDate,
+				},
+			},
+		});
+
+		await prisma.cheatMeal.deleteMany({
+			where: {
+				userId,
+				date: {
+					gte: startDate,
+					lte: endDate,
+				},
+			},
+		});
+
+		revalidatePath("/app", "layout");
+		return { success: true };
+	} catch (error) {
+		console.error("Error deleting progress:", error);
+		throw new Error("Failed to delete progress");
+	}
 }

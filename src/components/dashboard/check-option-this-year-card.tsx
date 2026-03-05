@@ -11,16 +11,16 @@ const options: {
 	[key: string]: {
 		title: string;
 		fetchCall:
-			| typeof getGymChecksByYearGroupedByMonth
-			| typeof getCheatMealsByYearGroupedByMonth;
+		| typeof getGymChecksByYearGroupedByMonth
+		| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
-		title: "Workouts (year)",
+		title: "Treinos (ano)",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		title: "Cheat meals (year)",
+		title: "Refeições livres (ano)",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };
@@ -62,7 +62,7 @@ async function CardData({
 					</span>
 					{diffFromLastYear !== 0 && (
 						<p className="text-xs text-muted-foreground">
-							{isPositive ? "Up by " : "Down by "}
+							{isPositive ? "Aumento de " : "Queda de "}
 							<span
 								className={isGoodTrend ? "text-emerald-500" : "text-red-500"}
 							>
@@ -71,7 +71,7 @@ async function CardData({
 									: diffFromLastYear.toFixed(1)}
 								%
 							</span>{" "}
-							vs last year
+							vs ano anterior
 						</p>
 					)}
 				</>

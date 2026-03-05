@@ -99,31 +99,31 @@ async function SidebarStats() {
 		<div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
 			<StatItem
 				icon={<Dumbbell className="size-4 text-vibrant-green" />}
-				label="Workouts this month"
+				label="Treinos neste mês"
 				value={workoutCount}
 			/>
 			<StatItem
 				icon={<UtensilsCrossed className="size-4 text-vibrant-orange" />}
-				label="Cheat meals this month"
+				label="Refeições livres neste mês"
 				value={cheatCount}
 			/>
 			<StatItem
 				icon={<Flame className="size-4 text-vibrant-green" />}
-				label="Workout streak"
-				value={`${gymStreak.currentStreak} day${gymStreak.currentStreak !== 1 ? "s" : ""}`}
+				label="Sequência de treinos"
+				value={`${gymStreak.currentStreak} dia${gymStreak.currentStreak !== 1 ? "s" : ""}`}
 			/>
 			<StatItem
 				icon={<ShieldCheck className="size-4 text-vibrant-orange" />}
-				label="Days since cheat meal"
+				label="Dias desde a última refeição livre"
 				value={
 					lastCheatMeal.length
-						? `${differenceInDays(new Date(), lastCheatMeal[0].date)} day${differenceInDays(new Date(), lastCheatMeal[0].date) !== 1 ? "s" : ""}`
-						: "N/A"
+						? `${differenceInDays(new Date(), lastCheatMeal[0].date)} dia${differenceInDays(new Date(), lastCheatMeal[0].date) !== 1 ? "s" : ""}`
+						: "N/D"
 				}
 			/>
 			<StatItem
 				icon={<Target className="size-4 text-vibrant-green" />}
-				label="Workouts this week"
+				label="Treinos nesta semana"
 				value={`${weeklyProgress.workouts}/${weeklyProgress.weeklyWorkoutGoal}`}
 			/>
 		</div>
@@ -134,14 +134,14 @@ export default function CalendarSidebar() {
 	return (
 		<aside className="w-full pb-6 lg:pb-0 lg:w-64 lg:shrink-0 lg:border-r lg:border-border/50 lg:pr-6 space-y-6 lg:h-full lg:overflow-y-auto">
 			<CollapsibleSection
-				title="Legend"
-				collapsedHint="Tap to view workout types & colors"
+				title="Legenda"
+				collapsedHint="Toque para ver os tipos de treino e cores"
 			>
 				<Suspense fallback={<LegendSkeleton />}>
 					<PresetLegendLoader />
 				</Suspense>
 			</CollapsibleSection>
-			<CollapsibleSection title="This Month" collapsedHint="Tap to view stats">
+			<CollapsibleSection title="Este Mês" collapsedHint="Toque para exibir as estatísticas">
 				<Suspense
 					fallback={
 						<div className="grid grid-cols-2 gap-3 lg:grid-cols-1">

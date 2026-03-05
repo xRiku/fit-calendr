@@ -4,19 +4,19 @@ import { cn } from "@/lib/utils";
 
 const MONTH_LABELS = [
 	"Jan",
-	"Feb",
+	"Fev",
 	"Mar",
-	"Apr",
-	"May",
+	"Abr",
+	"Mai",
 	"Jun",
 	"Jul",
-	"Aug",
-	"Sep",
-	"Oct",
+	"Ago",
+	"Set",
+	"Out",
 	"Nov",
-	"Dec",
+	"Dez",
 ];
-const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
+const DAY_LABELS = ["", "Seg", "", "Qua", "", "Sex", ""];
 
 function getIntensity(count: number): 0 | 1 | 2 | 3 {
 	if (count === 0) return 0;
@@ -168,14 +168,14 @@ export function HeatmapGrid({
 
 				{/* Legend */}
 				<div className="flex items-center justify-end gap-1.5 mt-2">
-					<span className="text-[10px] text-muted-foreground">Less</span>
+					<span className="text-[10px] text-muted-foreground">Menos</span>
 					{([0, 1, 2, 3] as const).map((level) => (
 						<div
 							key={level}
 							className={cn("w-[13px] h-[13px] rounded-sm", colors[level])}
 						/>
 					))}
-					<span className="text-[10px] text-muted-foreground">More</span>
+					<span className="text-[10px] text-muted-foreground">Mais</span>
 				</div>
 			</div>
 		</div>

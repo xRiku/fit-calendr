@@ -22,6 +22,7 @@ import { createGroup, type GroupDuration } from "@/actions/group-actions";
 import { toast } from "sonner";
 import { Plus, CalendarIcon } from "lucide-react";
 import { format, addDays, addMonths, addYears, endOfYear } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 const DURATION_OPTIONS: {
@@ -29,25 +30,25 @@ const DURATION_OPTIONS: {
 	label: string;
 	description: string;
 }[] = [
-	{ value: "30d", label: "30 Dias", description: "Desafio de 1 mês" },
-	{
-		value: "90d",
-		label: "90 Dias",
-		description: "Desafio clássico de 3 meses",
-	},
-	{ value: "6m", label: "6 Meses", description: "Desafio de meio ano" },
-	{
-		value: "eoy",
-		label: "Fim do Ano",
-		description: `Até 31 de dez de ${new Date().getFullYear()}`,
-	},
-	{ value: "1y", label: "1 Ano", description: "Desafio de um ano inteiro" },
-	{
-		value: "custom",
-		label: "Personalizado",
-		description: "Escolha sua própria data final",
-	},
-];
+		{ value: "30d", label: "30 Dias", description: "Desafio de 1 mês" },
+		{
+			value: "90d",
+			label: "90 Dias",
+			description: "Desafio clássico de 3 meses",
+		},
+		{ value: "6m", label: "6 Meses", description: "Desafio de meio ano" },
+		{
+			value: "eoy",
+			label: "Fim do Ano",
+			description: `Até 31 de dez de ${new Date().getFullYear()}`,
+		},
+		{ value: "1y", label: "1 Ano", description: "Desafio de um ano inteiro" },
+		{
+			value: "custom",
+			label: "Personalizado",
+			description: "Escolha sua própria data final",
+		},
+	];
 
 function getPreviewEndDate(
 	duration: GroupDuration,
@@ -211,7 +212,7 @@ export function CreateGroupDialog() {
 									>
 										<CalendarIcon className="size-4" />
 										{customDate
-											? format(customDate, "PPP")
+											? format(customDate, "PPP", { locale: ptBR })
 											: "Escolha uma data"}
 									</Button>
 								</PopoverTrigger>
@@ -234,8 +235,8 @@ export function CreateGroupDialog() {
 					{previewEnd && (
 						<p className="text-sm text-muted-foreground">
 							O desafio termina em{" "}
-							<span className="text-white font-medium">
-								{format(previewEnd, "MMMM d, yyyy")}
+							<span className="text-white font-medium capitalize">
+								{format(previewEnd, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
 							</span>
 						</p>
 					)}
