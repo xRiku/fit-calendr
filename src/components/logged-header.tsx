@@ -38,7 +38,10 @@ export default async function LoggedHeader() {
 	return (
 		<Header>
 			<MainNav />
-			<MyAccountDropdown initialsFromName={initialsFromName} avatarUrl={userRecord?.avatarUrl} />
+			<MyAccountDropdown
+				initialsFromName={initialsFromName}
+				avatarUrl={userRecord?.avatarUrl}
+			/>
 		</Header>
 	);
 }

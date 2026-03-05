@@ -16,7 +16,7 @@ export default function MainNav() {
 						: "text-neutral-400 hover:bg-white/5 rounded-full"
 				} `}
 			>
-				Calendar
+				Calendário
 			</Link>
 			<Link
 				href="/app/dashboard"
@@ -36,7 +36,7 @@ export default function MainNav() {
 						: "text-neutral-400 hover:bg-white/5 rounded-full"
 				} `}
 			>
-				Groups
+				Grupos
 			</Link>
 		</nav>
 	);

@@ -11,8 +11,8 @@ const options: {
 	[key: string]: {
 		title: string;
 		fetchCall:
-		| typeof getGymChecksByYearGroupedByMonth
-		| typeof getCheatMealsByYearGroupedByMonth;
+			| typeof getGymChecksByYearGroupedByMonth
+			| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
@@ -25,7 +25,10 @@ const options: {
 	},
 };
 
-async function CardData({ selected, year }: { selected: string; year: number }) {
+async function CardData({
+	selected,
+	year,
+}: { selected: string; year: number }) {
 	const gymChecksGroupedByMonth = await options[selected].fetchCall({ year });
 
 	const getDiffFromLastYear = async () => {
@@ -34,11 +37,9 @@ async function CardData({ selected, year }: { selected: string; year: number }) 
 			return 0;
 		}
 
-		const lastYearGymChecksGroupedByMonth = await options[selected].fetchCall(
-			{
-				year: year - 1,
-			},
-		);
+		const lastYearGymChecksGroupedByMonth = await options[selected].fetchCall({
+			year: year - 1,
+		});
 		const prevYear = lastYearGymChecksGroupedByMonth?.count || 0;
 
 		if (prevYear === 0) {
@@ -88,7 +89,6 @@ export default async function CheckOptionThisYearCard({
 	selected: string;
 	year?: number;
 }) {
-
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

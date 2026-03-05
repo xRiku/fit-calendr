@@ -17,7 +17,7 @@ export default async function LandingPageHeader() {
 				size="sm"
 			>
 				<Link href={`${session?.user.id ? "/app/dashboard" : "/auth/sign-in"}`}>
-					{session?.user.id ? "Dashboard" : "Sign In"}
+					{session?.user.id ? "Dashboard" : "Entrar"}
 				</Link>
 			</Button>
 		</Header>

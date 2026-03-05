@@ -9,20 +9,20 @@ import { Testimonials } from "./testimonials";
 import { WhyDifferent } from "./why-different";
 
 export const metadata: Metadata = {
-	title: "FitCalendr — Track Fitness, Stay Balanced",
+	title: "FitCalendr — Acompanhe seus Treinos, Mantenha o Equilíbrio",
 	description:
-		"The minimalist fitness tracker for people who train hard and enjoy life. Log workouts, track cheat meals, visualize your progress — all in one beautiful calendar. Free forever.",
+		"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida. Registre treinos, acompanhe refeições livres, visualize seu progresso — tudo em um calendário bonito. Grátis para sempre.",
 	keywords: [
-		"fitness tracker",
-		"workout log",
-		"habit tracker",
-		"cheat meal tracker",
-		"fitness calendar",
+		"rastreador de fitness",
+		"registro de treinos",
+		"rastreador de hábitos",
+		"rastreador de refeições livres",
+		"calendário fitness",
 	],
 	openGraph: {
-		title: "FitCalendr — Track Fitness, Stay Balanced",
+		title: "FitCalendr — Acompanhe seus Treinos, Mantenha o Equilíbrio",
 		description:
-			"The minimalist fitness tracker for people who train hard and enjoy life. Free forever.",
+			"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida. Grátis para sempre.",
 		type: "website",
 	},
 };

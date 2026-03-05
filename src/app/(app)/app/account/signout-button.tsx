@@ -16,7 +16,7 @@ export default function SignOutButton({
 				await logOut();
 			}}
 		>
-			Sign out
+			Sair
 		</Button>
 	);
 }

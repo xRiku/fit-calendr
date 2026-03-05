@@ -20,8 +20,8 @@ const options: {
 	[key: string]: {
 		description: string;
 		fetchCall:
-		| typeof getGymChecksByYearGroupedByMonth
-		| typeof getCheatMealsByYearGroupedByMonth;
+			| typeof getGymChecksByYearGroupedByMonth
+			| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {

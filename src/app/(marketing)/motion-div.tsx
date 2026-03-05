@@ -7,7 +7,10 @@ export default function MotionDiv({
 	children,
 	className,
 	...props
-}: HTMLMotionProps<"div"> & { children?: React.ReactNode; className?: string }) {
+}: HTMLMotionProps<"div"> & {
+	children?: React.ReactNode;
+	className?: string;
+}) {
 	const shouldReduceMotion = useReducedMotion();
 
 	return (

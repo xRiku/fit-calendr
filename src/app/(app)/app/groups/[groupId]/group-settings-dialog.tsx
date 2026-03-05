@@ -24,7 +24,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import {
 	updateGroupName,
@@ -44,7 +48,12 @@ interface Props {
 	isActive: boolean;
 }
 
-export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isActive }: Props) {
+export function GroupSettingsDialog({
+	groupId,
+	currentName,
+	currentEndDate,
+	isActive,
+}: Props) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState("");
@@ -65,9 +74,9 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 		startTransition(async () => {
 			try {
 				await updateGroupName(groupId, name);
-				toast.success("Group name updated");
+				toast.success("Nome do grupo atualizado");
 			} catch {
-				toast.error("Failed to update name");
+				toast.error("Falha ao atualizar nome");
 			}
 		});
 	}
@@ -76,9 +85,9 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 		startTransition(async () => {
 			try {
 				await updateGroupEndDate(groupId, endDate);
-				toast.success("End date updated — members have been notified");
+				toast.success("Data final atualizada — os membros foram notificados");
 			} catch {
-				toast.error("Failed to update end date");
+				toast.error("Falha ao atualizar data final");
 			}
 		});
 	}
@@ -87,9 +96,11 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 		startTransition(async () => {
 			try {
 				await regenerateInviteCode(groupId);
-				toast.success("Invite link regenerated — old link is now invalid");
+				toast.success(
+					"Link de convite regenerado — o link antigo não funciona mais",
+				);
 			} catch {
-				toast.error("Failed to regenerate invite link");
+				toast.error("Falha ao regenerar link de convite");
 			}
 		});
 	}
@@ -98,11 +109,11 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 		startTransition(async () => {
 			try {
 				await deleteGroup(groupId);
-				toast.success("Group deleted");
+				toast.success("Grupo excluído");
 				setOpen(false);
 				router.push("/app/groups");
 			} catch {
-				toast.error("Failed to delete group");
+				toast.error("Falha ao excluir grupo");
 			}
 		});
 	}
@@ -112,17 +123,17 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 			<DialogTrigger asChild>
 				<Button variant="outline" size="sm" className="gap-2">
 					<Settings className="size-4" />
-					Settings
+					Configurações
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle>Group Settings</DialogTitle>
+					<DialogTitle>Configurações do Grupo</DialogTitle>
 				</DialogHeader>
 
 				<div className="flex flex-col gap-5 pt-2">
 					<div className="flex flex-col gap-2">
-						<Label htmlFor="group-name-edit">Group name</Label>
+						<Label htmlFor="group-name-edit">Nome do grupo</Label>
 						<div className="flex gap-2">
 							<Input
 								id="group-name-edit"
@@ -135,13 +146,13 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 								onClick={handleSaveName}
 								disabled={isPending || name.trim() === currentName}
 							>
-								Save
+								Salvar
 							</Button>
 						</div>
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<Label>End date</Label>
+						<Label>Data final</Label>
 						<div className="flex gap-2">
 							<Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
 								<PopoverTrigger asChild>
@@ -173,14 +184,15 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 								onClick={handleSaveEndDate}
 								disabled={
 									isPending ||
-									endDate.toDateString() === new Date(currentEndDate).toDateString()
+									endDate.toDateString() ===
+										new Date(currentEndDate).toDateString()
 								}
 							>
-								Save
+								Salvar
 							</Button>
 						</div>
 						<p className="text-xs text-muted-foreground">
-							All members will be notified when you change this.
+							Todos os membros serão notificados quando você alterar isso.
 						</p>
 					</div>
 
@@ -188,7 +200,7 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 						<>
 							<Separator />
 							<div className="flex flex-col gap-2">
-								<Label>Invite link</Label>
+								<Label>Link de convite</Label>
 								<Button
 									variant="outline"
 									size="sm"
@@ -197,10 +209,10 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 									disabled={isPending}
 								>
 									<RefreshCw className="size-4" />
-									Regenerate invite link
+									Regenerar link de convite
 								</Button>
 								<p className="text-xs text-muted-foreground">
-									The old link will stop working immediately.
+									O link antigo vai parar de funcionar imediatamente.
 								</p>
 							</div>
 						</>
@@ -209,29 +221,33 @@ export function GroupSettingsDialog({ groupId, currentName, currentEndDate, isAc
 					<Separator />
 
 					<div className="flex flex-col gap-2">
-						<Label className="text-destructive">Danger zone</Label>
+						<Label className="text-destructive">Zona de perigo</Label>
 						<AlertDialog>
 							<AlertDialogTrigger asChild>
-								<Button variant="destructive" size="sm" className="gap-2 self-start">
+								<Button
+									variant="destructive"
+									size="sm"
+									className="gap-2 self-start"
+								>
 									<Trash2 className="size-4" />
-									Delete group
+									Excluir grupo
 								</Button>
 							</AlertDialogTrigger>
 							<AlertDialogContent>
 								<AlertDialogHeader>
-									<AlertDialogTitle>Delete "{currentName}"?</AlertDialogTitle>
+									<AlertDialogTitle>Excluir "{currentName}"?</AlertDialogTitle>
 									<AlertDialogDescription>
-										This will permanently delete the group and remove all members. This
-										cannot be undone.
+										Isso vai excluir permanentemente o grupo e remover todos os
+										membros. Essa ação não pode ser desfeita.
 									</AlertDialogDescription>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
-									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogCancel>Cancelar</AlertDialogCancel>
 									<AlertDialogAction
 										onClick={handleDelete}
 										className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 									>
-										Delete
+										Excluir
 									</AlertDialogAction>
 								</AlertDialogFooter>
 							</AlertDialogContent>

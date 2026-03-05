@@ -4,7 +4,13 @@ import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { HeatmapGrid } from "@/components/dashboard/yearly-heatmap/heatmap-grid";
-import { ChevronLeft, Flame, Trophy, Dumbbell, CalendarDays } from "lucide-react";
+import {
+	ChevronLeft,
+	Flame,
+	Trophy,
+	Dumbbell,
+	CalendarDays,
+} from "lucide-react";
 import Link from "next/link";
 import { getInitials } from "@/lib/utils";
 
@@ -29,7 +35,9 @@ function StatCard({
 				<Icon className={`size-3.5 ${accent ? "text-vibrant-green" : ""}`} />
 				{label}
 			</div>
-			<p className={`text-2xl font-bold ${accent ? "text-vibrant-green" : ""}`}>{value}</p>
+			<p className={`text-2xl font-bold ${accent ? "text-vibrant-green" : ""}`}>
+				{value}
+			</p>
 		</div>
 	);
 }
@@ -40,7 +48,16 @@ export default async function MemberProfilePage({ params }: Props) {
 
 	if (!data) notFound();
 
-	const { user, group, joinedAt, role, stats, heatmapData, year, isOwnProfile } = data;
+	const {
+		user,
+		group,
+		joinedAt,
+		role,
+		stats,
+		heatmapData,
+		year,
+		isOwnProfile,
+	} = data;
 
 	return (
 		<div className="flex flex-col gap-6 w-full max-w-2xl mx-auto">
@@ -100,9 +117,22 @@ export default async function MemberProfilePage({ params }: Props) {
 						value={stats.challengeWorkouts}
 						accent
 					/>
-						<StatCard icon={CalendarDays} label="Total workouts" value={stats.totalWorkouts} />
-					<StatCard icon={Flame} label="Current streak" value={`${stats.currentStreak}d`} accent={stats.currentStreak > 0} />
-					<StatCard icon={Trophy} label="Longest streak" value={`${stats.longestStreak}d`} />
+					<StatCard
+						icon={CalendarDays}
+						label="Total workouts"
+						value={stats.totalWorkouts}
+					/>
+					<StatCard
+						icon={Flame}
+						label="Current streak"
+						value={`${stats.currentStreak}d`}
+						accent={stats.currentStreak > 0}
+					/>
+					<StatCard
+						icon={Trophy}
+						label="Longest streak"
+						value={`${stats.longestStreak}d`}
+					/>
 				</div>
 			</div>
 

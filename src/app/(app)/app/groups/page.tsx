@@ -13,15 +13,15 @@ export default async function GroupsPage() {
 	return (
 		<div className="flex flex-col gap-6 w-full max-w-2xl mx-auto">
 			<div className="flex py-2 items-center justify-between flex-wrap gap-4">
-				<H2>Groups</H2>
+				<H2>Grupos</H2>
 				<CreateGroupDialog />
 			</div>
 
 			{groups.length === 0 ? (
 				<div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border py-16 text-center">
-					<p className="text-muted-foreground text-sm">No groups yet.</p>
+					<p className="text-muted-foreground text-sm">Nenhum grupo ainda.</p>
 					<p className="text-muted-foreground text-xs">
-						Create a challenge group and invite your friends.
+						Crie um grupo de desafio e convide seus amigos.
 					</p>
 				</div>
 			) : (
@@ -29,7 +29,7 @@ export default async function GroupsPage() {
 					{active.length > 0 && (
 						<section className="flex flex-col gap-3">
 							<h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-								Active
+								Ativos
 							</h2>
 							{active.map((group) => (
 								<GroupCard key={group.id} group={group} />
@@ -40,7 +40,7 @@ export default async function GroupsPage() {
 					{ended.length > 0 && (
 						<section className="flex flex-col gap-3">
 							<h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-								Ended
+								Encerrados
 							</h2>
 							{ended.map((group) => (
 								<GroupCard key={group.id} group={group} />

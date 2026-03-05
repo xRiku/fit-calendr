@@ -57,10 +57,10 @@ export const CheatMealChipInput = forwardRef<
 
 	const filteredPresets = inputValue
 		? presets.filter(
-			(preset) =>
-				preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
-				!value.some((chip) => chip.presetId === preset.id),
-		)
+				(preset) =>
+					preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
+					!value.some((chip) => chip.presetId === preset.id),
+			)
 		: [];
 
 	const duplicateChip = value.find(

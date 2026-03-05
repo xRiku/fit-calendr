@@ -40,7 +40,7 @@ export async function createPreset({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	const preset = await prisma.workoutPreset.create({
@@ -74,7 +74,7 @@ export async function updatePreset({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	const currentPreset = await prisma.workoutPreset.findFirst({
@@ -87,7 +87,7 @@ export async function updatePreset({
 	});
 
 	if (!currentPreset) {
-		throw new Error("Preset not found");
+		throw new Error("Predefinição não encontrada");
 	}
 
 	if (cascade && label && label !== currentPreset.label) {
@@ -117,7 +117,7 @@ export async function deletePreset({ id }: { id: string }) {
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	await prisma.gymCheck.updateMany({
@@ -145,7 +145,7 @@ export async function createWorkoutWithPresets({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	const createdWorkouts = await Promise.all(
@@ -171,7 +171,7 @@ export async function getPresetUsageCount(presetId: string) {
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	return prisma.gymCheck.count({ where: { presetId } });
@@ -210,7 +210,7 @@ export async function createCheatMealPreset({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	const preset = await prisma.cheatMealPreset.create({
@@ -244,7 +244,7 @@ export async function updateCheatMealPreset({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	const currentPreset = await prisma.cheatMealPreset.findFirst({
@@ -257,7 +257,7 @@ export async function updateCheatMealPreset({
 	});
 
 	if (!currentPreset) {
-		throw new Error("Preset not found");
+		throw new Error("Predefinição não encontrada");
 	}
 
 	if (cascade && label && label !== currentPreset.label) {
@@ -287,7 +287,7 @@ export async function deleteCheatMealPreset({ id }: { id: string }) {
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	await prisma.cheatMeal.updateMany({
@@ -315,7 +315,7 @@ export async function createCheatMealWithPresets({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	const created = await Promise.all(
@@ -341,7 +341,7 @@ export async function getCheatMealPresetUsageCount(presetId: string) {
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	return prisma.cheatMeal.count({ where: { presetId } });

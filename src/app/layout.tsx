@@ -21,8 +21,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	title: "FitCalendr - Workout & Habit Tracker",
-	description: "Track your workout frequency, streaks, and cheat meals daily.",
+	title: "FitCalendr - Registre Treinos e Hábitos",
+	description:
+		"Acompanhe a frequência dos seus treinos, sequências e refeições livres diariamente.",
 	applicationName: "FitCalendr",
 	appleWebApp: {
 		capable: true,
@@ -34,13 +35,13 @@ export const metadata: Metadata = {
 	},
 	openGraph: {
 		title: "FitCalendr",
-		description: "Track your workout frequency and cheat meals",
+		description: "Acompanhe a frequência dos seus treinos e refeições livres",
 		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "FitCalendr",
-		description: "Track your workout frequency and cheat meals",
+		description: "Acompanhe a frequência dos seus treinos e refeições livres",
 	},
 };
 
@@ -50,7 +51,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning className={`${onest.variable}`}>
+		<html lang="pt-BR" suppressHydrationWarning className={`${onest.variable}`}>
 			<body
 				className={
 					"dark:bg-[#121212] bg-[#F5F5F5] antialiased flex min-h-[100dvh] flex-col overscroll-none onest selection:bg-green-500/30"

@@ -33,7 +33,10 @@ function BannerSkeleton() {
 	);
 }
 
-async function BannerContent({ isWorkout, selected }: { isWorkout: boolean; selected: string }) {
+async function BannerContent({
+	isWorkout,
+	selected,
+}: { isWorkout: boolean; selected: string }) {
 	const progress = await getWeeklyProgress();
 
 	if (isWorkout) {

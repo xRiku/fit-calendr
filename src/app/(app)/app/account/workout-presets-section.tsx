@@ -8,6 +8,7 @@ import {
 	updatePreset,
 } from "@/actions/preset-actions";
 import { migrateExistingUserPresets } from "@/actions/preset-migration";
+import { PresetItem } from "@/components/preset-item";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -21,7 +22,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PresetItem } from "@/components/preset-item";
 import { DEFAULT_WORKOUT_PRESETS, PRESET_COLORS } from "@/lib/constants/colors";
 import { Plus, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -39,7 +39,7 @@ export function WorkoutPresetsSection() {
 			setPresets(userPresets);
 			setLoading(false);
 		} catch {
-			toast.error("Failed to load presets");
+			toast.error("Falha ao carregar atalhos");
 			setLoading(false);
 		}
 	}, []);
@@ -57,7 +57,7 @@ export function WorkoutPresetsSection() {
 				const result = await migrateExistingUserPresets();
 				if (mounted && result.created > 0) {
 					toast.success(
-						`Created ${result.created} presets from your workout history`,
+						`Criados ${result.created} atalhos do seu histórico de treinos`,
 					);
 					await loadPresets();
 				}
@@ -79,15 +79,18 @@ export function WorkoutPresetsSection() {
 		};
 	}, [loadPresets]);
 
-	const handleColorChange = async (preset: { id: string }, newColor: string) => {
+	const handleColorChange = async (
+		preset: { id: string },
+		newColor: string,
+	) => {
 		try {
 			await updatePreset({ id: preset.id, color: newColor });
 			setPresets((prev) =>
 				prev.map((p) => (p.id === preset.id ? { ...p, color: newColor } : p)),
 			);
-			toast.success("Color updated");
+			toast.success("Cor atualizada");
 		} catch {
-			toast.error("Failed to update color");
+			toast.error("Falha ao atualizar cor");
 		}
 	};
 
@@ -95,13 +98,11 @@ export function WorkoutPresetsSection() {
 		try {
 			await updatePreset({ id: preset.id, label: newLabel });
 			setPresets((prev) =>
-				prev.map((p) =>
-					p.id === preset.id ? { ...p, label: newLabel } : p,
-				),
+				prev.map((p) => (p.id === preset.id ? { ...p, label: newLabel } : p)),
 			);
-			toast.success("Label updated");
+			toast.success("Rótulo atualizado");
 		} catch {
-			toast.error("Failed to update label");
+			toast.error("Falha ao atualizar rótulo");
 		}
 	};
 
@@ -118,7 +119,10 @@ export function WorkoutPresetsSection() {
 		const [movedItem] = newPresets.splice(currentIndex, 1);
 		newPresets.splice(newIndex, 0, movedItem);
 
-		const reorderedPresets = newPresets.map((p, index) => ({ ...p, order: index }));
+		const reorderedPresets = newPresets.map((p, index) => ({
+			...p,
+			order: index,
+		}));
 		setPresets(reorderedPresets);
 
 		try {
@@ -126,7 +130,7 @@ export function WorkoutPresetsSection() {
 				reorderedPresets.map((p) => updatePreset({ id: p.id, order: p.order })),
 			);
 		} catch {
-			toast.error("Failed to reorder presets");
+			toast.error("Falha ao reordenar atalhos");
 			loadPresets();
 		}
 	};
@@ -135,9 +139,9 @@ export function WorkoutPresetsSection() {
 		try {
 			await deletePreset({ id: presetId });
 			setPresets((prev) => prev.filter((p) => p.id !== presetId));
-			toast.success("Preset deleted");
+			toast.success("Atalho excluído");
 		} catch {
-			toast.error("Failed to delete preset");
+			toast.error("Falha ao excluir atalho");
 		}
 	};
 
@@ -148,15 +152,15 @@ export function WorkoutPresetsSection() {
 				PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)].value;
 			const maxOrder = Math.max(...presets.map((p) => p.order), -1);
 			const newPreset = await createPreset({
-				label: "New Preset",
+				label: "Novo Atalho",
 				color: randomColor,
 				order: maxOrder + 1,
 			});
 			setPresets((prev) => [...prev, newPreset]);
-			toast.success("Preset created");
+			toast.success("Atalho criado");
 			setIsCreating(false);
 		} catch {
-			toast.error("Failed to create preset");
+			toast.error("Falha ao criar atalho");
 			setIsCreating(false);
 		}
 	};
@@ -175,9 +179,9 @@ export function WorkoutPresetsSection() {
 				),
 			);
 			setPresets(newPresets);
-			toast.success("Reset to defaults");
+			toast.success("Restaurado para padrões");
 		} catch {
-			toast.error("Failed to reset defaults");
+			toast.error("Falha ao restaurar padrões");
 		}
 	};
 
@@ -215,7 +219,7 @@ export function WorkoutPresetsSection() {
 					className="flex-1"
 				>
 					<Plus className="mr-2 h-4 w-4" />
-					Add Preset
+					Adicionar Atalho
 				</Button>
 
 				<AlertDialog>
@@ -225,26 +229,26 @@ export function WorkoutPresetsSection() {
 							className="dark:border-neutral-700 dark:hover:bg-neutral-800"
 						>
 							<RotateCcw className="mr-2 h-4 w-4" />
-							Reset to Defaults
+							Restaurar Padrões
 						</Button>
 					</AlertDialogTrigger>
 					<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
 						<AlertDialogHeader>
-							<AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
+							<AlertDialogTitle>Restaurar Padrões</AlertDialogTitle>
 							<AlertDialogDescription className="dark:text-neutral-400">
-								This will delete all your custom presets and restore the default
-								workouts. Are you sure?
+								Isso excluirá todos os seus atalhos personalizados e restaurará
+								os treinos padrão. Tem certeza?
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
-								Cancel
+								Cancelar
 							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={handleResetDefaults}
 								className="bg-red-600 hover:bg-red-700"
 							>
-								Reset
+								Restaurar
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>

@@ -1,10 +1,10 @@
-import { getGroupByInviteCode } from "@/lib/server-utils";
-import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import db from "@/lib/db";
-import { isPast, format, formatDistanceToNow } from "date-fns";
-import { Trophy, Users, CalendarDays } from "lucide-react";
+import { getGroupByInviteCode } from "@/lib/server-utils";
+import { format, formatDistanceToNow, isPast } from "date-fns";
+import { CalendarDays, Trophy, Users } from "lucide-react";
+import { headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import { JoinGroupButton } from "./join-group-button";
 
 interface Props {
@@ -41,10 +41,12 @@ export default async function JoinGroupPage({ params }: Props) {
 			<div className="flex flex-col gap-2">
 				<h1 className="text-2xl font-bold">{group.name}</h1>
 				{ended ? (
-					<p className="text-muted-foreground text-sm">This challenge has ended.</p>
+					<p className="text-muted-foreground text-sm">
+						Este desafio terminou.
+					</p>
 				) : (
 					<p className="text-muted-foreground text-sm">
-						You've been invited to join a fitness challenge group.
+						Você foi convidado para participar de um grupo de desafio fitness.
 					</p>
 				)}
 			</div>
@@ -52,21 +54,21 @@ export default async function JoinGroupPage({ params }: Props) {
 			<div className="flex flex-col gap-2 w-full rounded-xl border border-border bg-card px-5 py-4 text-sm">
 				<div className="flex items-center justify-between">
 					<span className="text-muted-foreground flex items-center gap-2">
-						<Users className="size-4" /> Members
+						<Users className="size-4" /> Membros
 					</span>
 					<span className="font-medium">{group._count.members}</span>
 				</div>
 				<div className="flex items-center justify-between">
 					<span className="text-muted-foreground flex items-center gap-2">
-						<CalendarDays className="size-4" /> {ended ? "Ended" : "Ends"}
+						<CalendarDays className="size-4" /> {ended ? "Terminou" : "Termina"}
 					</span>
 					<span className="font-medium">
-						{format(new Date(group.endDate), "MMM d, yyyy")}
+						{format(new Date(group.endDate), "dd MMM yyyy")}
 					</span>
 				</div>
 				{!ended && (
 					<div className="flex items-center justify-between">
-						<span className="text-muted-foreground">Time left</span>
+						<span className="text-muted-foreground">Tempo restante</span>
 						<span className="font-medium text-vibrant-green">
 							{formatDistanceToNow(new Date(group.endDate))}
 						</span>

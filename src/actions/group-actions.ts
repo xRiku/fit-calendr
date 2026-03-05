@@ -22,7 +22,8 @@ function computeEndDate(duration: GroupDuration, customEndDate?: Date): Date {
 		case "1y":
 			return addYears(now, 1);
 		case "custom":
-			if (!customEndDate) throw new Error("Custom end date required");
+			if (!customEndDate)
+				throw new Error("Data final personalizada é obrigatória");
 			return customEndDate;
 	}
 }
@@ -37,7 +38,7 @@ export async function createGroup({
 	customEndDate?: Date;
 }) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const endDate = computeEndDate(duration, customEndDate);
 
@@ -61,12 +62,12 @@ export async function createGroup({
 
 export async function joinGroupByCode(inviteCode: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const group = await prisma.group.findUnique({ where: { inviteCode } });
-	if (!group) throw new Error("Group not found");
+	if (!group) throw new Error("Grupo não encontrado");
 
-	if (new Date() > group.endDate) throw new Error("This challenge has ended");
+	if (new Date() > group.endDate) throw new Error("Este desafio já encerrou");
 
 	const existing = await prisma.groupMember.findUnique({
 		where: { groupId_userId: { groupId: group.id, userId: session.user.id } },
@@ -83,13 +84,14 @@ export async function joinGroupByCode(inviteCode: string) {
 
 export async function leaveGroup(groupId: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const member = await prisma.groupMember.findUnique({
 		where: { groupId_userId: { groupId, userId: session.user.id } },
 	});
-	if (!member) throw new Error("Not a member");
-	if (member.role === "owner") throw new Error("Owner cannot leave — delete the group instead");
+	if (!member) throw new Error("Não é membro");
+	if (member.role === "owner")
+		throw new Error("O dono não pode sair — exclua o grupo");
 
 	await prisma.groupMember.delete({
 		where: { groupId_userId: { groupId, userId: session.user.id } },
@@ -100,11 +102,12 @@ export async function leaveGroup(groupId: string) {
 
 export async function deleteGroup(groupId: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const group = await prisma.group.findUnique({ where: { id: groupId } });
-	if (!group) throw new Error("Group not found");
-	if (group.ownerId !== session.user.id) throw new Error("Only the owner can delete this group");
+	if (!group) throw new Error("Grupo não encontrado");
+	if (group.ownerId !== session.user.id)
+		throw new Error("Apenas o dono pode excluir este grupo");
 
 	await prisma.group.delete({ where: { id: groupId } });
 
@@ -113,29 +116,34 @@ export async function deleteGroup(groupId: string) {
 
 export async function updateGroupName(groupId: string, name: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const group = await prisma.group.findUnique({ where: { id: groupId } });
-	if (!group) throw new Error("Group not found");
-	if (group.ownerId !== session.user.id) throw new Error("Only the owner can rename this group");
+	if (!group) throw new Error("Grupo não encontrado");
+	if (group.ownerId !== session.user.id)
+		throw new Error("Apenas o dono pode renomear este grupo");
 
-	await prisma.group.update({ where: { id: groupId }, data: { name: name.trim() } });
+	await prisma.group.update({
+		where: { id: groupId },
+		data: { name: name.trim() },
+	});
 
 	revalidatePath(`/app/groups/${groupId}`);
 }
 
 export async function updateGroupEndDate(groupId: string, newEndDate: Date) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const group = await prisma.group.findUnique({
 		where: { id: groupId },
 		include: { members: { select: { userId: true } } },
 	});
-	if (!group) throw new Error("Group not found");
-	if (group.ownerId !== session.user.id) throw new Error("Only the owner can change the end date");
+	if (!group) throw new Error("Grupo não encontrado");
+	if (group.ownerId !== session.user.id)
+		throw new Error("Apenas o dono pode alterar a data final");
 
-	const formattedDate = new Intl.DateTimeFormat("en-US", {
+	const formattedDate = new Intl.DateTimeFormat("pt-BR", {
 		month: "long",
 		day: "numeric",
 		year: "numeric",
@@ -146,14 +154,17 @@ export async function updateGroupEndDate(groupId: string, newEndDate: Date) {
 		.filter((id) => id !== session.user.id);
 
 	await prisma.$transaction([
-		prisma.group.update({ where: { id: groupId }, data: { endDate: newEndDate } }),
+		prisma.group.update({
+			where: { id: groupId },
+			data: { endDate: newEndDate },
+		}),
 		...memberIds.map((userId) =>
 			prisma.groupNotification.create({
 				data: {
 					groupId,
 					userId,
 					type: "end_date_changed",
-					message: `The end date for "${group.name}" was changed to ${formattedDate}.`,
+					message: `A data final de "${group.name}" foi alterada para ${formattedDate}.`,
 				},
 			}),
 		),
@@ -164,11 +175,12 @@ export async function updateGroupEndDate(groupId: string, newEndDate: Date) {
 
 export async function regenerateInviteCode(groupId: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	const group = await prisma.group.findUnique({ where: { id: groupId } });
-	if (!group) throw new Error("Group not found");
-	if (group.ownerId !== session.user.id) throw new Error("Only the owner can regenerate the invite code");
+	if (!group) throw new Error("Grupo não encontrado");
+	if (group.ownerId !== session.user.id)
+		throw new Error("Apenas o dono pode regenerar o código de convite");
 
 	// cuid() not available at runtime directly — use crypto
 	const newCode = crypto.randomUUID().replace(/-/g, "").slice(0, 24);
@@ -183,7 +195,7 @@ export async function regenerateInviteCode(groupId: string) {
 
 export async function markNotificationsRead(notificationIds: string[]) {
 	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Unauthorized");
+	if (!session) throw new Error("Não autorizado");
 
 	await prisma.groupNotification.updateMany({
 		where: { id: { in: notificationIds }, userId: session.user.id },

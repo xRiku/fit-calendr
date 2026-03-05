@@ -27,14 +27,15 @@ export function GroupCard({ group }: { group: GroupWithCount }) {
 					<span className="font-semibold truncate">{group.name}</span>
 					{group.role === "owner" && (
 						<span className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-muted-foreground border border-border rounded px-1.5 py-0.5">
-							Owner
+							Dono
 						</span>
 					)}
 				</div>
 				<div className="flex items-center gap-3 text-xs text-muted-foreground">
 					<span className="flex items-center gap-1">
 						<Users className="size-3" />
-						{group._count.members} {group._count.members === 1 ? "member" : "members"}
+						{group._count.members}{" "}
+						{group._count.members === 1 ? "membro" : "membros"}
 					</span>
 					<span
 						className={cn(
@@ -42,8 +43,8 @@ export function GroupCard({ group }: { group: GroupWithCount }) {
 						)}
 					>
 						{ended
-							? `Ended ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true })}`
-							: `Ends ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true })}`}
+							? `Encerrado ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true })}`
+							: `Termina ${formatDistanceToNow(new Date(group.endDate), { addSuffix: true })}`}
 					</span>
 				</div>
 			</div>

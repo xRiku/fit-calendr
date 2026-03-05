@@ -10,12 +10,40 @@ import { emailOTP } from "better-auth/plugins";
 import prisma from "./db";
 
 const ADJECTIVES = [
-	"swift", "bold", "calm", "keen", "iron", "vast", "pure", "epic",
-	"wild", "firm", "free", "true", "bright", "strong", "sharp", "brave",
+	"swift",
+	"bold",
+	"calm",
+	"keen",
+	"iron",
+	"vast",
+	"pure",
+	"epic",
+	"wild",
+	"firm",
+	"free",
+	"true",
+	"bright",
+	"strong",
+	"sharp",
+	"brave",
 ];
 const NOUNS = [
-	"lion", "wolf", "bear", "hawk", "tiger", "eagle", "panther", "fox",
-	"falcon", "cobra", "shark", "bison", "jaguar", "rhino", "lynx", "ox",
+	"lion",
+	"wolf",
+	"bear",
+	"hawk",
+	"tiger",
+	"eagle",
+	"panther",
+	"fox",
+	"falcon",
+	"cobra",
+	"shark",
+	"bison",
+	"jaguar",
+	"rhino",
+	"lynx",
+	"ox",
 ];
 
 async function generateUniqueUsername(): Promise<string> {

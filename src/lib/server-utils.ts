@@ -368,15 +368,17 @@ export const getUserGroups = cache(async () => {
 	return memberships.map((m) => ({ ...m.group, role: m.role }));
 });
 
-export const isGroupMember = cache(async (groupId: string): Promise<boolean> => {
-	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) return false;
+export const isGroupMember = cache(
+	async (groupId: string): Promise<boolean> => {
+		const session = await auth.api.getSession({ headers: await headers() });
+		if (!session) return false;
 
-	const member = await prisma.groupMember.findUnique({
-		where: { groupId_userId: { groupId, userId: session.user.id } },
-	});
-	return !!member;
-});
+		const member = await prisma.groupMember.findUnique({
+			where: { groupId_userId: { groupId, userId: session.user.id } },
+		});
+		return !!member;
+	},
+);
 
 export async function getMemberProfile(groupId: string, targetUserId: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
@@ -391,7 +393,11 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 	// Target must also be in the group
 	const targetMembership = await prisma.groupMember.findUnique({
 		where: { groupId_userId: { groupId, userId: targetUserId } },
-		include: { user: { select: { id: true, name: true, username: true, avatarUrl: true } } },
+		include: {
+			user: {
+				select: { id: true, name: true, username: true, avatarUrl: true },
+			},
+		},
 	});
 	if (!targetMembership) redirect(`/app/groups/${groupId}`);
 
@@ -404,7 +410,10 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 	const allWorkouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: targetUserId,
-			date: { gte: new Date(year, 0, 1), lte: new Date(year, 11, 31, 23, 59, 59) },
+			date: {
+				gte: new Date(year, 0, 1),
+				lte: new Date(year, 11, 31, 23, 59, 59),
+			},
 		},
 		select: { date: true },
 		orderBy: { date: "asc" },
@@ -419,9 +428,13 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 	}
 
 	// Workouts within challenge period
-	const rangeEnd = new Date(group.endDate) < new Date() ? group.endDate : new Date();
+	const rangeEnd =
+		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 	const challengeWorkouts = await prisma.gymCheck.count({
-		where: { userId: targetUserId, date: { gte: group.startDate, lte: rangeEnd } },
+		where: {
+			userId: targetUserId,
+			date: { gte: group.startDate, lte: rangeEnd },
+		},
 	});
 
 	// All-time workouts for streak calculation
@@ -431,7 +444,9 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 		orderBy: { date: "asc" },
 	});
 
-	const { currentStreak, longestStreak } = calculateStreak(allTimeWorkouts.map((w) => w.date));
+	const { currentStreak, longestStreak } = calculateStreak(
+		allTimeWorkouts.map((w) => w.date),
+	);
 
 	return {
 		user: targetMembership.user,
@@ -471,7 +486,9 @@ export async function getGroupWithMembers(groupId: string) {
 		include: {
 			members: {
 				include: {
-					user: { select: { id: true, name: true, username: true, avatarUrl: true } },
+					user: {
+						select: { id: true, name: true, username: true, avatarUrl: true },
+					},
 				},
 				orderBy: { joinedAt: "asc" },
 			},
@@ -480,7 +497,8 @@ export async function getGroupWithMembers(groupId: string) {
 	if (!group) redirect("/app/groups");
 
 	// Count workouts per member within challenge period
-	const rangeEnd = new Date(group.endDate) < new Date() ? group.endDate : new Date();
+	const rangeEnd =
+		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 	const workoutCounts = await prisma.gymCheck.groupBy({
 		by: ["userId"],
 		where: {
@@ -496,6 +514,10 @@ export async function getGroupWithMembers(groupId: string) {
 		.map((m) => ({ ...m, workoutCount: countMap.get(m.userId) ?? 0 }))
 		.sort((a, b) => b.workoutCount - a.workoutCount);
 
-	return { group, leaderboard, currentUserId: session.user.id, currentUserRole: membership.role };
+	return {
+		group,
+		leaderboard,
+		currentUserId: session.user.id,
+		currentUserRole: membership.role,
+	};
 }
-

@@ -100,7 +100,7 @@ export function SignInForm() {
 			<div className="space-y-2">
 				<Label htmlFor="email">E-mail</Label>
 				<Input
-					placeholder="Enter email address"
+					placeholder="Digite seu e-mail"
 					id="email"
 					type="email"
 					{...register("email")}
@@ -123,7 +123,7 @@ export function SignInForm() {
 				) : (
 					<LogIn className="mr-2 h-4 w-4" />
 				)}
-				Continue
+				Continuar
 			</Button>
 		</form>
 	);

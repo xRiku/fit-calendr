@@ -37,7 +37,7 @@ export async function addDayInfo({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	let cheatMealResponse = undefined;
@@ -118,9 +118,7 @@ export async function updateCheatMealInfo({
 		});
 
 		if (!existingCheatMeal) {
-			throw new Error(
-				`Cheat Meal with specified id: ${cheatMealId} does not exist.`,
-			);
+			throw new Error(`Refeição livre com id ${cheatMealId} não existe.`);
 		}
 		if (cheatMealName === "") {
 			return await prisma.cheatMeal.delete({
@@ -177,9 +175,7 @@ export async function updateGymCheckInfo({
 		});
 
 		if (!existingGymCheck) {
-			throw new Error(
-				`Gym check with specified id: ${gymCheckId} does not exist.`,
-			);
+			throw new Error(`Treino com id ${gymCheckId} não existe.`);
 		}
 		if (workoutDescription === "") {
 			return await prisma.gymCheck.delete({
@@ -341,7 +337,7 @@ export async function updateDayInfo({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	let cheatMealResponse = undefined;
@@ -424,14 +420,16 @@ export async function updateUserGoals({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	if (weeklyWorkoutGoal < 1 || weeklyWorkoutGoal > 7) {
-		throw new Error("Weekly workout goal must be between 1 and 7");
+		throw new Error("A meta semanal de treinos deve ser entre 1 e 7");
 	}
 	if (weeklyCheatMealBudget < 0 || weeklyCheatMealBudget > 7) {
-		throw new Error("Weekly cheat meal budget must be between 0 and 7");
+		throw new Error(
+			"O limite semanal de refeições livres deve ser entre 0 e 7",
+		);
 	}
 
 	await prisma.user.update({
@@ -456,7 +454,7 @@ export async function updateUserName({
 	});
 
 	if (!user) {
-		throw Error(`User with id ${userId} doesn't exist`);
+		throw Error(`Usuário com id ${userId} não existe`);
 	}
 
 	return await prisma.user.update({
@@ -509,7 +507,7 @@ export async function quickToggleWorkout({
 	});
 
 	if (!session) {
-		throw new Error("Unauthorized");
+		throw new Error("Não autorizado");
 	}
 
 	if (gymCheckId) {
@@ -521,7 +519,7 @@ export async function quickToggleWorkout({
 		// Create quick workout with default description
 		await prisma.gymCheck.create({
 			data: {
-				description: "Quick workout",
+				description: "Treino rápido",
 				date,
 				user: { connect: { id: session.user.id } },
 			},

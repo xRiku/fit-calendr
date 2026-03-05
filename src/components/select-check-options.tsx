@@ -72,7 +72,9 @@ function SelectCheckOptionsContent({ selected }: { selected: string }) {
 export default function SelectCheckOptions({ selected }: { selected: string }) {
 	return (
 		<Suspense
-			fallback={<div className="h-[46px] w-[360px] bg-muted animate-pulse rounded-xl" />}
+			fallback={
+				<div className="h-[46px] w-[360px] bg-muted animate-pulse rounded-xl" />
+			}
 		>
 			<SelectCheckOptionsContent selected={selected} />
 		</Suspense>

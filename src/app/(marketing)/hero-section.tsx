@@ -177,14 +177,15 @@ function HeroVisual() {
 					{calendarDays.map((day, i) => (
 						<div
 							key={`hero-cell-${i}`}
-							className={`aspect-square rounded-lg flex items-center justify-center text-sm font-medium transition-all ${day?.workout && day?.cheat
-								? "bg-linear-to-br from-vibrant-green to-vibrant-orange text-white shadow-lg shadow-vibrant-green/25"
-								: day?.workout
-									? "bg-vibrant-green text-black shadow-lg shadow-vibrant-green/25"
-									: day?.cheat
-										? "bg-vibrant-orange text-black shadow-lg shadow-vibrant-orange/25"
-										: "bg-neutral-800/50 text-neutral-400 hover:bg-neutral-800"
-								}`}
+							className={`aspect-square rounded-lg flex items-center justify-center text-sm font-medium transition-all ${
+								day?.workout && day?.cheat
+									? "bg-linear-to-br from-vibrant-green to-vibrant-orange text-white shadow-lg shadow-vibrant-green/25"
+									: day?.workout
+										? "bg-vibrant-green text-black shadow-lg shadow-vibrant-green/25"
+										: day?.cheat
+											? "bg-vibrant-orange text-black shadow-lg shadow-vibrant-orange/25"
+											: "bg-neutral-800/50 text-neutral-400 hover:bg-neutral-800"
+							}`}
 						>
 							{i + 1}
 						</div>

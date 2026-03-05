@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dumbbell, Utensils } from "lucide-react";
-import { useTransition, useState } from "react";
+import { useState, useTransition } from "react";
 
 export function GoalsSection({
 	initialWorkoutGoal,
@@ -44,7 +44,7 @@ export function GoalsSection({
 					className="flex items-center gap-2 text-sm"
 				>
 					<Dumbbell className="size-4 text-vibrant-green" />
-					Weekly workout goal
+					Meta semanal de treinos
 				</Label>
 				<Input
 					id="workout-goal"
@@ -69,7 +69,7 @@ export function GoalsSection({
 					className="flex items-center gap-2 text-sm"
 				>
 					<Utensils className="size-4 text-vibrant-orange" />
-					Weekly cheat meal budget
+					Orçamento semanal de refeições livres
 				</Label>
 				<Input
 					id="cheat-meal-budget"
@@ -94,9 +94,9 @@ export function GoalsSection({
 					disabled={isPending || !hasChanges}
 					size="sm"
 				>
-					{isPending ? "Saving..." : "Save goals"}
+					{isPending ? "Salvando..." : "Salvar metas"}
 				</Button>
-				{saved && <span className="text-sm text-muted-foreground">Saved</span>}
+				{saved && <span className="text-sm text-muted-foreground">Salvo</span>}
 			</div>
 		</div>
 	);

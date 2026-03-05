@@ -8,7 +8,7 @@ import {
 	updateCheatMealPreset,
 } from "@/actions/preset-actions";
 import { migrateExistingUserCheatMealPresets } from "@/actions/preset-migration";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PresetItem } from "@/components/preset-item";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -21,7 +21,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { PresetItem } from "@/components/preset-item";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
 	DEFAULT_CHEAT_MEAL_PRESETS,
 	PRESET_COLORS,
@@ -42,7 +42,7 @@ export function CheatMealPresetsSection() {
 			setPresets(userPresets);
 			setLoading(false);
 		} catch {
-			toast.error("Failed to load presets");
+			toast.error("Falha ao carregar atalhos");
 			setLoading(false);
 		}
 	}, []);
@@ -59,7 +59,9 @@ export function CheatMealPresetsSection() {
 			try {
 				const result = await migrateExistingUserCheatMealPresets();
 				if (mounted && result.created > 0) {
-					toast.success(`Created ${result.created} cheat meal presets`);
+					toast.success(
+						`Criados ${result.created} atalhos de refeições livres`,
+					);
 					await loadPresets();
 				}
 				if (mounted) {
@@ -89,9 +91,9 @@ export function CheatMealPresetsSection() {
 			setPresets((prev) =>
 				prev.map((p) => (p.id === preset.id ? { ...p, color: newColor } : p)),
 			);
-			toast.success("Color updated");
+			toast.success("Cor atualizada");
 		} catch {
-			toast.error("Failed to update color");
+			toast.error("Falha ao atualizar cor");
 		}
 	};
 
@@ -99,13 +101,11 @@ export function CheatMealPresetsSection() {
 		try {
 			await updateCheatMealPreset({ id: preset.id, label: newLabel });
 			setPresets((prev) =>
-				prev.map((p) =>
-					p.id === preset.id ? { ...p, label: newLabel } : p,
-				),
+				prev.map((p) => (p.id === preset.id ? { ...p, label: newLabel } : p)),
 			);
-			toast.success("Label updated");
+			toast.success("Rótulo atualizado");
 		} catch {
-			toast.error("Failed to update label");
+			toast.error("Falha ao atualizar rótulo");
 		}
 	};
 
@@ -122,7 +122,10 @@ export function CheatMealPresetsSection() {
 		const [movedItem] = newPresets.splice(currentIndex, 1);
 		newPresets.splice(newIndex, 0, movedItem);
 
-		const reorderedPresets = newPresets.map((p, index) => ({ ...p, order: index }));
+		const reorderedPresets = newPresets.map((p, index) => ({
+			...p,
+			order: index,
+		}));
 		setPresets(reorderedPresets);
 
 		try {
@@ -132,7 +135,7 @@ export function CheatMealPresetsSection() {
 				),
 			);
 		} catch {
-			toast.error("Failed to reorder presets");
+			toast.error("Falha ao reordenar atalhos");
 			loadPresets();
 		}
 	};
@@ -141,9 +144,9 @@ export function CheatMealPresetsSection() {
 		try {
 			await deleteCheatMealPreset({ id: presetId });
 			setPresets((prev) => prev.filter((p) => p.id !== presetId));
-			toast.success("Preset deleted");
+			toast.success("Atalho excluído");
 		} catch {
-			toast.error("Failed to delete preset");
+			toast.error("Falha ao excluir atalho");
 		}
 	};
 
@@ -154,15 +157,15 @@ export function CheatMealPresetsSection() {
 				PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)].value;
 			const maxOrder = Math.max(...presets.map((p) => p.order), -1);
 			const newPreset = await createCheatMealPreset({
-				label: "New Preset",
+				label: "Novo Atalho",
 				color: randomColor,
 				order: maxOrder + 1,
 			});
 			setPresets((prev) => [...prev, newPreset]);
-			toast.success("Preset created");
+			toast.success("Atalho criado");
 			setIsCreating(false);
 		} catch {
-			toast.error("Failed to create preset");
+			toast.error("Falha ao criar atalho");
 			setIsCreating(false);
 		}
 	};
@@ -181,9 +184,9 @@ export function CheatMealPresetsSection() {
 				),
 			);
 			setPresets(newPresets);
-			toast.success("Reset to defaults");
+			toast.success("Restaurado para padrões");
 		} catch {
-			toast.error("Failed to reset defaults");
+			toast.error("Falha ao restaurar padrões");
 		}
 	};
 
@@ -221,7 +224,7 @@ export function CheatMealPresetsSection() {
 					className="flex-1"
 				>
 					<Plus className="mr-2 h-4 w-4" />
-					Add Preset
+					Adicionar Atalho
 				</Button>
 
 				<AlertDialog>
@@ -231,26 +234,26 @@ export function CheatMealPresetsSection() {
 							className="dark:border-neutral-700 dark:hover:bg-neutral-800"
 						>
 							<RotateCcw className="mr-2 h-4 w-4" />
-							Reset to Defaults
+							Restaurar Padrões
 						</Button>
 					</AlertDialogTrigger>
 					<AlertDialogContent className="dark:border-neutral-800 dark:bg-neutral-900">
 						<AlertDialogHeader>
-							<AlertDialogTitle>Reset to Defaults</AlertDialogTitle>
+							<AlertDialogTitle>Restaurar Padrões</AlertDialogTitle>
 							<AlertDialogDescription className="dark:text-neutral-400">
-								This will delete all your custom presets and restore the default
-								cheat meals. Are you sure?
+								Isso excluirá todos os seus atalhos personalizados e restaurará
+								as refeições livres padrão. Tem certeza?
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel className="dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700">
-								Cancel
+								Cancelar
 							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={handleResetDefaults}
 								className="bg-red-600 hover:bg-red-700"
 							>
-								Reset
+								Restaurar
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>

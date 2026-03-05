@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const updateUserSchema = z.object({
-	name: z.string().min(2, "Name should be at least 2 characters long"),
+	name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres"),
 });
 
 type UpdateUserSchema = z.infer<typeof updateUserSchema>;
@@ -69,12 +69,12 @@ export default function SetupForm({ name, userId }: SetupFormProps) {
 					name="name"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Full name</FormLabel>
+							<FormLabel>Nome completo</FormLabel>
 							<FormControl>
-								<Input placeholder="John Doe" {...field} />
+								<Input placeholder="João Silva" {...field} />
 							</FormControl>
 							<FormDescription>
-								This is your first and last name.
+								Este é seu primeiro e último nome.
 							</FormDescription>
 							{form.formState.errors.name && (
 								<FormMessage>{form.formState.errors.name?.message}</FormMessage>
@@ -90,7 +90,7 @@ export default function SetupForm({ name, userId }: SetupFormProps) {
 					{isSubmitting ? (
 						<Loader2 className="h-4 w-4 animate-spin" />
 					) : (
-						<span>Save</span>
+						<span>Salvar</span>
 					)}
 				</Button>
 			</form>

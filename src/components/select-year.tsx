@@ -16,10 +16,7 @@ type SelectYearProps = {
 	selectedYear: number;
 };
 
-function SelectYearContent({
-	availableYears,
-	selectedYear,
-}: SelectYearProps) {
+function SelectYearContent({ availableYears, selectedYear }: SelectYearProps) {
 	const pathname = usePathname();
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -60,7 +57,11 @@ function SelectYearContent({
 
 export default function SelectYear(props: SelectYearProps) {
 	return (
-		<Suspense fallback={<div className="h-10 w-[120px] bg-muted animate-pulse rounded-md" />}>
+		<Suspense
+			fallback={
+				<div className="h-10 w-[120px] bg-muted animate-pulse rounded-md" />
+			}
+		>
 			<SelectYearContent {...props} />
 		</Suspense>
 	);

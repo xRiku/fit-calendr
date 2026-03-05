@@ -60,10 +60,10 @@ export const WorkoutChipInput = forwardRef<
 	// Filter presets based on input (only when user is typing)
 	const filteredPresets = inputValue
 		? presets.filter(
-			(preset) =>
-				preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
-				!value.some((chip) => chip.presetId === preset.id),
-		)
+				(preset) =>
+					preset.label.toLowerCase().includes(inputValue.toLowerCase()) &&
+					!value.some((chip) => chip.presetId === preset.id),
+			)
 		: [];
 
 	// Check if input matches an existing preset exactly

@@ -26,10 +26,12 @@ export function LeaveGroupButton({ groupId }: { groupId: string }) {
 		startTransition(async () => {
 			try {
 				await leaveGroup(groupId);
-				toast.success("You left the group");
+				toast.success("Você saiu do grupo");
 				router.push("/app/groups");
 			} catch (err) {
-				toast.error(err instanceof Error ? err.message : "Failed to leave group");
+				toast.error(
+					err instanceof Error ? err.message : "Falha ao sair do grupo",
+				);
 			}
 		});
 	}
@@ -37,9 +39,14 @@ export function LeaveGroupButton({ groupId }: { groupId: string }) {
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button variant="outline" size="sm" className="gap-2" disabled={isPending}>
+				<Button
+					variant="outline"
+					size="sm"
+					className="gap-2"
+					disabled={isPending}
+				>
 					<LogOut className="size-4" />
-					Leave group
+					Sair do grupo
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>

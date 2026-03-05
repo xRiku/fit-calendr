@@ -48,23 +48,21 @@ export function OTPInput({
 				<div className="flex items-center justify-center space-x-2">
 					<div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
 					<span className="text-sm text-gray-400">
-						{isLoading ? "Verifying..." : "Redirecting..."}
+						{isLoading ? "Verificando..." : "Redirecionando..."}
 					</span>
 				</div>
 			)}
 
 			{hasError && (
 				<span className="text-sm text-red-500 dark:text-red-900">
-					Invalid OTP code. Try again
+					Código OTP inválido. Tente novamente
 				</span>
 			)}
 
 			{/* {isLoading && } */}
 
 			<div className="flex space-x-2">
-				<span className="text-sm text-[#878787]">
-					Didn&apos;t receive the email?
-				</span>
+				<span className="text-sm text-[#878787]">Não recebeu o e-mail?</span>
 				<button
 					onClick={() => {
 						setShouldShowOtpField(false);
@@ -73,7 +71,7 @@ export function OTPInput({
 					type="button"
 					className="text-sm text-white underline font-medium"
 				>
-					Resend code
+					Reenviar código
 				</button>
 			</div>
 		</div>

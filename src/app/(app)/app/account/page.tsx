@@ -41,7 +41,7 @@ export default async function AccountPage() {
 	return (
 		<main className="mx-auto flex w-full max-w-2xl flex-col gap-6">
 			<div className="flex py-2 items-center flex-wrap gap-4">
-				<H2>Settings</H2>
+				<H2>Configurações</H2>
 			</div>
 
 			{/* Mobile: Flat layout with separators | Desktop: Cards */}
@@ -49,9 +49,9 @@ export default async function AccountPage() {
 				{/* Profile Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Profile</h2>
+						<h2 className="text-lg font-semibold">Perfil</h2>
 						<p className="text-muted-foreground text-sm">
-							Manage your account information
+							Gerencie as informações da sua conta
 						</p>
 					</div>
 					<div className="flex flex-col gap-4">
@@ -63,12 +63,17 @@ export default async function AccountPage() {
 							/>
 							<div className="flex flex-col gap-0.5">
 								<span className="font-medium">{session.user.name}</span>
-								<span className="text-muted-foreground text-sm">{session.user.email}</span>
+								<span className="text-muted-foreground text-sm">
+									{session.user.email}
+								</span>
 							</div>
 						</div>
 						<UsernameSection currentUsername={userRecord?.username ?? null} />
-						<Link href="/app/groups" className="text-sm text-vibrant-green hover:underline pt-1">
-							My groups →
+						<Link
+							href="/app/groups"
+							className="text-sm text-vibrant-green hover:underline pt-1"
+						>
+							Meus grupos →
 						</Link>
 					</div>
 				</section>
@@ -78,9 +83,9 @@ export default async function AccountPage() {
 				{/* Goals Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Weekly Goals</h2>
+						<h2 className="text-lg font-semibold">Metas Semanais</h2>
 						<p className="text-muted-foreground text-sm">
-							Set your weekly targets
+							Defina suas metas semanais
 						</p>
 					</div>
 					<GoalsSection
@@ -94,23 +99,23 @@ export default async function AccountPage() {
 				{/* Presets Section - Mobile */}
 				<section>
 					<div className="mb-3">
-						<h2 className="text-lg font-semibold">Presets</h2>
+						<h2 className="text-lg font-semibold">Atalhos</h2>
 						<p className="text-muted-foreground text-sm">
-							Quick access to your frequently used items
+							Acesso rápido aos seus itens mais usados
 						</p>
 					</div>
 					<Tabs defaultValue="workouts" className="w-full">
 						<TabsList className="grid w-full grid-cols-2">
 							<TabsTrigger value="workouts" className="flex items-center gap-2">
 								<Dumbbell className="h-4 w-4" />
-								Workouts
+								Treinos
 							</TabsTrigger>
 							<TabsTrigger
 								value="cheat-meals"
 								className="flex items-center gap-2"
 							>
 								<Utensils className="h-4 w-4" />
-								Cheat Meals
+								Refeições Livres
 							</TabsTrigger>
 						</TabsList>
 						<TabsContent value="workouts" className="mt-4">
@@ -134,8 +139,10 @@ export default async function AccountPage() {
 			<div className="hidden md:flex md:flex-col md:gap-6">
 				<Card>
 					<CardHeader>
-						<CardTitle>Profile</CardTitle>
-						<CardDescription>Manage your account information</CardDescription>
+						<CardTitle>Perfil</CardTitle>
+						<CardDescription>
+							Gerencie as informações da sua conta
+						</CardDescription>
 					</CardHeader>
 					<CardContent className="flex flex-col gap-5">
 						<div className="flex items-center gap-3">
@@ -146,21 +153,26 @@ export default async function AccountPage() {
 							/>
 							<div className="flex flex-col gap-0.5">
 								<span className="font-medium">{session.user.name}</span>
-								<span className="text-muted-foreground text-sm">{session.user.email}</span>
+								<span className="text-muted-foreground text-sm">
+									{session.user.email}
+								</span>
 							</div>
 						</div>
 						<Separator />
 						<UsernameSection currentUsername={userRecord?.username ?? null} />
-						<Link href="/app/groups" className="text-sm text-vibrant-green hover:underline self-start">
-							My groups →
+						<Link
+							href="/app/groups"
+							className="text-sm text-vibrant-green hover:underline self-start"
+						>
+							Meus grupos →
 						</Link>
 					</CardContent>
 				</Card>
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Weekly Goals</CardTitle>
-						<CardDescription>Set your weekly targets</CardDescription>
+						<CardTitle>Metas Semanais</CardTitle>
+						<CardDescription>Defina suas metas semanais</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<GoalsSection
@@ -172,9 +184,9 @@ export default async function AccountPage() {
 
 				<Card>
 					<CardHeader>
-						<CardTitle>Presets</CardTitle>
+						<CardTitle>Atalhos</CardTitle>
 						<CardDescription>
-							Quick access to your frequently used items
+							Acesso rápido aos seus itens mais usados
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -185,14 +197,14 @@ export default async function AccountPage() {
 									className="flex items-center gap-2"
 								>
 									<Dumbbell className="h-4 w-4" />
-									Workouts
+									Treinos
 								</TabsTrigger>
 								<TabsTrigger
 									value="cheat-meals"
 									className="flex items-center gap-2"
 								>
 									<Utensils className="h-4 w-4" />
-									Cheat Meals
+									Refeições Livres
 								</TabsTrigger>
 							</TabsList>
 							<TabsContent value="workouts" className="mt-4">
@@ -207,16 +219,17 @@ export default async function AccountPage() {
 
 				<Card className="border-destructive/20">
 					<CardHeader>
-						<CardTitle className="text-destructive">Account Management</CardTitle>
+						<CardTitle className="text-destructive">
+							Gerenciamento da Conta
+						</CardTitle>
 						<CardDescription>
-							Sign out of your account on this device
+							Sair da sua conta neste dispositivo
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<SignOutButton />
 					</CardContent>
 				</Card>
-
 			</div>
 		</main>
 	);

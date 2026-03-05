@@ -10,8 +10,8 @@ const options: {
 	[key: string]: {
 		title: string;
 		fetchCall:
-		| typeof getGymChecksByYearGroupedByMonth
-		| typeof getCheatMealsByYearGroupedByMonth;
+			| typeof getGymChecksByYearGroupedByMonth
+			| typeof getCheatMealsByYearGroupedByMonth;
 	};
 } = {
 	workout: {
@@ -50,8 +50,7 @@ async function CardData({
 				].fetchCall({
 					year: year - 1,
 				});
-				prevMonth =
-					prevYearGymChecksGroupedByMonth.hashTable[11]?.length || 0;
+				prevMonth = prevYearGymChecksGroupedByMonth.hashTable[11]?.length || 0;
 				if (prevMonth === 0) {
 					return 0;
 				}
@@ -104,7 +103,6 @@ export default function CheckOptionThisMonthCard({
 	selected: keyof typeof options;
 	year?: number;
 }) {
-
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

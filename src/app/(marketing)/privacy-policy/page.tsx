@@ -15,45 +15,65 @@ export default function PrivacyPolicyPage() {
 
 				<div className="space-y-10 text-neutral-300 leading-relaxed">
 					<section>
-						<h2 className="text-xl font-semibold text-white mb-3">1. Information We Collect</h2>
+						<h2 className="text-xl font-semibold text-white mb-3">
+							1. Information We Collect
+						</h2>
 						<p>
-							FitCalendr collects only the information necessary to provide the service. This includes your email address for authentication, and the fitness and cheat meal data you choose to log. We do not collect any other personal information.
+							FitCalendr collects only the information necessary to provide the
+							service. This includes your email address for authentication, and
+							the fitness and cheat meal data you choose to log. We do not
+							collect any other personal information.
 						</p>
 					</section>
 
 					<section>
-						<h2 className="text-xl font-semibold text-white mb-3">2. How We Use Your Information</h2>
+						<h2 className="text-xl font-semibold text-white mb-3">
+							2. How We Use Your Information
+						</h2>
 						<p>
-							Your data is used solely to power your personal dashboard and calendar. We do not sell, share, or monetize your data in any way. Your workout and meal logs are private and accessible only to you.
+							Your data is used solely to power your personal dashboard and
+							calendar. We do not sell, share, or monetize your data in any way.
+							Your workout and meal logs are private and accessible only to you.
 						</p>
 					</section>
 
 					<section>
-						<h2 className="text-xl font-semibold text-white mb-3">3. Data Storage</h2>
+						<h2 className="text-xl font-semibold text-white mb-3">
+							3. Data Storage
+						</h2>
 						<p>
-							Your data is stored securely in our database. We use industry-standard security practices to protect your information from unauthorized access.
+							Your data is stored securely in our database. We use
+							industry-standard security practices to protect your information
+							from unauthorized access.
 						</p>
 					</section>
 
 					<section>
-						<h2 className="text-xl font-semibold text-white mb-3">4. Cookies</h2>
+						<h2 className="text-xl font-semibold text-white mb-3">
+							4. Cookies
+						</h2>
 						<p>
-							FitCalendr uses a session cookie solely to keep you logged in. No tracking or advertising cookies are used.
+							FitCalendr uses a session cookie solely to keep you logged in. No
+							tracking or advertising cookies are used.
 						</p>
 					</section>
 
 					<section>
-						<h2 className="text-xl font-semibold text-white mb-3">5. Your Rights</h2>
+						<h2 className="text-xl font-semibold text-white mb-3">
+							5. Your Rights
+						</h2>
 						<p>
-							You can delete your account and all associated data at any time. If you have questions about your data, contact us at the email below.
+							You can delete your account and all associated data at any time.
+							If you have questions about your data, contact us at the email
+							below.
 						</p>
 					</section>
 
 					<section>
-						<h2 className="text-xl font-semibold text-white mb-3">6. Contact</h2>
-						<p>
-							For privacy-related questions, please reach out via the app.
-						</p>
+						<h2 className="text-xl font-semibold text-white mb-3">
+							6. Contact
+						</h2>
+						<p>For privacy-related questions, please reach out via the app.</p>
 					</section>
 				</div>
 
