@@ -10,6 +10,7 @@
 		"deploy": "pnpm dlx prisma generate && pnpm run build"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.1002.0",
 		"@hookform/resolvers": "^3.10.0",
 		"@prisma/adapter-pg": "^7.3.0",
 		"@prisma/client": "7.3.0",
@@ -47,6 +48,7 @@
 		"recharts": "^2.15.4",
 		"resend": "^4.8.0",
 		"server-only": "^0.0.1",
+		"sharp": "^0.34.5",
 		"sonner": "^1.7.4",
 		"tailwind-merge": "^2.6.0",
 		"tailwindcss-animate": "^1.0.7",
@@ -61,6 +63,7 @@
 		"@types/node": "^20.19.27",
 		"@types/react": "^18.3.27",
 		"@types/react-dom": "^18.3.7",
+		"@types/sharp": "^0.32.0",
 		"postcss": "^8.5.6",
 		"prisma": "^7.3.0",
 		"shadcn": "^3.7.0",

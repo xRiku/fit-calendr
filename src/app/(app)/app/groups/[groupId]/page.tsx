@@ -2,7 +2,7 @@ import { getGroupWithMembers } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
 import { Trophy, Users, CalendarDays, Medal, ChevronLeft } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { GroupSettingsDialog } from "./group-settings-dialog";
@@ -128,6 +128,9 @@ export default async function GroupPage({ params }: Props) {
 									</div>
 
 									<Avatar className="size-8 shrink-0">
+										{member.user.avatarUrl && (
+											<AvatarImage src={member.user.avatarUrl} alt={member.user.name} />
+										)}
 										<AvatarFallback className="text-xs bg-neutral-800">
 											{getInitials(member.user.name)}
 										</AvatarFallback>

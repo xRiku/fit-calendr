@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import prisma from "@/lib/db";
 import { headers } from "next/headers";
 import Header from "./header";
 import MainNav from "./main-nav";
@@ -27,10 +28,17 @@ export default async function LoggedHeader() {
 		session?.user.name,
 	).toUpperCase();
 
+	const userRecord = session
+		? await prisma.user.findUnique({
+				where: { id: session.user.id },
+				select: { avatarUrl: true },
+			})
+		: null;
+
 	return (
 		<Header>
 			<MainNav />
-			<MyAccountDropdown initialsFromName={initialsFromName} />
+			<MyAccountDropdown initialsFromName={initialsFromName} avatarUrl={userRecord?.avatarUrl} />
 		</Header>
 	);
 }
