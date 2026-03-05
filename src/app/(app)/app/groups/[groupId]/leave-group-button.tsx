@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useWebHaptics } from "web-haptics/react";
 import { useRouter } from "next/navigation";
 import {
 	AlertDialog,
@@ -21,14 +22,17 @@ import { LogOut } from "lucide-react";
 export function LeaveGroupButton({ groupId }: { groupId: string }) {
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
+	const haptic = useWebHaptics();
 
 	function handleLeave() {
 		startTransition(async () => {
 			try {
+				haptic.trigger("warning");
 				await leaveGroup(groupId);
 				toast.success("Você saiu do grupo");
 				router.push("/app/groups");
 			} catch (err) {
+				haptic.trigger("error");
 				toast.error(
 					err instanceof Error ? err.message : "Falha ao sair do grupo",
 				);

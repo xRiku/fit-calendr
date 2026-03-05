@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useWebHaptics } from "web-haptics/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,7 @@ export function UsernameSection({
 }: { currentUsername: string | null }) {
 	const [username, setUsername] = useState(currentUsername ?? "");
 	const [isPending, startTransition] = useTransition();
+	const haptic = useWebHaptics();
 
 	const isDirty = username.trim().toLowerCase() !== (currentUsername ?? "");
 
@@ -20,8 +22,10 @@ export function UsernameSection({
 		startTransition(async () => {
 			try {
 				await updateUsername(username);
+				haptic.trigger("success");
 				toast.success("Nome de usuário atualizado");
 			} catch (err) {
+				haptic.trigger("error");
 				toast.error(
 					err instanceof Error
 						? err.message

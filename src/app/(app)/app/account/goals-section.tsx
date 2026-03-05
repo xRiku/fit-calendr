@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Dumbbell, Minus, Plus, Utensils } from "lucide-react";
 import { useState, useTransition } from "react";
+import { useWebHaptics } from "web-haptics/react";
 
 export function GoalsSection({
 	initialWorkoutGoal,
@@ -14,6 +15,7 @@ export function GoalsSection({
 	initialCheatMealBudget: number;
 }) {
 	const [isPending, startTransition] = useTransition();
+	const haptic = useWebHaptics();
 	const [workoutGoal, setWorkoutGoal] = useState(() => initialWorkoutGoal);
 	const [cheatMealBudget, setCheatMealBudget] = useState(
 		() => initialCheatMealBudget,
@@ -30,6 +32,7 @@ export function GoalsSection({
 				weeklyWorkoutGoal: workoutGoal,
 				weeklyCheatMealBudget: cheatMealBudget,
 			});
+			haptic.trigger("success");
 			setSaved(true);
 			setTimeout(() => setSaved(false), 2000);
 		});

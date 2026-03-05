@@ -26,6 +26,7 @@ import { WorkoutChipInput } from "@/components/workout-chip-input";
 import { useModalStore } from "@/stores/day-info-modal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
+import { useWebHaptics } from "web-haptics/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -46,6 +47,7 @@ export default function DayInfoForm() {
 	const workoutInputRef = useRef<WorkoutChipInputRef>(null);
 	const cheatMealInputRef = useRef<CheatMealChipInputRef>(null);
 
+	const haptic = useWebHaptics();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
@@ -115,17 +117,18 @@ export default function DayInfoForm() {
 					formData.set("cheatMeals", JSON.stringify(cheatMealsToSubmit));
 
 					if (dayInfoType === "create") {
-						toast.promise(
-							addDayInfo({
+						const toastId = toast.loading("Adicionando informações...");
+						try {
+							await addDayInfo({
 								formData,
 								date: selectedDayInfo?.date ?? new Date(),
-							}),
-							{
-								loading: "Adicionando informações...",
-								success: "Informações adicionadas",
-								error: "Erro",
-							},
-						);
+							});
+							haptic.trigger("success");
+							toast.success("Informações adicionadas", { id: toastId });
+						} catch {
+							haptic.trigger("error");
+							toast.error("Erro", { id: toastId });
+						}
 					}
 
 					if (dayInfoType === "edit") {
@@ -134,20 +137,21 @@ export default function DayInfoForm() {
 						const existingCheatMealIds =
 							selectedDayInfo?.cheatMeals?.map((m) => m.id) || [];
 
-						toast.promise(
-							updateDayInfo({
+						const toastId = toast.loading("Editando informações...");
+						try {
+							await updateDayInfo({
 								workouts: workoutsToSubmit,
 								existingWorkoutIds,
 								cheatMeals: cheatMealsToSubmit,
 								existingCheatMealIds,
 								date: selectedDayInfo?.date ?? new Date(),
-							}),
-							{
-								loading: "Editando informações...",
-								success: "Informações atualizadas",
-								error: "Erro",
-							},
-						);
+							});
+							haptic.trigger("success");
+							toast.success("Informações atualizadas", { id: toastId });
+						} catch {
+							haptic.trigger("error");
+							toast.error("Erro", { id: toastId });
+						}
 					}
 
 					toggleDayInfoModalState();

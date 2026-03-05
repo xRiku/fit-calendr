@@ -4,6 +4,7 @@ import { joinGroupByCode } from "@/actions/group-actions";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { useWebHaptics } from "web-haptics/react";
 import { toast } from "sonner";
 
 export function JoinGroupButton({
@@ -15,6 +16,7 @@ export function JoinGroupButton({
 }) {
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
+	const haptic = useWebHaptics();
 
 	function handleJoin() {
 		startTransition(async () => {
@@ -24,6 +26,7 @@ export function JoinGroupButton({
 					router.push(`/app/groups/${groupId}`);
 					return;
 				}
+				haptic.trigger("success");
 				toast.success("Você entrou no grupo!");
 				router.push(`/app/groups/${groupId}`);
 			} catch (err) {
@@ -32,6 +35,7 @@ export function JoinGroupButton({
 				if (message === "Unauthorized") {
 					router.push(`/auth/sign-in?redirect=/app/groups/join/${inviteCode}`);
 				} else {
+					haptic.trigger("error");
 					toast.error(message);
 				}
 			}

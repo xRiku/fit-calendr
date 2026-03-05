@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useWebHaptics } from "web-haptics/react";
 import { Button } from "@/components/ui/button";
 import {
     ResponsiveDialog,
@@ -18,13 +19,16 @@ import { Trash2, Loader2 } from "lucide-react";
 
 export function DeleteAccountSection() {
     const [isDeleting, setIsDeleting] = useState(false);
+    const haptic = useWebHaptics();
 
     const handleDelete = async () => {
         try {
+            haptic.trigger("warning");
             setIsDeleting(true);
             await deleteAccount();
             // Redirection handled by server action via signOut
         } catch (error) {
+            haptic.trigger("error");
             toast.error("Erro ao excluir conta. Tente novamente.");
             setIsDeleting(false);
         }

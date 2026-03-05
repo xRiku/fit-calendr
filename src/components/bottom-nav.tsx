@@ -4,9 +4,11 @@ import { cn } from "@/lib/utils";
 import { BarChart2, CalendarDays, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWebHaptics } from "web-haptics/react";
 
 export function BottomNav() {
 	const pathname = usePathname();
+	const haptic = useWebHaptics();
 
 	const navItems = [
 		{
@@ -42,6 +44,7 @@ export function BottomNav() {
 						<Link
 							key={item.href}
 							href={item.href}
+							onClick={() => haptic.trigger("light")}
 							className={cn(
 								"flex flex-col items-center justify-center gap-1 min-w-[64px] transition-colors",
 								isActive
