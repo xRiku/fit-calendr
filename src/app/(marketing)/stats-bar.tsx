@@ -3,7 +3,6 @@ import MotionDiv from "./motion-div";
 const stats = [
 	{ value: "10K+", label: "Treinos Registrados" },
 	{ value: "30 Dias", label: "Sequência Média" },
-	{ value: "100%", label: "Grátis para Sempre" },
 	{ value: "Não", label: "Cartão de Crédito Necessário" },
 ];
 
@@ -11,7 +10,7 @@ export function StatsBar() {
 	return (
 		<section className="border-y border-neutral-800 bg-neutral-900/30 backdrop-blur-sm">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
+				<div className="grid grid-cols-2 md:grid-cols-3 gap-8 py-12">
 					{stats.map((stat, i) => (
 						<MotionDiv
 							key={stat.label}

@@ -11,7 +11,7 @@ import { WhyDifferent } from "./why-different";
 export const metadata: Metadata = {
 	title: "FitCalendr — Acompanhe seus Treinos, Mantenha o Equilíbrio",
 	description:
-		"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida. Registre treinos, acompanhe refeições livres, visualize seu progresso — tudo em um calendário bonito. Grátis para sempre.",
+		"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida. Registre treinos, acompanhe refeições livres, visualize seu progresso — tudo em um calendário bonito.",
 	keywords: [
 		"rastreador de fitness",
 		"registro de treinos",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "FitCalendr — Acompanhe seus Treinos, Mantenha o Equilíbrio",
 		description:
-			"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida. Grátis para sempre.",
+			"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida.",
 		type: "website",
 	},
 };

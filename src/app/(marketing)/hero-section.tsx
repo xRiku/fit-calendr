@@ -75,10 +75,6 @@ export function HeroSection() {
 						{/* Trust Indicators */}
 						<div className="flex flex-wrap items-center gap-6 text-sm text-neutral-400">
 							<div className="flex items-center gap-2">
-								<Check className="w-4 h-4 text-vibrant-green" />
-								<span>Grátis para sempre</span>
-							</div>
-							<div className="flex items-center gap-2">
 								<Lock className="w-4 h-4 text-vibrant-green" />
 								<span>Privacidade em primeiro lugar</span>
 							</div>
