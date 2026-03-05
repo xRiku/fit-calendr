@@ -71,8 +71,8 @@ function ResponsiveDialogContent({
 		);
 	}
 	return (
-		<DrawerContent className="max-h-[90vh]">
-			<div className="overflow-y-auto">{children}</div>
+		<DrawerContent className="max-h-[95vh] flex flex-col">
+			<div className="overflow-y-auto flex-1">{children}</div>
 		</DrawerContent>
 	);
 }
