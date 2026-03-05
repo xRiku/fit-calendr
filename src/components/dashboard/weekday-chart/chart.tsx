@@ -87,7 +87,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 			return {
 				weekday,
 				checkOption: checkOption,
-				fill: `var(--chart-${weekday}-${selected})`,
+				fill: `var(--color-${weekday})`,
 			};
 		},
 	);
@@ -109,7 +109,7 @@ export function Chart({ selected, fetchCallPromise }: ChartProps) {
 			) => {
 				acc[item.weekday] = {
 					label: item.weekday,
-					color: `hsl(var(--chart-${index + 1}))`,
+					color: `var(--chart-${index + 1}-${selected === "cheat-meal" ? "cheatmeal" : selected})`,
 				};
 				return acc;
 			},

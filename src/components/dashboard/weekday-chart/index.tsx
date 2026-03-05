@@ -25,11 +25,11 @@ const options: {
 	};
 } = {
 	workout: {
-		description: "Showing workout frequency per weekday for this year",
+		description: "Frequência de treinos por dia da semana neste ano",
 		fetchCall: getGymChecksByYearGroupedByMonth,
 	},
 	"cheat-meal": {
-		description: "Showing cheat meal frequency per weekday for this year",
+		description: "Frequência de refeições livres por dia da semana neste ano",
 		fetchCall: getCheatMealsByYearGroupedByMonth,
 	},
 };
@@ -46,7 +46,7 @@ export function WeekdayChart({
 	return (
 		<Card className="col-span-3 min-w-0 max-w-full overflow-hidden">
 			<CardHeader>
-				<CardTitle>Weekday Frequency Chart</CardTitle>
+				<CardTitle>Frequência por Dia da Semana</CardTitle>
 				<CardDescription>{options[selected].description}</CardDescription>
 			</CardHeader>
 			<Suspense fallback={<ChartSkeleton />}>
