@@ -83,7 +83,7 @@ export function SignInForm() {
 
   return (
     <>
-      <CardHeader>
+      <CardHeader className="px-0">
         <CardTitle className="text-xl text-left font-semibold tracking-tight text-white">
           Entrar no FitCalendr
         </CardTitle>
