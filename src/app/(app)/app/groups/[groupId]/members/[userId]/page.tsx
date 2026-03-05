@@ -1,7 +1,7 @@
 import { getMemberProfile } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { HeatmapGrid } from "@/components/dashboard/yearly-heatmap/heatmap-grid";
 import { ChevronLeft, Flame, Trophy, Dumbbell, CalendarDays } from "lucide-react";
@@ -56,6 +56,9 @@ export default async function MemberProfilePage({ params }: Props) {
 			{/* Profile header */}
 			<div className="flex items-center gap-4">
 				<Avatar className="size-16">
+					{user.avatarUrl && (
+						<AvatarImage src={user.avatarUrl} alt={user.name} />
+					)}
 					<AvatarFallback className="bg-neutral-800 text-lg">
 						{getInitials(user.name)}
 					</AvatarFallback>

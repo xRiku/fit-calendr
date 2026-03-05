@@ -1,7 +1,7 @@
 "use client";
 
 import { logOut } from "@/actions/actions";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -15,15 +15,18 @@ import Link from "next/link";
 
 type MyAccountDropdownProps = {
 	initialsFromName: string;
+	avatarUrl?: string | null;
 };
 
 export function MyAccountDropdown({
 	initialsFromName,
+	avatarUrl,
 }: MyAccountDropdownProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Avatar>
+					{avatarUrl && <AvatarImage src={avatarUrl} alt="Avatar" />}
 					<AvatarFallback>{initialsFromName}</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>

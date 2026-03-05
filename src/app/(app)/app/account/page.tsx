@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AvatarUpload } from "@/app/(app)/app/account/avatar-upload";
 import { auth } from "@/lib/auth";
 import { getUserGoals } from "@/lib/server-utils";
 import { getInitials } from "@/lib/utils";
@@ -35,7 +35,7 @@ export default async function AccountPage() {
 	const goals = await getUserGoals();
 	const userRecord = await prisma.user.findUnique({
 		where: { id: session.user.id },
-		select: { username: true },
+		select: { username: true, avatarUrl: true },
 	});
 
 	return (
@@ -56,11 +56,11 @@ export default async function AccountPage() {
 					</div>
 					<div className="flex flex-col gap-4">
 						<div className="flex items-center gap-3">
-							<Avatar className="size-12">
-								<AvatarFallback className="bg-neutral-800 text-sm">
-									{getInitials(session.user.name)}
-								</AvatarFallback>
-							</Avatar>
+							<AvatarUpload
+								avatarUrl={userRecord?.avatarUrl ?? null}
+								name={session.user.name}
+								initials={getInitials(session.user.name)}
+							/>
 							<div className="flex flex-col gap-0.5">
 								<span className="font-medium">{session.user.name}</span>
 								<span className="text-muted-foreground text-sm">{session.user.email}</span>
@@ -139,11 +139,11 @@ export default async function AccountPage() {
 					</CardHeader>
 					<CardContent className="flex flex-col gap-5">
 						<div className="flex items-center gap-3">
-							<Avatar className="size-12">
-								<AvatarFallback className="bg-neutral-800 text-sm">
-									{getInitials(session.user.name)}
-								</AvatarFallback>
-							</Avatar>
+							<AvatarUpload
+								avatarUrl={userRecord?.avatarUrl ?? null}
+								name={session.user.name}
+								initials={getInitials(session.user.name)}
+							/>
 							<div className="flex flex-col gap-0.5">
 								<span className="font-medium">{session.user.name}</span>
 								<span className="text-muted-foreground text-sm">{session.user.email}</span>
