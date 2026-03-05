@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { r2, R2_BUCKET, R2_PUBLIC_URL } from "@/lib/r2";
+import { getR2 } from "@/lib/r2";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 import { headers } from "next/headers";
@@ -37,18 +37,19 @@ export async function POST(request: Request) {
 		.webp({ quality: 80 })
 		.toBuffer();
 
+	const { client, bucket, publicUrl } = getR2();
 	const key = `avatars/${session.user.id}.webp`;
 
-	await r2.send(
+	await client.send(
 		new PutObjectCommand({
-			Bucket: R2_BUCKET,
+			Bucket: bucket,
 			Key: key,
 			Body: webpBuffer,
 			ContentType: "image/webp",
 		}),
 	);
 
-	const avatarUrl = `${R2_PUBLIC_URL}/${key}`;
+	const avatarUrl = `${publicUrl}/${key}`;
 
 	await prisma.user.update({
 		where: { id: session.user.id },
@@ -66,11 +67,12 @@ export async function DELETE() {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
 
+	const { client, bucket } = getR2();
 	const key = `avatars/${session.user.id}.webp`;
 
-	await r2.send(
+	await client.send(
 		new DeleteObjectCommand({
-			Bucket: R2_BUCKET,
+			Bucket: bucket,
 			Key: key,
 		}),
 	);
