@@ -5,23 +5,23 @@ const steps = [
 	{
 		icon: CalendarDays,
 		step: "01",
-		title: "Log Your Day",
+		title: "Registre Seu Dia",
 		description:
-			"Click any day on the calendar to add workouts or cheat meals. Use quick presets for common activities.",
+			"Clique em qualquer dia do calendário para adicionar treinos ou refeições livres. Use presets rápidos para atividades comuns.",
 	},
 	{
 		icon: Target,
 		step: "02",
-		title: "Set Your Goals",
+		title: "Defina Suas Metas",
 		description:
-			"Define your weekly workout target and cheat meal budget. We'll help you stay on track with visual progress bars.",
+			"Estabeleça sua meta semanal de treinos e o limite de refeições livres. Barras de progresso visuais te ajudam a manter o foco.",
 	},
 	{
 		icon: TrendingUp,
 		step: "03",
-		title: "Watch Progress",
+		title: "Acompanhe o Progresso",
 		description:
-			"See your entire year at a glance with the heatmap. Track streaks, analyze patterns, and stay motivated.",
+			"Veja o ano inteiro de relance com o heatmap. Acompanhe sequências, analise padrões e mantenha a motivação.",
 	},
 ];
 
@@ -36,9 +36,9 @@ export function HowItWorks() {
 					transition={{ duration: 0.6 }}
 					className="text-center mb-16"
 				>
-					<h2 className="text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
+					<h2 className="text-4xl md:text-5xl font-bold mb-4">Como Funciona</h2>
 					<p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-						Start tracking in seconds. No complex setup, no learning curve.
+						Comece a registrar em segundos. Sem configurações complexas, sem curva de aprendizado.
 					</p>
 				</MotionDiv>
 

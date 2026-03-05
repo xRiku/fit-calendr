@@ -19,14 +19,14 @@ export function CTASection() {
 
 					<div className="relative bg-neutral-900/90 backdrop-blur-xl rounded-3xl border border-neutral-800 p-12 md:p-16 text-center">
 						<h2 className="text-4xl md:text-5xl font-bold mb-6">
-							Ready to Start Your
+							Pronto para Começar sua
 							<br />
-							<span className="text-vibrant-green">Fitness Journey?</span>
+							<span className="text-vibrant-green">Jornada Fitness?</span>
 						</h2>
 
 						<p className="text-xl text-neutral-300 mb-8 max-w-2xl mx-auto">
-							Join thousands of people tracking their workouts and staying
-							balanced. It's free, it's simple, and it works.
+							Junte-se a milhares de pessoas rastreando seus treinos e mantendo o
+							equilíbrio. É grátis, é simples, e funciona.
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -36,7 +36,7 @@ export function CTASection() {
 								className="bg-vibrant-green hover:bg-vibrant-green/90 text-black font-bold text-lg px-10 py-7 rounded-full transition-all hover:scale-105 active:scale-95 group"
 							>
 								<Link href="/auth/sign-in" className="flex items-center gap-2">
-									Create Free Account
+									Criar Conta Gratuita
 									<ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
 								</Link>
 							</Button>
@@ -45,15 +45,15 @@ export function CTASection() {
 						<div className="flex flex-wrap items-center justify-center gap-6 text-sm text-neutral-400">
 							<div className="flex items-center gap-2">
 								<Check className="w-4 h-4 text-vibrant-green" />
-								<span>Free forever</span>
+								<span>Grátis para sempre</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<Check className="w-4 h-4 text-vibrant-green" />
-								<span>No credit card</span>
+								<span>Sem cartão de crédito</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<Check className="w-4 h-4 text-vibrant-green" />
-								<span>Cancel anytime</span>
+								<span>Cancele quando quiser</span>
 							</div>
 						</div>
 					</div>

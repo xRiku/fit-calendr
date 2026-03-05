@@ -5,21 +5,21 @@ import MotionDiv from "./motion-div";
 const testimonials = [
 	{
 		quote:
-			"Finally, a fitness app that doesn't try to do everything. I just log my workouts and occasional cheat meals. Simple.",
+			"Finalmente, um app de fitness que não tenta fazer tudo. Só registro meus treinos e refeições livres ocasionais. Simples.",
 		author: "Alex M.",
-		title: "Powerlifter",
+		title: "Levantador de Peso",
 	},
 	{
 		quote:
-			"The yearly heatmap is addictive. Seeing my consistency visualized keeps me motivated to not break the streak.",
+			"O heatmap anual é viciante. Ver minha consistência visualizada me mantém motivado a não quebrar a sequência.",
 		author: "Sarah K.",
-		title: "CrossFit Athlete",
+		title: "Atleta de CrossFit",
 	},
 	{
 		quote:
-			"I love that it tracks cheat meals too. Most apps shame you for it, but this helps me stay balanced and guilt-free.",
+			"Adoro que ele também rastreia refeições livres. A maioria dos apps te envergonha por isso, mas esse me ajuda a manter o equilíbrio sem culpa.",
 		author: "Mike R.",
-		title: "Weekend Warrior",
+		title: "Atleta de Fim de Semana",
 	},
 ];
 
@@ -35,10 +35,10 @@ export function Testimonials() {
 					className="text-center mb-16"
 				>
 					<h2 className="text-4xl md:text-5xl font-bold mb-4">
-						Loved by Lifters
+						Amado por Atletas
 					</h2>
 					<p className="text-xl text-neutral-400">
-						Join thousands tracking their fitness journey
+						Junte-se a milhares acompanhando sua jornada fitness
 					</p>
 				</MotionDiv>
 

@@ -12,39 +12,39 @@ import MotionDiv from "./motion-div";
 const features = [
 	{
 		icon: CalendarDays,
-		title: "Interactive Calendar",
+		title: "Calendário Interativo",
 		description:
-			"Beautiful monthly view with visual indicators. Click any day to add or edit entries instantly.",
+			"Visão mensal bonita com indicadores visuais. Clique em qualquer dia para adicionar ou editar entradas instantaneamente.",
 	},
 	{
 		icon: Dumbbell,
-		title: "Custom Workout Presets",
+		title: "Presets de Treino Personalizados",
 		description:
-			"Create presets for Leg Day, Cardio, Yoga, or any activity you do regularly. One-click logging.",
+			"Crie presets para Leg Day, Cardio, Yoga ou qualquer atividade que você faz regularmente. Registro com um clique.",
 	},
 	{
 		icon: Pizza,
-		title: "Cheat Meal Tracking",
+		title: "Rastreamento de Refeições Livres",
 		description:
-			"Log burgers, pizza, or any indulgence. Keep tabs on your treats with the weekly budget feature.",
+			"Registre hambúrgueres, pizza ou qualquer indulgência. Controle suas refeições livres com o recurso de orçamento semanal.",
 	},
 	{
 		icon: Flame,
-		title: "Streak Counter",
+		title: "Contador de Sequência",
 		description:
-			"Stay motivated with current and longest streak tracking. Don't break the chain!",
+			"Mantenha-se motivado com o rastreamento da sequência atual e a mais longa. Não quebre a corrente!",
 	},
 	{
 		icon: TrendingUp,
-		title: "Yearly Heatmap",
+		title: "Heatmap Anual",
 		description:
-			"GitHub-style visualization of your entire year. Spot patterns and celebrate consistency at a glance.",
+			"Visualização estilo GitHub do seu ano inteiro. Identifique padrões e celebre a consistência de relance.",
 	},
 	{
 		icon: Target,
-		title: "Weekly Goals",
+		title: "Metas Semanais",
 		description:
-			"Set targets for workouts and budgets for cheat meals. Visual progress bars keep you accountable.",
+			"Defina metas de treinos e limite de refeições livres. Barras de progresso visuais mantêm você responsável.",
 	},
 ];
 
@@ -63,10 +63,10 @@ export function FeaturesGrid() {
 					className="text-center mb-16"
 				>
 					<h2 className="text-4xl md:text-5xl font-bold mb-4">
-						Everything You Need
+						Tudo que Você Precisa
 					</h2>
 					<p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-						Powerful features, beautifully simple. Nothing more, nothing less.
+						Recursos poderosos, lindamente simples. Nada mais, nada menos.
 					</p>
 				</MotionDiv>
 

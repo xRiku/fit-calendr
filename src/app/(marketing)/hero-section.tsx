@@ -36,18 +36,18 @@ export function HeroSection() {
 					>
 						{/* Headline */}
 						<h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
-							Track Fitness.
+							Registre Treinos.
 							<br />
 							<span className="text-transparent bg-clip-text bg-linear-to-r from-vibrant-green to-vibrant-green-light">
-								Stay Balanced.
+								Mantenha o Equilíbrio.
 							</span>
 						</h1>
 
 						{/* Subheadline */}
 						<p className="text-xl text-neutral-300 max-w-lg leading-relaxed">
-							The minimalist habit tracker for people who train hard and enjoy
-							life. Log workouts, track cheat meals, visualize your progress —
-							all in one beautiful calendar.
+							O rastreador minimalista para quem treina pesado e aproveita a
+							vida. Registre treinos, acompanhe refeições livres, visualize seu
+							progresso — tudo em um calendário bonito.
 						</p>
 
 						{/* CTA Buttons */}
@@ -58,7 +58,7 @@ export function HeroSection() {
 								className="bg-vibrant-green hover:bg-vibrant-green/90 text-black font-bold text-lg px-8 py-6 rounded-full transition-all hover:scale-105 active:scale-95 group"
 							>
 								<Link href="/auth/sign-in" className="flex items-center gap-2">
-									Start Tracking Free
+									Começar Gratuitamente
 									<ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
 								</Link>
 							</Button>
@@ -68,7 +68,7 @@ export function HeroSection() {
 								size="lg"
 								className="border-neutral-700 hover:border-vibrant-green/50 text-white font-semibold text-lg px-8 py-6 rounded-full bg-neutral-900/50 backdrop-blur-sm"
 							>
-								<Link href="#how-it-works">See How It Works</Link>
+								<Link href="#how-it-works">Como Funciona</Link>
 							</Button>
 						</div>
 
@@ -76,15 +76,15 @@ export function HeroSection() {
 						<div className="flex flex-wrap items-center gap-6 text-sm text-neutral-400">
 							<div className="flex items-center gap-2">
 								<Check className="w-4 h-4 text-vibrant-green" />
-								<span>Free forever</span>
+								<span>Grátis para sempre</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<Lock className="w-4 h-4 text-vibrant-green" />
-								<span>Privacy-first</span>
+								<span>Privacidade em primeiro lugar</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<Zap className="w-4 h-4 text-vibrant-green" />
-								<span>No setup required</span>
+								<span>Sem configuração necessária</span>
 							</div>
 						</div>
 					</MotionDiv>
@@ -146,17 +146,17 @@ function HeroVisual() {
 			<div className="relative bg-neutral-900/90 backdrop-blur-xl rounded-2xl border border-neutral-800 p-6 shadow-2xl">
 				<div className="flex items-center justify-between mb-6">
 					<div>
-						<h3 className="text-lg font-semibold">February 2026</h3>
-						<p className="text-sm text-neutral-400">Your activity this month</p>
+						<h3 className="text-lg font-semibold">Fevereiro 2026</h3>
+						<p className="text-sm text-neutral-400">Sua atividade este mês</p>
 					</div>
 					<div className="flex gap-2">
 						<div className="flex items-center gap-1.5 text-xs">
 							<div className="w-3 h-3 rounded-sm bg-vibrant-green" />
-							<span className="text-neutral-400">Workout</span>
+							<span className="text-neutral-400">Treino</span>
 						</div>
 						<div className="flex items-center gap-1.5 text-xs">
 							<div className="w-3 h-3 rounded-sm bg-vibrant-orange" />
-							<span className="text-neutral-400">Cheat</span>
+							<span className="text-neutral-400">Livre</span>
 						</div>
 					</div>
 				</div>
@@ -196,7 +196,7 @@ function HeroVisual() {
 				<div className="mt-6 pt-6 border-t border-neutral-800 space-y-4">
 					<div>
 						<div className="flex justify-between text-sm mb-2">
-							<span className="text-neutral-300">Weekly Workouts</span>
+							<span className="text-neutral-300">Treinos Semanais</span>
 							<span className="font-semibold text-vibrant-green">3 / 4</span>
 						</div>
 						<div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
@@ -205,7 +205,7 @@ function HeroVisual() {
 					</div>
 					<div>
 						<div className="flex justify-between text-sm mb-2">
-							<span className="text-neutral-300">Cheat Meal Budget</span>
+							<span className="text-neutral-300">Refeições Livres</span>
 							<span className="font-semibold text-vibrant-orange">1 / 3</span>
 						</div>
 						<div className="h-2 bg-neutral-800 rounded-full overflow-hidden">

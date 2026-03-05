@@ -2,14 +2,14 @@ import { CalendarDays, Flame } from "lucide-react";
 import Link from "next/link";
 
 const productLinks = [
-	{ label: "Features", href: "#features" },
-	{ label: "How It Works", href: "#how-it-works" },
-	{ label: "Get Started", href: "/auth/sign-in" },
+	{ label: "Funcionalidades", href: "#features" },
+	{ label: "Como Funciona", href: "#how-it-works" },
+	{ label: "Começar", href: "/auth/sign-in" },
 ];
 
 const legalLinks = [
-	{ label: "Privacy Policy", href: "/privacy-policy" },
-	{ label: "Terms of Service", href: "/terms-of-service" },
+	{ label: "Política de Privacidade", href: "/privacy-policy" },
+	{ label: "Termos de Serviço", href: "/terms-of-service" },
 ];
 
 export function LandingFooter() {
@@ -25,13 +25,13 @@ export function LandingFooter() {
 							<span className="font-bold text-xl">FitCalendr</span>
 						</div>
 						<p className="text-neutral-400 max-w-sm">
-							The minimalist fitness tracker for people who train hard and enjoy
-							life. Log workouts, track cheat meals, visualize progress.
+							O rastreador fitness minimalista para quem treina pesado e aproveita
+							a vida. Registre treinos, acompanhe refeições livres, visualize o progresso.
 						</p>
 					</div>
 
 					<div>
-						<h4 className="font-semibold mb-4">Product</h4>
+						<h4 className="font-semibold mb-4">Produto</h4>
 						<ul className="space-y-2 text-neutral-400">
 							{productLinks.map((link) => (
 								<li key={link.label}>
@@ -65,12 +65,12 @@ export function LandingFooter() {
 
 				<div className="pt-8 border-t border-neutral-800 flex flex-col md:flex-row justify-between items-center gap-4">
 					<p className="text-neutral-400 text-sm">
-						© {new Date().getFullYear()} FitCalendr. All rights reserved.
+						© {new Date().getFullYear()} FitCalendr. Todos os direitos reservados.
 					</p>
 					<div className="flex items-center gap-2 text-sm text-neutral-400">
-						<span>Made with</span>
+						<span>Feito com</span>
 						<Flame className="w-4 h-4 text-vibrant-orange" />
-						<span>for fitness enthusiasts</span>
+						<span>para entusiastas do fitness</span>
 					</div>
 				</div>
 			</div>

@@ -3,11 +3,11 @@ import { HeatmapPreview } from "./heatmap-preview";
 import MotionDiv from "./motion-div";
 
 const benefits = [
-	"No complex meal logging or calorie counting",
-	"No overwhelming dashboards with 50 metrics",
-	"No subscription fees or hidden costs",
-	"No ads cluttering your experience",
-	"No account required to get started",
+	"Sem registro complexo de refeições ou contagem de calorias",
+	"Sem dashboards confusos com 50 métricas",
+	"Sem mensalidades ou custos ocultos",
+	"Sem anúncios poluindo sua experiência",
+	"Sem necessidade de conta para começar",
 ];
 
 export function WhyDifferent() {
@@ -22,12 +22,12 @@ export function WhyDifferent() {
 						transition={{ duration: 0.6 }}
 					>
 						<h2 className="text-4xl md:text-5xl font-bold mb-6">
-							Built for <span className="text-vibrant-green">Real Life</span>
+							Feito para a <span className="text-vibrant-green">Vida Real</span>
 						</h2>
 						<p className="text-xl text-neutral-300 mb-8 leading-relaxed">
-							Most fitness apps are either too complex or too restrictive. We
-							believe in balance — train hard, enjoy life, and track it all
-							without the headache.
+							A maioria dos apps de fitness é complexa demais ou restritiva demais.
+							Acreditamos no equilíbrio — treine pesado, aproveite a vida e
+							registre tudo sem dor de cabeça.
 						</p>
 
 						<div className="space-y-4">
@@ -54,24 +54,24 @@ export function WhyDifferent() {
 							<div className="absolute -inset-4 bg-vibrant-green/10 rounded-3xl blur-2xl" />
 							<div className="relative bg-neutral-900/90 backdrop-blur-xl rounded-2xl border border-neutral-800 p-6 shadow-2xl">
 								<h3 className="text-lg font-semibold mb-2">
-									Your Year at a Glance
+									Seu Ano de Relance
 								</h3>
 								<p className="text-sm text-neutral-400 mb-6">
-									Consistency is key. See your entire fitness journey
-									visualized.
+									Consistência é a chave. Veja toda a sua jornada fitness
+									visualizada.
 								</p>
 
 								<HeatmapPreview />
 
 								<div className="flex items-center justify-between mt-4 text-xs text-neutral-400">
-									<span>Less</span>
+									<span>Menos</span>
 									<div className="flex gap-1">
 										<div className="w-3 h-3 rounded-sm bg-neutral-800" />
 										<div className="w-3 h-3 rounded-sm bg-vibrant-green/30" />
 										<div className="w-3 h-3 rounded-sm bg-vibrant-green/60" />
 										<div className="w-3 h-3 rounded-sm bg-vibrant-green" />
 									</div>
-									<span>More</span>
+									<span>Mais</span>
 								</div>
 							</div>
 						</div>

@@ -1,10 +1,10 @@
 import MotionDiv from "./motion-div";
 
 const stats = [
-	{ value: "10K+", label: "Workouts Logged" },
-	{ value: "30 Days", label: "Avg. Streak" },
-	{ value: "100%", label: "Free Forever" },
-	{ value: "No", label: "Credit Card Required" },
+	{ value: "10K+", label: "Treinos Registrados" },
+	{ value: "30 Dias", label: "Sequência Média" },
+	{ value: "100%", label: "Grátis para Sempre" },
+	{ value: "Não", label: "Cartão de Crédito Necessário" },
 ];
 
 export function StatsBar() {
