@@ -1,5 +1,6 @@
 "use server";
 
+import { randomBytes } from "crypto";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { headers } from "next/headers";
@@ -42,7 +43,7 @@ export async function createGroup({
 
 	const endDate = computeEndDate(duration, customEndDate);
 
-	const inviteCode = crypto.randomBytes(6).toString("base64url").slice(0, 8);
+	const inviteCode = randomBytes(6).toString("base64url").slice(0, 8);
 	const group = await prisma.group.create({
 		data: {
 			name: name.trim(),
@@ -184,7 +185,7 @@ export async function regenerateInviteCode(groupId: string) {
 	if (group.ownerId !== session.user.id)
 		throw new Error("Apenas o dono pode regenerar o código de convite");
 
-	const newCode = crypto.randomBytes(6).toString("base64url").slice(0, 8);
+	const newCode = randomBytes(6).toString("base64url").slice(0, 8);
 	const updated = await prisma.group.update({
 		where: { id: groupId },
 		data: { inviteCode: newCode },
