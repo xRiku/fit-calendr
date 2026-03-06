@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 		type: "website",
 		images: [
 			{
-				url: "https://fitcalendr.com/og-image.png",
+				url: "/og-image.png",
 				width: 1200,
 				height: 630,
 				alt: "FitCalendr",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "FitCalendr",
 		description: "Acompanhe a frequência dos seus treinos e refeições livres",
-		images: ["https://fitcalendr.com/og-image.png"],
+		images: ["/og-image.png"],
 	},
 };
 
