@@ -10,11 +10,16 @@ export async function proxy(request: NextRequest) {
 	const isOnLoginPage = pathname.includes("/auth");
 
 	if (!sessionCookie && isOnPrivatePages) {
-		return NextResponse.redirect(new URL("/auth/sign-in", request.url));
+		const signInUrl = new URL("/auth/sign-in", request.url);
+		const dest = request.nextUrl.pathname + request.nextUrl.search;
+		signInUrl.searchParams.set("redirect", dest);
+		return NextResponse.redirect(signInUrl);
 	}
 
 	if (sessionCookie && isOnLoginPage) {
-		return NextResponse.redirect(new URL("/app/dashboard", request.url));
+		const redirectTo = request.nextUrl.searchParams.get("redirect");
+		const dest = redirectTo?.startsWith("/") ? redirectTo : "/app/dashboard";
+		return NextResponse.redirect(new URL(dest, request.url));
 	}
 	return NextResponse.next();
 }

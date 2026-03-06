@@ -31,12 +31,12 @@ export function MyAccountDropdown({
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link href="/app/account" className="cursor-pointer">
-              Settings
+              Configurações
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -47,7 +47,7 @@ export function MyAccountDropdown({
           }}
           className="cursor-pointer"
         >
-          Log out
+          Sair
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
