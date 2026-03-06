@@ -17,7 +17,7 @@ export default function SignOutButton({
 			size="sm"
 			className={className}
 			onClick={async () => {
-				haptic.trigger("light");
+				haptic.trigger("warning");
 				await logOut();
 			}}
 		>

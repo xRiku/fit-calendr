@@ -44,7 +44,7 @@ export function BottomNav() {
 						<Link
 							key={item.href}
 							href={item.href}
-							onClick={() => haptic.trigger("light")}
+							onClick={() => haptic.trigger("selection")}
 							className={cn(
 								"flex flex-col items-center justify-center gap-1 min-w-[64px] transition-colors",
 								isActive

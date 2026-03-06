@@ -10,12 +10,13 @@ import { Search } from "lucide-react";
 import {
 	forwardRef,
 	useCallback,
+	useEffect,
 	useImperativeHandle,
 	useRef,
 	useState,
-	useEffect,
 } from "react";
 import { toast } from "sonner";
+import { useWebHaptics } from "web-haptics/react";
 
 export type CheatMealChipInputRef = {
 	flushInput: () => Promise<CheatMealChip | null>;
@@ -43,6 +44,7 @@ export const CheatMealChipInput = forwardRef<
 	const [inputValue, setInputValue] = useState("");
 	const [open, setOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const haptic = useWebHaptics();
 	const inputValueRef = useRef(inputValue);
 	const valueRef = useRef(value);
 	const presetsRef = useRef(presets);
@@ -81,17 +83,28 @@ export const CheatMealChipInput = forwardRef<
 				isNew: false,
 			};
 			onChange([...value, newChip]);
+			haptic.trigger("selection");
 			setInputValue("");
 			setOpen(false);
 			inputRef.current?.focus();
 		},
-		[value, onChange],
+		[value, onChange, haptic],
 	);
 
 	const handleInputChange = useCallback((newValue: string) => {
 		setInputValue(newValue);
 		setOpen(newValue.length > 0);
 	}, []);
+
+	const handleRemoveChip = useCallback(
+		(chipId: string | undefined) => {
+			if (chipId) {
+				onChange(value.filter((c) => c.id !== chipId));
+				haptic.trigger("selection");
+			}
+		},
+		[value, onChange, haptic],
+	);
 
 	const flushInput = useCallback(async (): Promise<CheatMealChip | null> => {
 		const currentInput = inputValueRef.current.trim();
@@ -197,9 +210,7 @@ export const CheatMealChipInput = forwardRef<
 							{chip.label}
 							<button
 								type="button"
-								onClick={() =>
-									chip.id && onChange(value.filter((c) => c.id !== chip.id))
-								}
+								onClick={() => handleRemoveChip(chip.id)}
 								className="ml-0.5 rounded-full p-0.5 opacity-50 hover:opacity-80 transition-opacity"
 								style={{ color: chip.color }}
 							>
