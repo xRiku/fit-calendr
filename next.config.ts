@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 import "./src/env";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
+	metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://fitcalendr.com"),
 	async redirects() {
 		return [
 			{ source: "/calendar", destination: "/app/calendar", permanent: false },
