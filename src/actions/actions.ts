@@ -462,6 +462,40 @@ export async function updateUserName({
 	});
 }
 
+export async function completeUserOnboarding({
+	name,
+	weeklyWorkoutGoal,
+	weeklyCheatMealBudget,
+}: {
+	name: string;
+	weeklyWorkoutGoal: number;
+	weeklyCheatMealBudget: number;
+}) {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) throw new Error("Não autenticado");
+
+	const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+	if (!user) {
+		throw Error(`Usuário com id ${session.user.id} não existe`);
+	}
+
+	if (weeklyWorkoutGoal < 1 || weeklyWorkoutGoal > 7) {
+		throw new Error("A meta semanal de treinos deve ser entre 1 e 7");
+	}
+	if (weeklyCheatMealBudget < 0 || weeklyCheatMealBudget > 7) {
+		throw new Error(
+			"O limite semanal de refeições livres deve ser entre 0 e 7",
+		);
+	}
+
+	await prisma.user.update({
+		where: { id: session.user.id },
+		data: { name, weeklyWorkoutGoal, weeklyCheatMealBudget },
+	});
+
+	revalidatePath("/app");
+}
+
 // Auth
 
 export async function signInWithCredentials(email: string) {

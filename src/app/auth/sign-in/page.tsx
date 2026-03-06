@@ -10,11 +10,16 @@ export const metadata = {
 		"Entre na sua conta FitCalendr para acompanhar seus hábitos diários.",
 };
 
-export default function SignInPage() {
+export default async function SignInPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ redirect?: string }>;
+}) {
+	const { redirect } = await searchParams;
 	return (
 		<Card className="bg-neutral-900 border-neutral-800 text-white">
 			<CardContent className="flex flex-col gap-6">
-				<SignInForm />
+				<SignInForm redirectTo={redirect} />
 				{/* <div className="flex justify-between items-center gap-2 ">
           <Separator className="w-2/5" />
           <p>or</p>

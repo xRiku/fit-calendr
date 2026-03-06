@@ -130,7 +130,7 @@ export default async function AccountPage() {
             <DeleteAccountSection />
           </CardContent>
         </Card>
-        <SignOutButton className="shrink-0 sm:self-center" />
+        <SignOutButton className="w-full shrink-0 sm:self-center" />
       </div>
     </main>
   );

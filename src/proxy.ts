@@ -6,7 +6,7 @@ export async function proxy(request: NextRequest) {
 	const sessionCookie = getSessionCookie(request);
 
 	const isOnPrivatePages =
-		pathname.includes("/app") || pathname.includes("/setup");
+		pathname.includes("/app") || pathname.includes("/onboarding");
 	const isOnLoginPage = pathname.includes("/auth");
 
 	if (!sessionCookie && isOnPrivatePages) {

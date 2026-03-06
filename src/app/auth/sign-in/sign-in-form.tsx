@@ -20,7 +20,7 @@ const signInFormSchema = z.object({
 
 type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
-export function SignInForm() {
+export function SignInForm({ redirectTo }: { redirectTo?: string }) {
   const [shouldShowOtpField, setShouldShowOtpField] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -65,14 +65,14 @@ export function SignInForm() {
 
       if (!user.name) {
         startTransition(() => {
-          router.push("/setup");
+          router.push("/onboarding");
         });
         setIsLoading(false);
         return;
       }
 
       startTransition(() => {
-        router.push("/app/dashboard");
+        router.push(redirectTo?.startsWith("/") ? redirectTo : "/app/dashboard");
       });
       setIsLoading(false);
     } catch {
