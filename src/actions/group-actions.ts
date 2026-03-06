@@ -42,11 +42,13 @@ export async function createGroup({
 
 	const endDate = computeEndDate(duration, customEndDate);
 
+	const inviteCode = crypto.randomBytes(6).toString("base64url").slice(0, 8);
 	const group = await prisma.group.create({
 		data: {
 			name: name.trim(),
 			ownerId: session.user.id,
 			endDate,
+			inviteCode,
 			members: {
 				create: {
 					userId: session.user.id,
@@ -182,8 +184,7 @@ export async function regenerateInviteCode(groupId: string) {
 	if (group.ownerId !== session.user.id)
 		throw new Error("Apenas o dono pode regenerar o código de convite");
 
-	// cuid() not available at runtime directly — use crypto
-	const newCode = crypto.randomUUID().replace(/-/g, "").slice(0, 24);
+	const newCode = crypto.randomBytes(6).toString("base64url").slice(0, 8);
 	const updated = await prisma.group.update({
 		where: { id: groupId },
 		data: { inviteCode: newCode },

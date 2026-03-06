@@ -37,11 +37,20 @@ export const metadata: Metadata = {
 		title: "FitCalendr",
 		description: "Acompanhe a frequência dos seus treinos e refeições livres",
 		type: "website",
+		images: [
+			{
+				url: "https://fitcalendr.com/og-image.png",
+				width: 1200,
+				height: 630,
+				alt: "FitCalendr",
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "FitCalendr",
 		description: "Acompanhe a frequência dos seus treinos e refeições livres",
+		images: ["https://fitcalendr.com/og-image.png"],
 	},
 };
 

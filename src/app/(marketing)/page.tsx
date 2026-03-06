@@ -24,6 +24,14 @@ export const metadata: Metadata = {
 		description:
 			"O rastreador de fitness minimalista para quem treina pesado e aproveita a vida.",
 		type: "website",
+		images: [
+			{
+				url: "https://fitcalendr.com/og-image.png",
+				width: 1200,
+				height: 630,
+				alt: "FitCalendr",
+			},
+		],
 	},
 };
 
