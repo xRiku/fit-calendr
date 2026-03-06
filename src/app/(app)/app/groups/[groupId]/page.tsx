@@ -131,7 +131,7 @@ export default async function GroupPage({ params }: Props) {
 							return (
 								<Link
 									key={member.userId}
-									href={`/app/groups/${group.id}/members/${member.userId}`}
+									href={`/app/groups/${group.id}/members/${member.user.username ?? member.userId}`}
 									className={cn(
 										"flex items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/5",
 										isCurrentUser &&

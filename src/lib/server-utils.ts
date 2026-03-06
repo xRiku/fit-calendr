@@ -380,7 +380,7 @@ export const isGroupMember = cache(
 	},
 );
 
-export async function getMemberProfile(groupId: string, targetUserId: string) {
+export async function getMemberProfile(groupId: string, username: string) {
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session) redirect("/auth/sign-in");
 
@@ -389,6 +389,11 @@ export async function getMemberProfile(groupId: string, targetUserId: string) {
 		where: { groupId_userId: { groupId, userId: session.user.id } },
 	});
 	if (!viewerMembership) redirect("/app/groups");
+
+	// Look up target user by username
+	const targetUser = await prisma.user.findUnique({ where: { username } });
+	if (!targetUser) redirect(`/app/groups/${groupId}`);
+	const targetUserId = targetUser.id;
 
 	// Target must also be in the group
 	const [targetMembership, group] = await Promise.all([
