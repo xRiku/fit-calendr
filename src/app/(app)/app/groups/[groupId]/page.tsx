@@ -6,6 +6,12 @@ import {
   getGroupActivityFeed,
   getGroupCalendarData,
 } from "@/lib/server-utils";
+
+function formatTimeRemaining(endDate: Date): string {
+  const dist = formatDistanceToNow(endDate, { locale: ptBR });
+  const plural = !dist.match(/^(menos de |1 |um |uma )/i);
+  return `${dist} ${plural ? "restantes" : "restante"}`;
+}
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -89,10 +95,7 @@ export default async function GroupPage({ params }: Props) {
                   variant="outline"
                   className="text-vibrant-green border-vibrant-green/30 text-xs"
                 >
-                  {formatDistanceToNow(new Date(group.endDate), {
-                    locale: ptBR,
-                  })}{" "}
-                  restante
+                  {formatTimeRemaining(new Date(group.endDate))}
                 </Badge>
               )}
               {ended && (
