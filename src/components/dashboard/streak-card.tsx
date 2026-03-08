@@ -1,12 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import {
 	getGymStreak,
+	getGoalStreak,
 	getLastCheatMeal,
 	getWeeklyProgress,
 } from "@/lib/server-utils";
 import { cn } from "@/lib/utils";
 import { differenceInDays } from "date-fns";
-import { Flame, Target } from "lucide-react";
+import { Flame, Target, Trophy } from "lucide-react";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -38,9 +39,10 @@ async function BannerContent({
 	selected,
 }: { isWorkout: boolean; selected: string }) {
 	if (isWorkout) {
-		const [progress, { currentStreak, longestStreak }] = await Promise.all([
+		const [progress, { currentStreak, longestStreak }, { currentGoalStreak, longestGoalStreak }] = await Promise.all([
 			getWeeklyProgress(),
 			getGymStreak(),
+			getGoalStreak(),
 		]);
 		const current = progress.workouts;
 		const goal = progress.weeklyWorkoutGoal;
@@ -81,6 +83,25 @@ async function BannerContent({
 							<span className="text-[10px] text-muted-foreground uppercase font-semibold shrink-0">
 								nesta semana
 							</span>
+						</div>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardContent className="py-4 flex justify-between items-center">
+						<div className="flex items-center gap-3">
+							<Trophy className="size-5 text-vibrant-green" />
+							<span className="font-semibold">Sequência de Metas</span>
+						</div>
+						<div className="flex flex-col items-end gap-0.5">
+							<span className="text-sm text-muted-foreground font-medium">
+								{currentGoalStreak} sem.
+							</span>
+							{longestGoalStreak > currentGoalStreak && (
+								<span className="text-xs text-muted-foreground">
+									melhor: {longestGoalStreak} sem.
+								</span>
+							)}
 						</div>
 					</CardContent>
 				</Card>

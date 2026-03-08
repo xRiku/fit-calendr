@@ -301,6 +301,94 @@ export const getWeeklyProgress = cache(async () => {
 	};
 });
 
+export function calculateGoalStreak(
+	gymCheckDates: Date[],
+	cheatMealDates: Date[],
+	weeklyWorkoutGoal: number,
+	weeklyCheatMealBudget: number,
+): { currentGoalStreak: number; longestGoalStreak: number } {
+	if (weeklyWorkoutGoal <= 0) return { currentGoalStreak: 0, longestGoalStreak: 0 };
+
+	// Get Monday of the current week (local time)
+	const now = new Date();
+	const day = now.getDay();
+	const diff = day === 0 ? -6 : 1 - day;
+	const currentMonday = new Date(now);
+	currentMonday.setDate(now.getDate() + diff);
+	currentMonday.setHours(0, 0, 0, 0);
+
+	// Find earliest date across all entries to know when to stop
+	const allDates = [...gymCheckDates, ...cheatMealDates].map((d) => new Date(d));
+	if (allDates.length === 0) return { currentGoalStreak: 0, longestGoalStreak: 0 };
+	const earliestEntry = new Date(Math.min(...allDates.map((d) => d.getTime())));
+
+	// Helper: count dates within [start, end]
+	const countInRange = (dates: Date[], start: Date, end: Date) =>
+		dates.filter((d) => {
+			const t = new Date(d).getTime();
+			return t >= start.getTime() && t <= end.getTime();
+		}).length;
+
+	let currentGoalStreak = 0;
+	let longestGoalStreak = 0;
+	let consecutiveRun = 0;
+	let foundFirstNonPerfect = false;
+
+	// Iterate backwards week by week starting from the most recent completed week
+	let weekMonday = new Date(currentMonday);
+	weekMonday.setDate(currentMonday.getDate() - 7);
+
+	while (weekMonday >= earliestEntry || weekMonday.getTime() >= earliestEntry.getTime()) {
+		const weekSunday = new Date(weekMonday);
+		weekSunday.setDate(weekMonday.getDate() + 6);
+		weekSunday.setHours(23, 59, 59, 999);
+
+		// Stop if this week is entirely before any data
+		if (weekSunday.getTime() < earliestEntry.getTime()) break;
+
+		const workouts = countInRange(gymCheckDates.map((d) => new Date(d)), weekMonday, weekSunday);
+		const cheatMeals = countInRange(cheatMealDates.map((d) => new Date(d)), weekMonday, weekSunday);
+		const perfectWeek = workouts >= weeklyWorkoutGoal && cheatMeals <= weeklyCheatMealBudget;
+
+		if (perfectWeek) {
+			consecutiveRun++;
+			longestGoalStreak = Math.max(longestGoalStreak, consecutiveRun);
+			if (!foundFirstNonPerfect) {
+				currentGoalStreak = consecutiveRun;
+			}
+		} else {
+			foundFirstNonPerfect = true;
+			consecutiveRun = 0;
+		}
+
+		weekMonday = new Date(weekMonday);
+		weekMonday.setDate(weekMonday.getDate() - 7);
+	}
+
+	return { currentGoalStreak, longestGoalStreak };
+}
+
+export const getGoalStreak = cache(async () => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const [gymChecks, cheatMeals, user] = await Promise.all([
+		prisma.gymCheck.findMany({ where: { userId: session.user.id }, select: { date: true } }),
+		prisma.cheatMeal.findMany({ where: { userId: session.user.id }, select: { date: true } }),
+		prisma.user.findUniqueOrThrow({
+			where: { id: session.user.id },
+			select: { weeklyWorkoutGoal: true, weeklyCheatMealBudget: true },
+		}),
+	]);
+
+	return calculateGoalStreak(
+		gymChecks.map((g) => g.date),
+		cheatMeals.map((c) => c.date),
+		user.weeklyWorkoutGoal,
+		user.weeklyCheatMealBudget,
+	);
+});
+
 export const getGymStreak = cache(async () => {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -416,7 +504,7 @@ export async function getMemberProfile(groupId: string, username: string) {
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
 	// Parallel DB fetches
-	const [allWorkouts, challengeWorkouts, allTimeWorkouts] = await Promise.all([
+	const [allWorkouts, challengeWorkouts, allTimeWorkouts, allTimeCheatMeals, targetUserGoals] = await Promise.all([
 		// All workouts for heatmap (current year)
 		prisma.gymCheck.findMany({
 			where: {
@@ -442,6 +530,16 @@ export async function getMemberProfile(groupId: string, username: string) {
 			select: { date: true },
 			orderBy: { date: "asc" },
 		}),
+		// All-time cheat meals for goal streak
+		prisma.cheatMeal.findMany({
+			where: { userId: targetUserId },
+			select: { date: true },
+		}),
+		// User goals for goal streak
+		prisma.user.findUniqueOrThrow({
+			where: { id: targetUserId },
+			select: { weeklyWorkoutGoal: true, weeklyCheatMealBudget: true },
+		}),
 	]);
 
 	// Build heatmap map directly
@@ -456,6 +554,13 @@ export async function getMemberProfile(groupId: string, username: string) {
 		allTimeWorkouts.map((w) => w.date),
 	);
 
+	const goalStreak = calculateGoalStreak(
+		allTimeWorkouts.map((w) => w.date),
+		allTimeCheatMeals.map((c) => c.date),
+		targetUserGoals.weeklyWorkoutGoal,
+		targetUserGoals.weeklyCheatMealBudget,
+	);
+
 	return {
 		user: targetMembership.user,
 		group,
@@ -466,6 +571,7 @@ export async function getMemberProfile(groupId: string, username: string) {
 			longestStreak,
 			totalWorkouts: allTimeWorkouts.length,
 			challengeWorkouts,
+			goalStreak,
 		},
 		heatmapData,
 		year,

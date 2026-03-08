@@ -1,16 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import {
-	type DayButton,
-	DayPicker,
-	getDefaultClassNames,
-} from "react-day-picker";
-import { ptBR } from "date-fns/locale";
-import { ChevronLeftIcon, ChevronRightIcon, CalendarDays } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn, getInitials } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 import type { CalendarMember, GroupCalendarData } from "@/lib/server-utils";
 
 interface GroupCalendarTabProps {
@@ -19,222 +10,95 @@ interface GroupCalendarTabProps {
 	endDate: Date;
 }
 
-function formatDateKey(date: Date): string {
-	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-}
+export function GroupCalendarTab({ calendarData }: GroupCalendarTabProps) {
+	const days = Object.entries(calendarData)
+		.filter(([, members]) => members.length > 0)
+		.sort(([a], [b]) => b.localeCompare(a));
 
-export function GroupCalendarTab({
-	calendarData,
-	startDate,
-	endDate,
-}: GroupCalendarTabProps) {
-	const [selectedDay, setSelectedDay] = useState<string | null>(null);
-	const selectedMembers = selectedDay ? (calendarData[selectedDay] ?? []) : [];
+	if (days.length === 0) {
+		return (
+			<div className="flex flex-col items-center justify-center py-16 text-center">
+				<p className="text-sm text-muted-foreground">
+					Nenhum treino registrado ainda.
+				</p>
+			</div>
+		);
+	}
 
-	const defaultClassNames = getDefaultClassNames();
-
-	return (
-		<div className="flex flex-col gap-3">
-			<DayPicker
-				locale={ptBR}
-				fromDate={new Date(startDate)}
-				toDate={new Date(endDate)}
-				defaultMonth={new Date()}
-				showOutsideDays={false}
-				className={cn(
-					"bg-transparent group/calendar p-0 w-full",
-					"rtl:**:[.rdp-button\\_next>svg]:rotate-180",
-					"rtl:**:[.rdp-button\\_previous>svg]:rotate-180",
-				)}
-				classNames={{
-					root: cn("w-full", defaultClassNames.root),
-					months: cn(
-						"flex gap-4 flex-col relative",
-						defaultClassNames.months,
-					),
-					month: cn("flex flex-col w-full gap-4", defaultClassNames.month),
-					nav: cn(
-						"flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
-						defaultClassNames.nav,
-					),
-					button_previous: cn(
-						buttonVariants({ variant: "ghost" }),
-						"size-9 p-0 select-none",
-						defaultClassNames.button_previous,
-					),
-					button_next: cn(
-						buttonVariants({ variant: "ghost" }),
-						"size-9 p-0 select-none",
-						defaultClassNames.button_next,
-					),
-					month_caption: cn(
-						"flex items-center justify-center h-9 w-full px-9",
-						defaultClassNames.month_caption,
-					),
-					caption_label: cn(
-						"select-none font-medium text-sm capitalize",
-						defaultClassNames.caption_label,
-					),
-					weekdays: cn("flex", defaultClassNames.weekdays),
-					weekday: cn(
-						"text-muted-foreground rounded-md flex-1 font-medium text-xs py-2 whitespace-nowrap select-none",
-						defaultClassNames.weekday,
-					),
-					week: cn("flex w-full mt-1", defaultClassNames.week),
-					day: cn(
-						"relative w-full h-full p-0 text-center select-none",
-						defaultClassNames.day,
-					),
-					outside: cn(
-						"text-muted-foreground opacity-30",
-						defaultClassNames.outside,
-					),
-					disabled: cn(
-						"text-muted-foreground opacity-30",
-						defaultClassNames.disabled,
-					),
-					hidden: cn("invisible", defaultClassNames.hidden),
-				}}
-				components={{
-					Root: ({ className, rootRef, ...props }) => (
-						<div
-							data-slot="calendar"
-							ref={rootRef}
-							className={cn(className)}
-							{...props}
-						/>
-					),
-					Chevron: ({ className, orientation, ...props }) => {
-						if (orientation === "left") {
-							return (
-								<ChevronLeftIcon
-									className={cn("size-4", className)}
-									{...props}
-								/>
-							);
-						}
-						return (
-							<ChevronRightIcon
-								className={cn("size-4", className)}
-								{...props}
-							/>
-						);
-					},
-					DayButton: (dayButtonProps) => (
-						<GroupCalendarDayButton
-							{...dayButtonProps}
-							calendarData={calendarData}
-							selectedDay={selectedDay}
-							onSelectDay={setSelectedDay}
-						/>
-					),
-				}}
-			/>
-
-			{/* Selected day detail */}
-			{selectedDay && (
-				<div className="flex flex-col gap-2 rounded-xl border border-border px-4 py-3">
-					<p className="text-xs font-medium text-muted-foreground">
-						{new Date(selectedDay + "T12:00:00").toLocaleDateString("pt-BR", {
-							weekday: "long",
-							day: "numeric",
-							month: "long",
-						})}
-					</p>
-					{selectedMembers.length === 0 ? (
-						<p className="text-sm text-muted-foreground">
-							Ninguém treinou neste dia
-						</p>
-					) : (
-						<div className="flex flex-col gap-1.5">
-							{selectedMembers.map((member) => (
-								<div
-									key={member.id}
-									className="flex items-center gap-2"
-								>
-									<Avatar className="size-6 shrink-0">
-										{member.avatarUrl && (
-											<AvatarImage
-												src={member.avatarUrl}
-												alt={member.name}
-											/>
-										)}
-										<AvatarFallback className="text-[10px] bg-neutral-800">
-											{getInitials(member.name)}
-										</AvatarFallback>
-									</Avatar>
-									<span className="text-sm">{member.name}</span>
-								</div>
-							))}
-						</div>
-					)}
-				</div>
-			)}
-		</div>
-	);
-}
-
-function GroupCalendarDayButton({
-	className,
-	day,
-	modifiers,
-	calendarData,
-	selectedDay,
-	onSelectDay,
-	...props
-}: React.ComponentProps<typeof DayButton> & {
-	calendarData: GroupCalendarData;
-	selectedDay: string | null;
-	onSelectDay: (day: string | null) => void;
-}) {
-	const defaultClassNames = getDefaultClassNames();
-	const dateKey = formatDateKey(day.date);
-	const members = calendarData[dateKey] ?? [];
-	const isSelected = selectedDay === dateKey;
-
-	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault();
-		onSelectDay(isSelected ? null : dateKey);
-	};
+	// Group by month
+	const months: { key: string; label: string; days: [string, CalendarMember[]][] }[] = [];
+	for (const [dateKey, members] of days) {
+		const monthKey = dateKey.slice(0, 7);
+		const last = months[months.length - 1];
+		if (last && last.key === monthKey) {
+			last.days.push([dateKey, members]);
+		} else {
+			const label = new Date(`${monthKey}-01T12:00:00`).toLocaleDateString("pt-BR", {
+				month: "long",
+				year: "numeric",
+			});
+			months.push({ key: monthKey, label, days: [[dateKey, members]] });
+		}
+	}
 
 	return (
-		<Button
-			variant="ghost"
-			size="icon"
-			data-day={day.date.toLocaleDateString()}
-			className={cn(
-				"relative flex aspect-square size-auto w-full min-h-11 flex-col items-center justify-start gap-0.5 pt-1.5 leading-none font-normal p-1 rounded-lg transition-colors",
-				isSelected && "bg-white/10 ring-1 ring-vibrant-green/40",
-				members.length > 0 && !isSelected && "hover:bg-white/5",
-				defaultClassNames.day,
-				className,
-			)}
-			onClick={handleClick}
-			{...props}
-		>
-			<span className="text-xs">{props.children}</span>
-			{members.length > 0 && (
-				<div className="flex items-center justify-center gap-px mt-0.5">
-					{members.slice(0, 3).map((member) => (
-						<Avatar
-							key={member.id}
-							className="size-4 -ml-[2px] first:ml-0 ring-1 ring-background"
-						>
-							{member.avatarUrl && (
-								<AvatarImage src={member.avatarUrl} alt={member.name} />
-							)}
-							<AvatarFallback className="text-[6px] bg-vibrant-green/20 text-vibrant-green">
-								{getInitials(member.name)}
-							</AvatarFallback>
-						</Avatar>
-					))}
-					{members.length > 3 && (
-						<span className="text-[7px] font-medium text-muted-foreground ml-px">
-							+{members.length - 3}
+		<div className="flex flex-col gap-6">
+			{months.map((month) => (
+				<div key={month.key} className="relative flex flex-col gap-0">
+					{/* Gradient timeline line */}
+					<div className="absolute left-[7px] top-6 bottom-0 w-px bg-linear-to-b from-vibrant-green/60 via-vibrant-green/15 to-transparent" />
+
+					{/* Month header */}
+					<div className="mb-3 pl-6">
+						<span className="text-[10px] font-bold uppercase tracking-[0.15em] text-vibrant-green/70">
+							{month.label}
 						</span>
-					)}
+					</div>
+
+					<div className="flex flex-col gap-3">
+						{month.days.map(([dateKey, members]) => {
+							const dateLabel = new Date(`${dateKey}T12:00:00`).toLocaleDateString(
+								"pt-BR",
+								{ weekday: "short", day: "numeric", month: "short" },
+							);
+							return (
+								<div key={dateKey} className="flex items-start gap-3">
+									{/* Timeline dot */}
+									<div className="mt-2.5 size-[7px] shrink-0 rounded-full bg-vibrant-green/80 ring-2 ring-vibrant-green/20" />
+
+									{/* Day card */}
+									<div className="flex-1 rounded-xl border border-vibrant-green/10 bg-vibrant-green/[0.03] px-3 py-2.5 flex flex-col gap-2">
+										<p className="text-xs font-semibold text-muted-foreground capitalize">
+											{dateLabel}
+										</p>
+										<div className="flex flex-wrap gap-x-3 gap-y-2">
+											{members.map((member) => (
+												<div
+													key={member.id}
+													className="flex items-center gap-1.5"
+												>
+													<Avatar className="size-6 shrink-0">
+														{member.avatarUrl && (
+															<AvatarImage
+																src={member.avatarUrl}
+																alt={member.name}
+															/>
+														)}
+														<AvatarFallback className="text-[9px] bg-vibrant-green/20 text-vibrant-green">
+															{getInitials(member.name)}
+														</AvatarFallback>
+													</Avatar>
+													<span className="text-xs text-foreground/80">{member.name}</span>
+												</div>
+											))}
+										</div>
+									</div>
+								</div>
+							);
+						})}
+					</div>
 				</div>
-			)}
-		</Button>
+			))}
+		</div>
 	);
 }

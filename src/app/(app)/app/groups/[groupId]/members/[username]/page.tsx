@@ -133,6 +133,14 @@ export default async function MemberProfilePage({ params }: Props) {
 						label="Longest streak"
 						value={`${stats.longestStreak}d`}
 					/>
+					<div className="col-span-2">
+						<StatCard
+							icon={Trophy}
+							label="Goal streak"
+							value={`${stats.goalStreak.currentGoalStreak}w`}
+							accent={stats.goalStreak.currentGoalStreak > 0}
+						/>
+					</div>
 				</div>
 			</div>
 
