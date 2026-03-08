@@ -672,6 +672,97 @@ export const getGroupStreakLeaderboard = cache(async (groupId: string) => {
 	return streakLeaderboard;
 });
 
+export const getGroupActivityFeed = cache(
+	async (groupId: string, limit = 30) => {
+		const session = await auth.api.getSession({ headers: await headers() });
+		if (!session) redirect("/auth/sign-in");
+
+		const group = await prisma.group.findUnique({
+			where: { id: groupId },
+			include: { members: { select: { userId: true } } },
+		});
+		if (!group) return [];
+
+		const memberIds = group.members.map((m) => m.userId);
+
+		const [workouts, milestoneNotifications] = await Promise.all([
+			prisma.gymCheck.findMany({
+				where: {
+					userId: { in: memberIds },
+					date: { gte: group.startDate },
+				},
+				include: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							avatarUrl: true,
+						},
+					},
+					preset: { select: { label: true, color: true } },
+				},
+				orderBy: { createdAt: "desc" },
+				take: limit,
+			}),
+			prisma.groupNotification.findMany({
+				where: {
+					groupId,
+					type: { in: ["streak_milestone", "count_milestone"] },
+				},
+				orderBy: { createdAt: "desc" },
+				take: limit,
+			}),
+		]);
+
+		type FeedItem =
+			| {
+					kind: "workout";
+					id: string;
+					createdAt: Date;
+					user: {
+						id: string;
+						name: string;
+						username: string | null;
+						avatarUrl: string | null;
+					};
+					description: string;
+					presetLabel: string | null;
+					presetColor: string | null;
+			  }
+			| {
+					kind: "milestone";
+					id: string;
+					createdAt: Date;
+					message: string;
+					type: string;
+			  };
+
+		const feed: FeedItem[] = [
+			...workouts.map((w) => ({
+				kind: "workout" as const,
+				id: w.id,
+				createdAt: w.createdAt,
+				user: w.user,
+				description: w.description,
+				presetLabel: w.preset?.label ?? null,
+				presetColor: w.preset?.color ?? null,
+			})),
+			...milestoneNotifications.map((n) => ({
+				kind: "milestone" as const,
+				id: n.id,
+				createdAt: n.createdAt,
+				message: n.message,
+				type: n.type,
+			})),
+		];
+
+		feed.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+		return feed.slice(0, limit);
+	},
+);
+
 export const getGroupStreak = cache(async (groupId: string) => {
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session) redirect("/auth/sign-in");

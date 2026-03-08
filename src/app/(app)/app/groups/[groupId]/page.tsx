@@ -3,6 +3,7 @@ import {
 	getGroupStreak,
 	getGroupWeeklyLeaderboard,
 	getGroupStreakLeaderboard,
+	getGroupActivityFeed,
 } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
@@ -27,12 +28,14 @@ interface Props {
 
 export default async function GroupPage({ params }: Props) {
 	const { groupId } = await params;
-	const [data, groupStreak, weeklyData, streakLeaderboard] = await Promise.all([
-		getGroupWithMembers(groupId),
-		getGroupStreak(groupId),
-		getGroupWeeklyLeaderboard(groupId),
-		getGroupStreakLeaderboard(groupId),
-	]);
+	const [data, groupStreak, weeklyData, streakLeaderboard, activityFeed] =
+		await Promise.all([
+			getGroupWithMembers(groupId),
+			getGroupStreak(groupId),
+			getGroupWeeklyLeaderboard(groupId),
+			getGroupStreakLeaderboard(groupId),
+			getGroupActivityFeed(groupId),
+		]);
 
 	if (!data) notFound();
 
@@ -144,7 +147,7 @@ export default async function GroupPage({ params }: Props) {
 				</TabsContent>
 
 				<TabsContent value="feed">
-					<ActivityFeedTab />
+					<ActivityFeedTab feed={activityFeed} />
 				</TabsContent>
 
 				<TabsContent value="calendar">
