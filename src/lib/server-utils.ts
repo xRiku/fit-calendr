@@ -530,6 +530,148 @@ export async function getGroupWithMembers(groupId: string) {
 	};
 }
 
+export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const group = await prisma.group.findUnique({
+		where: { id: groupId },
+		include: {
+			members: {
+				include: {
+					user: {
+						select: { id: true, name: true, username: true, avatarUrl: true },
+					},
+				},
+			},
+		},
+	});
+	if (!group) return { weeklyLeaderboard: [], lastWeekMvp: null };
+
+	const memberIds = group.members.map((m) => m.userId);
+
+	// Current week: Monday to Sunday
+	const now = new Date();
+	const day = now.getDay();
+	const diff = day === 0 ? -6 : 1 - day;
+	const monday = new Date(now);
+	monday.setDate(now.getDate() + diff);
+	monday.setHours(0, 0, 0, 0);
+	const sunday = new Date(monday);
+	sunday.setDate(monday.getDate() + 6);
+	sunday.setHours(23, 59, 59, 999);
+
+	// Last week
+	const lastMonday = new Date(monday);
+	lastMonday.setDate(monday.getDate() - 7);
+	const lastSunday = new Date(monday);
+	lastSunday.setDate(monday.getDate() - 1);
+	lastSunday.setHours(23, 59, 59, 999);
+
+	const [weeklyCounts, lastWeekCounts] = await Promise.all([
+		prisma.gymCheck.groupBy({
+			by: ["userId"],
+			where: {
+				userId: { in: memberIds },
+				date: { gte: monday, lte: sunday },
+			},
+			_count: { id: true },
+		}),
+		prisma.gymCheck.groupBy({
+			by: ["userId"],
+			where: {
+				userId: { in: memberIds },
+				date: { gte: lastMonday, lte: lastSunday },
+			},
+			_count: { id: true },
+		}),
+	]);
+
+	const weeklyCountMap = new Map(
+		weeklyCounts.map((w) => [w.userId, w._count.id]),
+	);
+
+	const weeklyLeaderboard = group.members
+		.map((m) => ({
+			...m,
+			workoutCount: weeklyCountMap.get(m.userId) ?? 0,
+		}))
+		.sort((a, b) => b.workoutCount - a.workoutCount);
+
+	// Last week MVP
+	let lastWeekMvp: {
+		user: { id: string; name: string; username: string | null; avatarUrl: string | null };
+		workoutCount: number;
+	} | null = null;
+
+	if (lastWeekCounts.length > 0) {
+		const topLastWeek = lastWeekCounts.sort(
+			(a, b) => b._count.id - a._count.id,
+		)[0];
+		const mvpMember = group.members.find(
+			(m) => m.userId === topLastWeek.userId,
+		);
+		if (mvpMember) {
+			lastWeekMvp = {
+				user: mvpMember.user,
+				workoutCount: topLastWeek._count.id,
+			};
+		}
+	}
+
+	return { weeklyLeaderboard, lastWeekMvp };
+});
+
+export const getGroupStreakLeaderboard = cache(async (groupId: string) => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const group = await prisma.group.findUnique({
+		where: { id: groupId },
+		include: {
+			members: {
+				include: {
+					user: {
+						select: { id: true, name: true, username: true, avatarUrl: true },
+					},
+				},
+			},
+		},
+	});
+	if (!group) return [];
+
+	// Fetch workout dates for all members (last 400 days for perf)
+	const cutoff = new Date();
+	cutoff.setDate(cutoff.getDate() - 400);
+
+	const workouts = await prisma.gymCheck.findMany({
+		where: {
+			userId: { in: group.members.map((m) => m.userId) },
+			date: { gte: cutoff },
+		},
+		select: { userId: true, date: true },
+		orderBy: { date: "asc" },
+	});
+
+	// Group dates by userId
+	const datesByUser = new Map<string, Date[]>();
+	for (const w of workouts) {
+		const dates = datesByUser.get(w.userId) ?? [];
+		dates.push(w.date);
+		datesByUser.set(w.userId, dates);
+	}
+
+	const streakLeaderboard = group.members
+		.map((m) => {
+			const dates = datesByUser.get(m.userId) ?? [];
+			const { currentStreak, longestStreak } = calculateStreak(dates);
+			return { ...m, currentStreak, longestStreak };
+		})
+		.sort((a, b) => b.currentStreak - a.currentStreak);
+
+	return streakLeaderboard;
+});
+
 export const getGroupStreak = cache(async (groupId: string) => {
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session) redirect("/auth/sign-in");

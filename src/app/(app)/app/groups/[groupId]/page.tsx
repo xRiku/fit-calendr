@@ -1,4 +1,9 @@
-import { getGroupWithMembers, getGroupStreak } from "@/lib/server-utils";
+import {
+	getGroupWithMembers,
+	getGroupStreak,
+	getGroupWeeklyLeaderboard,
+	getGroupStreakLeaderboard,
+} from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -22,9 +27,11 @@ interface Props {
 
 export default async function GroupPage({ params }: Props) {
 	const { groupId } = await params;
-	const [data, groupStreak] = await Promise.all([
+	const [data, groupStreak, weeklyData, streakLeaderboard] = await Promise.all([
 		getGroupWithMembers(groupId),
 		getGroupStreak(groupId),
+		getGroupWeeklyLeaderboard(groupId),
+		getGroupStreakLeaderboard(groupId),
 	]);
 
 	if (!data) notFound();
@@ -122,6 +129,9 @@ export default async function GroupPage({ params }: Props) {
 						<LeaderboardTab
 							groupId={group.id}
 							leaderboard={leaderboard}
+							weeklyLeaderboard={weeklyData.weeklyLeaderboard}
+							streakLeaderboard={streakLeaderboard}
+							lastWeekMvp={weeklyData.lastWeekMvp}
 							currentUserId={currentUserId}
 						/>
 
