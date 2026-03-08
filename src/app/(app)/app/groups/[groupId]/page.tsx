@@ -1,15 +1,18 @@
-import { getGroupWithMembers } from "@/lib/server-utils";
+import { getGroupWithMembers, getGroupStreak } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Trophy, Users, CalendarDays, Medal, ChevronLeft } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Trophy, Users, CalendarDays, ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { GroupSettingsDialog } from "./group-settings-dialog";
 import { LeaveGroupButton } from "./leave-group-button";
 import { CopyInviteButton } from "./copy-invite-button";
-import { cn, getInitials } from "@/lib/utils";
+import { GroupStreakBanner } from "./group-streak-banner";
+import { GroupTabs, TabsContent } from "./group-tabs";
+import { LeaderboardTab } from "./leaderboard-tab";
+import { ActivityFeedTab } from "./activity-feed-tab";
+import { GroupCalendarTab } from "./group-calendar-tab";
 import { env } from "@/env";
 import Link from "next/link";
 
@@ -17,20 +20,12 @@ interface Props {
 	params: Promise<{ groupId: string }>;
 }
 
-function RankIcon({ rank }: { rank: number }) {
-	if (rank === 1) return <Trophy className="size-4 text-yellow-400" />;
-	if (rank === 2) return <Medal className="size-4 text-neutral-400" />;
-	if (rank === 3) return <Medal className="size-4 text-amber-600" />;
-	return (
-		<span className="text-sm font-medium text-muted-foreground w-4 text-center">
-			{rank}
-		</span>
-	);
-}
-
 export default async function GroupPage({ params }: Props) {
 	const { groupId } = await params;
-	const data = await getGroupWithMembers(groupId);
+	const [data, groupStreak] = await Promise.all([
+		getGroupWithMembers(groupId),
+		getGroupStreak(groupId),
+	]);
 
 	if (!data) notFound();
 
@@ -50,6 +45,7 @@ export default async function GroupPage({ params }: Props) {
 				<ChevronLeft className="size-4" />
 				Grupos
 			</Link>
+
 			{/* Header */}
 			<div className="flex flex-col gap-3">
 				<div className="flex items-start justify-between gap-4">
@@ -112,93 +108,39 @@ export default async function GroupPage({ params }: Props) {
 				)}
 			</div>
 
+			<GroupStreakBanner
+				currentGroupStreak={groupStreak.currentGroupStreak}
+				longestGroupStreak={groupStreak.longestGroupStreak}
+			/>
+
 			<Separator />
 
-			{/* Leaderboard */}
-			<div className="flex flex-col gap-3">
-				<h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-					Ranking
-				</h2>
+			{/* Tabbed content */}
+			<GroupTabs>
+				<TabsContent value="ranking">
+					<div className="flex flex-col gap-3">
+						<LeaderboardTab
+							groupId={group.id}
+							leaderboard={leaderboard}
+							currentUserId={currentUserId}
+						/>
 
-				{leaderboard.length === 0 ? (
-					<p className="text-sm text-muted-foreground">Nenhum membro ainda.</p>
-				) : (
-					<div className="flex flex-col gap-1">
-						{leaderboard.map((member, index) => {
-							const rank = index + 1;
-							const isCurrentUser = member.userId === currentUserId;
-
-							return (
-								<Link
-									key={member.userId}
-									href={`/app/groups/${group.id}/members/${member.user.username ?? member.userId}`}
-									className={cn(
-										"flex items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/5",
-										isCurrentUser &&
-										"bg-vibrant-green/5 border border-vibrant-green/20",
-									)}
-								>
-									<div className="flex items-center justify-center w-5 shrink-0">
-										<RankIcon rank={rank} />
-									</div>
-
-									<Avatar className="size-8 shrink-0">
-										{member.user.avatarUrl && (
-											<AvatarImage
-												src={member.user.avatarUrl}
-												alt={member.user.name}
-											/>
-										)}
-										<AvatarFallback className="text-xs bg-neutral-800">
-											{getInitials(member.user.name)}
-										</AvatarFallback>
-									</Avatar>
-
-									<div className="flex-1 min-w-0">
-										<div className="flex items-center gap-2">
-											<span
-												className={cn(
-													"font-medium text-sm truncate",
-													isCurrentUser && "text-vibrant-green",
-												)}
-											>
-												{member.user.name}
-											</span>
-											{isCurrentUser && (
-												<span className="text-[10px] text-muted-foreground shrink-0">
-													você
-												</span>
-											)}
-											{member.role === "owner" && (
-												<span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground border border-border rounded px-1 py-0.5 shrink-0">
-													Dono
-												</span>
-											)}
-										</div>
-										{member.user.username && (
-											<p className="text-xs text-muted-foreground">
-												@{member.user.username}
-											</p>
-										)}
-									</div>
-
-									<div className="text-right shrink-0">
-										<p className="text-sm font-semibold">
-											{member.workoutCount}
-										</p>
-										<p className="text-xs text-muted-foreground">treinos</p>
-									</div>
-								</Link>
-							);
-						})}
+						<div className="text-xs text-muted-foreground text-center pb-4">
+							Treinos registrados entre{" "}
+							{format(new Date(group.startDate), "d 'de' MMM", { locale: ptBR })} –{" "}
+							{format(new Date(group.endDate), "d 'de' MMM, yyyy", { locale: ptBR })}
+						</div>
 					</div>
-				)}
-			</div>
+				</TabsContent>
 
-			<div className="text-xs text-muted-foreground text-center pb-4">
-				Treinos registrados entre {format(new Date(group.startDate), "d 'de' MMM", { locale: ptBR })} –{" "}
-				{format(new Date(group.endDate), "d 'de' MMM, yyyy", { locale: ptBR })}
-			</div>
+				<TabsContent value="feed">
+					<ActivityFeedTab />
+				</TabsContent>
+
+				<TabsContent value="calendar">
+					<GroupCalendarTab />
+				</TabsContent>
+			</GroupTabs>
 		</div>
 	);
 }

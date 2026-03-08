@@ -154,7 +154,7 @@ export const getAvailableYears = cache(async (): Promise<number[]> => {
 	return Array.from(yearsSet).sort((a, b) => b - a);
 });
 
-function calculateStreak(dates: Date[]): {
+export function calculateStreak(dates: Date[]): {
 	currentStreak: number;
 	longestStreak: number;
 } {
@@ -529,3 +529,46 @@ export async function getGroupWithMembers(groupId: string) {
 		currentUserRole: membership.role,
 	};
 }
+
+export const getGroupStreak = cache(async (groupId: string) => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const group = await prisma.group.findUnique({
+		where: { id: groupId },
+		include: { members: { select: { userId: true } } },
+	});
+	if (!group) return { currentGroupStreak: 0, longestGroupStreak: 0 };
+
+	const memberIds = group.members.map((m) => m.userId);
+	const rangeEnd =
+		new Date(group.endDate) < new Date() ? group.endDate : new Date();
+
+	const workouts = await prisma.gymCheck.findMany({
+		where: {
+			userId: { in: memberIds },
+			date: { gte: group.startDate, lte: rangeEnd },
+		},
+		select: { date: true },
+		orderBy: { date: "asc" },
+	});
+
+	// Collect unique dates where at least one member trained
+	const uniqueDatesSet = new Set<string>();
+	for (const w of workouts) {
+		const d = new Date(w.date);
+		d.setHours(0, 0, 0, 0);
+		uniqueDatesSet.add(d.toISOString());
+	}
+
+	const uniqueDates = Array.from(uniqueDatesSet)
+		.map((iso) => new Date(iso))
+		.sort((a, b) => a.getTime() - b.getTime());
+
+	const { currentStreak, longestStreak } = calculateStreak(uniqueDates);
+
+	return {
+		currentGroupStreak: currentStreak,
+		longestGroupStreak: longestStreak,
+	};
+});
