@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 // import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/db";
+import { checkAndCreateMilestoneNotifications } from "@/lib/milestone-utils";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -225,6 +226,7 @@ export async function updateWorkoutsForDay({
 	}
 
 	// Update existing workouts and create new ones
+	let hasNewCreates = false;
 	const results = await Promise.all(
 		newWorkouts.map(async (workout) => {
 			if (workout.id) {
@@ -243,6 +245,7 @@ export async function updateWorkoutsForDay({
 				}
 			}
 			// Create new workout
+			hasNewCreates = true;
 			return prisma.gymCheck.create({
 				data: {
 					description: workout.label,
@@ -253,6 +256,11 @@ export async function updateWorkoutsForDay({
 			});
 		}),
 	);
+
+	// Fire-and-forget milestone check only if new workouts were created
+	if (hasNewCreates) {
+		checkAndCreateMilestoneNotifications(userId).catch(() => {});
+	}
 
 	return results;
 }
@@ -553,6 +561,9 @@ export async function quickToggleWorkout({
 				user: { connect: { id: session.user.id } },
 			},
 		});
+
+		// Fire-and-forget milestone check
+		checkAndCreateMilestoneNotifications(session.user.id).catch(() => {});
 	}
 
 	revalidatePath("/app/calendar", "page");

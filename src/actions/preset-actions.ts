@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
+import { checkAndCreateMilestoneNotifications } from "@/lib/milestone-utils";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -160,6 +161,9 @@ export async function createWorkoutWithPresets({
 			}),
 		),
 	);
+
+	// Fire-and-forget milestone check
+	checkAndCreateMilestoneNotifications(session.user.id).catch(() => {});
 
 	revalidatePath("/app/calendar", "page");
 	return createdWorkouts;
