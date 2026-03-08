@@ -4,6 +4,7 @@ import {
 	getGroupWeeklyLeaderboard,
 	getGroupStreakLeaderboard,
 	getGroupActivityFeed,
+	getGroupCalendarData,
 } from "@/lib/server-utils";
 import { notFound } from "next/navigation";
 import { isPast, formatDistanceToNow, format } from "date-fns";
@@ -28,14 +29,21 @@ interface Props {
 
 export default async function GroupPage({ params }: Props) {
 	const { groupId } = await params;
-	const [data, groupStreak, weeklyData, streakLeaderboard, activityFeed] =
-		await Promise.all([
-			getGroupWithMembers(groupId),
-			getGroupStreak(groupId),
-			getGroupWeeklyLeaderboard(groupId),
-			getGroupStreakLeaderboard(groupId),
-			getGroupActivityFeed(groupId),
-		]);
+	const [
+		data,
+		groupStreak,
+		weeklyData,
+		streakLeaderboard,
+		activityFeed,
+		calendarResult,
+	] = await Promise.all([
+		getGroupWithMembers(groupId),
+		getGroupStreak(groupId),
+		getGroupWeeklyLeaderboard(groupId),
+		getGroupStreakLeaderboard(groupId),
+		getGroupActivityFeed(groupId),
+		getGroupCalendarData(groupId),
+	]);
 
 	if (!data) notFound();
 
@@ -151,7 +159,11 @@ export default async function GroupPage({ params }: Props) {
 				</TabsContent>
 
 				<TabsContent value="calendar">
-					<GroupCalendarTab />
+					<GroupCalendarTab
+						calendarData={calendarResult.calendarData}
+						startDate={calendarResult.startDate}
+						endDate={calendarResult.endDate}
+					/>
 				</TabsContent>
 			</GroupTabs>
 		</div>

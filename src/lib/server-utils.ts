@@ -763,6 +763,57 @@ export const getGroupActivityFeed = cache(
 	},
 );
 
+export type CalendarMember = {
+	id: string;
+	name: string;
+	username: string | null;
+	avatarUrl: string | null;
+};
+
+export type GroupCalendarData = Record<string, CalendarMember[]>;
+
+export const getGroupCalendarData = cache(async (groupId: string) => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session) redirect("/auth/sign-in");
+
+	const group = await prisma.group.findUnique({
+		where: { id: groupId },
+		include: { members: { select: { userId: true } } },
+	});
+	if (!group)
+		return { calendarData: {} as GroupCalendarData, startDate: new Date(), endDate: new Date() };
+
+	const memberIds = group.members.map((m) => m.userId);
+	const rangeEnd =
+		new Date(group.endDate) < new Date() ? group.endDate : new Date();
+
+	const workouts = await prisma.gymCheck.findMany({
+		where: {
+			userId: { in: memberIds },
+			date: { gte: group.startDate, lte: rangeEnd },
+		},
+		include: {
+			user: {
+				select: { id: true, name: true, username: true, avatarUrl: true },
+			},
+		},
+		orderBy: { date: "asc" },
+	});
+
+	const calendarData: GroupCalendarData = {};
+	for (const w of workouts) {
+		const d = new Date(w.date);
+		const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+		if (!calendarData[key]) calendarData[key] = [];
+		// Avoid duplicate users on the same day
+		if (!calendarData[key].some((m) => m.id === w.user.id)) {
+			calendarData[key].push(w.user);
+		}
+	}
+
+	return { calendarData, startDate: group.startDate, endDate: group.endDate };
+});
+
 export const getGroupStreak = cache(async (groupId: string) => {
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session) redirect("/auth/sign-in");
