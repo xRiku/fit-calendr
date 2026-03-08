@@ -604,7 +604,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 		workoutCount: number;
 	} | null = null;
 
-	if (lastWeekCounts.length > 0) {
+	if (lastWeekCounts.length > 0 && group.startDate <= lastSunday) {
 		const topLastWeek = lastWeekCounts.sort(
 			(a, b) => b._count.id - a._count.id,
 		)[0];
