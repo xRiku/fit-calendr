@@ -658,7 +658,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 			},
 		},
 	});
-	if (!group) return { weeklyLeaderboard: [], lastWeekMvp: null };
+	if (!group) return { weeklyLeaderboard: [], lastWeekMvp: null, weekStart: new Date() };
 
 	const memberIds = group.members.map((m) => m.userId);
 
@@ -738,7 +738,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 		}
 	}
 
-	return { weeklyLeaderboard, lastWeekMvp };
+	return { weeklyLeaderboard, lastWeekMvp, weekStart: weeklyStart };
 });
 
 export const getGroupStreakLeaderboard = cache(async (groupId: string) => {

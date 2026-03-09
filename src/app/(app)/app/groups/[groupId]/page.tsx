@@ -149,6 +149,7 @@ export default async function GroupPage({ params }: Props) {
               weeklyLeaderboard={weeklyData.weeklyLeaderboard}
               streakLeaderboard={streakLeaderboard}
               lastWeekMvp={weeklyData.lastWeekMvp}
+              weekStart={weeklyData.weekStart}
               currentUserId={currentUserId}
             />
 

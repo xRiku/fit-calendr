@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Trophy, Medal, Flame } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -50,6 +52,7 @@ interface LeaderboardTabProps {
 	weeklyLeaderboard: WeeklyMember[];
 	streakLeaderboard: StreakMember[];
 	lastWeekMvp: LastWeekMvp | null;
+	weekStart: Date;
 	currentUserId: string;
 }
 
@@ -137,6 +140,7 @@ export function LeaderboardTab({
 	weeklyLeaderboard,
 	streakLeaderboard,
 	lastWeekMvp,
+	weekStart,
 	currentUserId,
 }: LeaderboardTabProps) {
 	const [view, setView] = useState("total");
@@ -178,6 +182,7 @@ export function LeaderboardTab({
 					weeklyLeaderboard={weeklyLeaderboard}
 					lastWeekMvp={lastWeekMvp}
 					currentUserId={currentUserId}
+				weekStart={weekStart}
 				/>
 			)}
 
@@ -232,15 +237,22 @@ function WeeklyView({
 	groupId,
 	weeklyLeaderboard,
 	lastWeekMvp,
+	weekStart,
 	currentUserId,
 }: {
 	groupId: string;
 	weeklyLeaderboard: WeeklyMember[];
 	lastWeekMvp: LastWeekMvp | null;
+	weekStart: Date;
 	currentUserId: string;
 }) {
 	return (
 		<div className="flex flex-col gap-3">
+			<p className="text-xs text-muted-foreground">
+				Última atualização{" "}
+				{format(weekStart, "d 'de' MMMM yyyy", { locale: ptBR })}
+			</p>
+
 			{lastWeekMvp && (
 				<div className="flex items-center gap-3 rounded-xl border border-yellow-400/20 bg-yellow-400/5 px-4 py-3">
 					<Trophy className="size-4 text-yellow-400 shrink-0" />
