@@ -674,12 +674,15 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 	lastSunday.setDate(monday.getDate() - 1);
 	lastSunday.setHours(23, 59, 59, 999);
 
+	const weeklyStart = monday > group.startDate ? monday : group.startDate;
+	const lastWeekStart = lastMonday > group.startDate ? lastMonday : group.startDate;
+
 	const [weeklyCounts, lastWeekCounts] = await Promise.all([
 		prisma.gymCheck.groupBy({
 			by: ["userId"],
 			where: {
 				userId: { in: memberIds },
-				date: { gte: monday, lte: sunday },
+				date: { gte: weeklyStart, lte: sunday },
 			},
 			_count: { id: true },
 		}),
@@ -687,7 +690,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 			by: ["userId"],
 			where: {
 				userId: { in: memberIds },
-				date: { gte: lastMonday, lte: lastSunday },
+				date: { gte: lastWeekStart, lte: lastSunday },
 			},
 			_count: { id: true },
 		}),
