@@ -738,7 +738,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 		}
 	}
 
-	return { weeklyLeaderboard, lastWeekMvp, weekStart: weeklyStart };
+	return { weeklyLeaderboard, lastWeekMvp, weekStart: monday };
 });
 
 export const getGroupStreakLeaderboard = cache(async (groupId: string) => {
