@@ -503,6 +503,10 @@ export async function getMemberProfile(groupId: string, username: string) {
 	const rangeEnd =
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
+	// Normalize group start date to beginning of day (to include workouts from the join date)
+	const challengeStartDate = new Date(group.startDate);
+	challengeStartDate.setHours(0, 0, 0, 0);
+
 	// Parallel DB fetches
 	const [allWorkouts, challengeWorkouts, allTimeWorkouts, allTimeCheatMeals, targetUserGoals] = await Promise.all([
 		// All workouts for heatmap (current year)
@@ -521,7 +525,7 @@ export async function getMemberProfile(groupId: string, username: string) {
 		prisma.gymCheck.count({
 			where: {
 				userId: targetUserId,
-				date: { gte: group.startDate, lte: rangeEnd },
+				date: { gte: challengeStartDate, lte: rangeEnd },
 			},
 		}),
 		// All-time workouts for streak calculation
@@ -613,11 +617,13 @@ export async function getGroupWithMembers(groupId: string) {
 	// Count workouts per member within challenge period
 	const rangeEnd =
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
+	const challengeStartDate = new Date(group.startDate);
+	challengeStartDate.setHours(0, 0, 0, 0);
 	const workoutCounts = await prisma.gymCheck.groupBy({
 		by: ["userId"],
 		where: {
 			userId: { in: group.members.map((m) => m.userId) },
-			date: { gte: group.startDate, lte: rangeEnd },
+			date: { gte: challengeStartDate, lte: rangeEnd },
 		},
 		_count: { id: true },
 	});
@@ -656,6 +662,10 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 
 	const memberIds = group.members.map((m) => m.userId);
 
+	// Normalize group start date to beginning of day
+	const challengeStartDate = new Date(group.startDate);
+	challengeStartDate.setHours(0, 0, 0, 0);
+
 	// Current week: Monday to Sunday
 	const now = new Date();
 	const day = now.getDay();
@@ -674,8 +684,8 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 	lastSunday.setDate(monday.getDate() - 1);
 	lastSunday.setHours(23, 59, 59, 999);
 
-	const weeklyStart = monday > group.startDate ? monday : group.startDate;
-	const lastWeekStart = lastMonday > group.startDate ? lastMonday : group.startDate;
+	const weeklyStart = monday > challengeStartDate ? monday : challengeStartDate;
+	const lastWeekStart = lastMonday > challengeStartDate ? lastMonday : challengeStartDate;
 
 	const [weeklyCounts, lastWeekCounts] = await Promise.all([
 		prisma.gymCheck.groupBy({
@@ -713,7 +723,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 		workoutCount: number;
 	} | null = null;
 
-	if (lastWeekCounts.length > 0 && group.startDate <= lastSunday) {
+	if (lastWeekCounts.length > 0 && challengeStartDate <= lastSunday) {
 		const topLastWeek = lastWeekCounts.sort(
 			(a, b) => b._count.id - a._count.id,
 		)[0];
@@ -793,12 +803,14 @@ export const getGroupActivityFeed = cache(
 		if (!group) return [];
 
 		const memberIds = group.members.map((m) => m.userId);
+	const challengeStartDate = new Date(group.startDate);
+	challengeStartDate.setHours(0, 0, 0, 0);
 
 		const [workouts, milestoneNotifications] = await Promise.all([
 			prisma.gymCheck.findMany({
 				where: {
 					userId: { in: memberIds },
-					date: { gte: group.startDate },
+					date: { gte: challengeStartDate },
 				},
 				include: {
 					user: {
@@ -896,10 +908,12 @@ export const getGroupCalendarData = cache(async (groupId: string) => {
 	const rangeEnd =
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
+	const challengeStartDate = new Date(group.startDate);
+	challengeStartDate.setHours(0, 0, 0, 0);
 	const workouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: { in: memberIds },
-			date: { gte: group.startDate, lte: rangeEnd },
+			date: { gte: challengeStartDate, lte: rangeEnd },
 		},
 		include: {
 			user: {
@@ -937,10 +951,12 @@ export const getGroupStreak = cache(async (groupId: string) => {
 	const rangeEnd =
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
+	const challengeStartDate = new Date(group.startDate);
+	challengeStartDate.setHours(0, 0, 0, 0);
 	const workouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: { in: memberIds },
-			date: { gte: group.startDate, lte: rangeEnd },
+			date: { gte: challengeStartDate, lte: rangeEnd },
 		},
 		select: { date: true },
 		orderBy: { date: "asc" },
