@@ -90,7 +90,7 @@ export default async function CheckOptionThisYearCard({
 	year?: number;
 }) {
 	return (
-		<Card>
+		<Card className="hover:bg-white/5 hover:scale-[1.02] transition-all duration-300 border-white/5 group flex flex-col justify-between">
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 				<CardTitle className="text-base font-semibold">
 					{options[selected].title}

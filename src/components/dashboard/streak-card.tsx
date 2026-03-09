@@ -22,7 +22,7 @@ function BannerSkeleton() {
 					</div>
 				</CardContent>
 			</Card>
-			<Card>
+			<Card className="border-white/5 md:col-span-2">
 				<CardContent className="py-4">
 					<div className="flex items-center gap-4 w-full">
 						<Skeleton className="h-4 w-24" />
@@ -49,8 +49,8 @@ async function BannerContent({
 		const pct = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
 
 		return (
-			<div className="flex flex-col gap-4 w-full">
-				<Card>
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+				<Card className="hover:bg-white/5 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group border-white/5">
 					<CardContent className="py-4 flex justify-between items-center">
 						<div className="flex items-center gap-3">
 							<Flame className="size-5 text-vibrant-green" />
@@ -124,8 +124,8 @@ async function BannerContent({
 	const pct = budget > 0 ? Math.min((current / budget) * 100, 100) : 0;
 
 	return (
-		<div className="flex flex-col gap-4 w-full">
-			<Card>
+		<div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+			<Card className="hover:bg-white/5 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group border-white/5">
 				<CardContent className="py-4 flex justify-between items-center">
 					<div className="flex items-center gap-3">
 						<Flame className="size-5 text-vibrant-orange" />
@@ -137,7 +137,7 @@ async function BannerContent({
 				</CardContent>
 			</Card>
 
-			<Card>
+			<Card className="hover:bg-white/5 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group border-white/5 border-l-vibrant-orange/50 border-l-4">
 				<CardContent className="py-4 flex flex-col gap-3">
 					<div className="flex justify-between items-center">
 						<div className="flex items-center gap-3">

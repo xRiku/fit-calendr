@@ -67,7 +67,7 @@ export function YearlyHeatmap({
 	const fetchCallPromise = options[selected].fetchCall({ year });
 
 	return (
-		<Card>
+		<Card className="hover:bg-white/5 hover:scale-[1.01] transition-all duration-300 relative overflow-hidden group border-white/5 md:col-span-full">
 			<CardHeader>
 				<CardTitle>{options[selected].title}</CardTitle>
 				<CardDescription>{options[selected].description}</CardDescription>

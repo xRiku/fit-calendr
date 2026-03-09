@@ -51,23 +51,31 @@ export default async function DashboardPage({
 					<SelectYear availableYears={availableYears} selectedYear={year} />
 				)}
 			</div>
-			<div className="flex flex-col gap-4 group-has-data-pending:animate-pulse">
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 group-has-data-pending:animate-pulse">
 				{/* Overview Heatmap */}
-				<YearlyHeatmap selected={selected} year={year} />
+				<div className="lg:col-span-3">
+					<YearlyHeatmap selected={selected} year={year} />
+				</div>
 
-				{/* 2-Column Stat Cards */}
-				<div className="grid grid-cols-2 gap-4">
+				{/* Welcome/Streak Banner (taking 2 cols on lg) */}
+				<div className="lg:col-span-2 flex w-full">
+					<StreakCard selected={selected} />
+				</div>
+
+				{/* 2-Column Stat Cards (taking 1 col on lg, stacked) */}
+				<div className="lg:col-span-1 grid grid-cols-2 lg:grid-cols-1 gap-4">
 					<CheckOptionThisMonthCard selected={selected} year={year} />
 					<CheckOptionThisYearCard selected={selected} year={year} />
 				</div>
 
-				{/* Status banner */}
-				<StreakCard selected={selected} />
-
 				{/* Charts */}
-				<div className="flex flex-col sm:grid sm:grid-cols-9 gap-4">
-					<FrequencyChart selected={selected} year={year} />
-					<WeekdayChart selected={selected} year={year} />
+				<div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-9 gap-4">
+					<div className="sm:col-span-1 lg:col-span-5">
+						<FrequencyChart selected={selected} year={year} />
+					</div>
+					<div className="sm:col-span-1 lg:col-span-4">
+						<WeekdayChart selected={selected} year={year} />
+					</div>
 				</div>
 			</div>
 		</main>
