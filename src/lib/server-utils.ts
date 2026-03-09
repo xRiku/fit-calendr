@@ -738,7 +738,12 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 		}
 	}
 
-	return { weeklyLeaderboard, lastWeekMvp, weekStart: monday };
+	// Create display date at noon UTC so client displays correct day
+	// (filtering uses monday at 00:00 UTC)
+	const weekStartDisplay = new Date(monday);
+	weekStartDisplay.setHours(12, 0, 0, 0);
+
+	return { weeklyLeaderboard, lastWeekMvp, weekStart: weekStartDisplay };
 });
 
 export const getGroupStreakLeaderboard = cache(async (groupId: string) => {
