@@ -30,12 +30,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   updateGroupName,
   updateGroupEndDate,
   regenerateInviteCode,
   deleteGroup,
+  updateGroupAllowRetroactiveWorkouts,
 } from "@/actions/group-actions";
 import { toast } from "sonner";
 import { Settings, CalendarIcon, RefreshCw, Trash2 } from "lucide-react";
@@ -47,6 +49,7 @@ interface Props {
   currentName: string;
   currentEndDate: Date;
   isActive: boolean;
+  allowRetroactiveWorkouts: boolean;
 }
 
 export function GroupSettingsDialog({
@@ -54,12 +57,14 @@ export function GroupSettingsDialog({
   currentName,
   currentEndDate,
   isActive,
+  allowRetroactiveWorkouts,
 }: Props) {
   const router = useRouter();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [endDate, setEndDate] = useState<Date>(() => new Date(currentEndDate));
+  const [retroActive, setRetroActive] = useState(allowRetroactiveWorkouts);
 
   function handleOpenChange(value: boolean) {
     if (value) {
@@ -70,6 +75,7 @@ export function GroupSettingsDialog({
   }
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isPendingRetro, startRetroTransition] = useTransition();
 
   function handleSaveName() {
     if (name.trim() === currentName) return;
@@ -90,6 +96,17 @@ export function GroupSettingsDialog({
         toast.success("Data final atualizada — os membros foram notificados");
       } catch {
         toast.error("Falha ao atualizar data final");
+      }
+    });
+  }
+
+  function handleRetroactiveToggle(value: boolean) {
+    setRetroActive(value);
+    startRetroTransition(async () => {
+      const res = await updateGroupAllowRetroactiveWorkouts(groupId, value);
+      if (res.error) {
+        setRetroActive(!value);
+        toast.error(res.error);
       }
     });
   }
@@ -223,7 +240,21 @@ export function GroupSettingsDialog({
             </p>
           </div>
 
-          {isActive && (
+<div className="flex items-center justify-between gap-4 py-2">
+            <div>
+              <p className="text-sm font-medium">Treinos retroativos</p>
+              <p className="text-xs text-muted-foreground">
+                Permite contar treinos registrados após a data do treino
+              </p>
+            </div>
+            <Switch
+              checked={retroActive}
+              onCheckedChange={handleRetroactiveToggle}
+              disabled={isPendingRetro}
+            />
+          </div>
+
+                    {isActive && (
             <>
               <Separator />
               <div className="flex flex-col gap-2">

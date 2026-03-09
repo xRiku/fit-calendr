@@ -33,10 +33,12 @@ export async function createGroup({
 	name,
 	duration,
 	customEndDate,
+	allowRetroactiveWorkouts = true,
 }: {
 	name: string;
 	duration: GroupDuration;
 	customEndDate?: Date;
+	allowRetroactiveWorkouts?: boolean;
 }) {
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session) throw new Error("Não autorizado");
@@ -50,6 +52,7 @@ export async function createGroup({
 			ownerId: session.user.id,
 			endDate,
 			inviteCode,
+			allowRetroactiveWorkouts,
 			members: {
 				create: {
 					userId: session.user.id,
@@ -203,6 +206,26 @@ export async function markNotificationsRead(notificationIds: string[]) {
 		where: { id: { in: notificationIds }, userId: session.user.id },
 		data: { read: true },
 	});
+}
+
+export async function updateGroupAllowRetroactiveWorkouts(
+	groupId: string,
+	allowRetroactiveWorkouts: boolean,
+): Promise<{ error?: string }> {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session?.user?.id) return { error: "Não autorizado" };
+
+	const group = await prisma.group.findUnique({ where: { id: groupId } });
+	if (!group || group.ownerId !== session.user.id)
+		return { error: "Sem permissão" };
+
+	await prisma.group.update({
+		where: { id: groupId },
+		data: { allowRetroactiveWorkouts },
+	});
+
+	revalidatePath(`/app/groups/${groupId}`);
+	return {};
 }
 
 export async function getUnreadGroupNotifications() {

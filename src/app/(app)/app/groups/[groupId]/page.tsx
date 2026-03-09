@@ -116,6 +116,7 @@ export default async function GroupPage({ params }: Props) {
                 currentName={group.name}
                 currentEndDate={group.endDate}
                 isActive={!ended}
+                allowRetroactiveWorkouts={group.allowRetroactiveWorkouts}
               />
             )}
             {!isOwner && !ended && <LeaveGroupButton groupId={group.id} />}

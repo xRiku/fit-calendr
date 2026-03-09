@@ -123,6 +123,7 @@ model Group {
   notifications GroupNotification[]
   startDate   DateTime      @default(now())
   endDate     DateTime
+  allowRetroactiveWorkouts Boolean @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 

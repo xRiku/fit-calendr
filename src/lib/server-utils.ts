@@ -31,6 +31,38 @@ function groupByMonth<T extends HasDate>(
 	return { hashTable, count: items.length };
 }
 
+function filterRetroactiveChecks<T extends { date: Date; createdAt: Date }>(
+	checks: T[],
+	allow: boolean,
+): T[] {
+	if (allow) return checks;
+	return checks.filter((c) => {
+		const d = new Date(c.date);
+		d.setHours(0, 0, 0, 0);
+		const cr = new Date(c.createdAt);
+		cr.setHours(0, 0, 0, 0);
+		return d >= cr;
+	});
+}
+
+function countFiltered(
+	checks: { userId: string; date: Date; createdAt: Date }[],
+	allow: boolean,
+): Map<string, number> {
+	const map = new Map<string, number>();
+	for (const c of checks) {
+		if (!allow) {
+			const d = new Date(c.date);
+			d.setHours(0, 0, 0, 0);
+			const cr = new Date(c.createdAt);
+			cr.setHours(0, 0, 0, 0);
+			if (d < cr) continue;
+		}
+		map.set(c.userId, (map.get(c.userId) ?? 0) + 1);
+	}
+	return map;
+}
+
 export const getCheatMealsByYearGroupedByMonth = cache(
 	async (params?: { year?: number }) => {
 		const { year = new Date().getFullYear() } = params || {};
@@ -619,16 +651,15 @@ export async function getGroupWithMembers(groupId: string) {
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 	const challengeStartDate = new Date(group.startDate);
 	challengeStartDate.setHours(0, 0, 0, 0);
-	const workoutCounts = await prisma.gymCheck.groupBy({
-		by: ["userId"],
+	const workouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: { in: group.members.map((m) => m.userId) },
 			date: { gte: challengeStartDate, lte: rangeEnd },
 		},
-		_count: { id: true },
+		select: { userId: true, date: true, createdAt: true },
 	});
 
-	const countMap = new Map(workoutCounts.map((w) => [w.userId, w._count.id]));
+	const countMap = countFiltered(workouts, group.allowRetroactiveWorkouts);
 
 	const leaderboard = group.members
 		.map((m) => ({ ...m, workoutCount: countMap.get(m.userId) ?? 0 }))
@@ -687,28 +718,25 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 	const weeklyStart = monday > challengeStartDate ? monday : challengeStartDate;
 	const lastWeekStart = lastMonday > challengeStartDate ? lastMonday : challengeStartDate;
 
-	const [weeklyCounts, lastWeekCounts] = await Promise.all([
-		prisma.gymCheck.groupBy({
-			by: ["userId"],
+	const [weeklyWorkouts, lastWeekWorkouts] = await Promise.all([
+		prisma.gymCheck.findMany({
 			where: {
 				userId: { in: memberIds },
 				date: { gte: weeklyStart, lte: sunday },
 			},
-			_count: { id: true },
+			select: { userId: true, date: true, createdAt: true },
 		}),
-		prisma.gymCheck.groupBy({
-			by: ["userId"],
+		prisma.gymCheck.findMany({
 			where: {
 				userId: { in: memberIds },
 				date: { gte: lastWeekStart, lte: lastSunday },
 			},
-			_count: { id: true },
+			select: { userId: true, date: true, createdAt: true },
 		}),
 	]);
 
-	const weeklyCountMap = new Map(
-		weeklyCounts.map((w) => [w.userId, w._count.id]),
-	);
+	const weeklyCountMap = countFiltered(weeklyWorkouts, group.allowRetroactiveWorkouts);
+	const lastWeekCountMap = countFiltered(lastWeekWorkouts, group.allowRetroactiveWorkouts);
 
 	const weeklyLeaderboard = group.members
 		.map((m) => ({
@@ -723,17 +751,20 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 		workoutCount: number;
 	} | null = null;
 
-	if (lastWeekCounts.length > 0 && challengeStartDate <= lastSunday) {
-		const topLastWeek = lastWeekCounts.sort(
-			(a, b) => b._count.id - a._count.id,
-		)[0];
-		const mvpMember = group.members.find(
-			(m) => m.userId === topLastWeek.userId,
-		);
+	if (lastWeekCountMap.size > 0 && challengeStartDate <= lastSunday) {
+		let topUserId = "";
+		let topCount = 0;
+		for (const [userId, count] of lastWeekCountMap) {
+			if (count > topCount) {
+				topCount = count;
+				topUserId = userId;
+			}
+		}
+		const mvpMember = group.members.find((m) => m.userId === topUserId);
 		if (mvpMember) {
 			lastWeekMvp = {
 				user: mvpMember.user,
-				workoutCount: topLastWeek._count.id,
+				workoutCount: topCount,
 			};
 		}
 	}
@@ -773,13 +804,14 @@ export const getGroupStreakLeaderboard = cache(async (groupId: string) => {
 			userId: { in: group.members.map((m) => m.userId) },
 			date: { gte: cutoff },
 		},
-		select: { userId: true, date: true },
+		select: { userId: true, date: true, createdAt: true },
 		orderBy: { date: "asc" },
 	});
 
-	// Group dates by userId
+	// Filter by retroactive setting and group dates by userId
+	const filtered = filterRetroactiveChecks(workouts, group.allowRetroactiveWorkouts);
 	const datesByUser = new Map<string, Date[]>();
-	for (const w of workouts) {
+	for (const w of filtered) {
 		const dates = datesByUser.get(w.userId) ?? [];
 		dates.push(w.date);
 		datesByUser.set(w.userId, dates);
@@ -928,8 +960,11 @@ export const getGroupCalendarData = cache(async (groupId: string) => {
 		orderBy: { date: "asc" },
 	});
 
+	// Filter by retroactive setting
+	const filtered = filterRetroactiveChecks(workouts, group.allowRetroactiveWorkouts);
+
 	const calendarData: GroupCalendarData = {};
-	for (const w of workouts) {
+	for (const w of filtered) {
 		const d = new Date(w.date);
 		const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 		if (!calendarData[key]) calendarData[key] = [];
@@ -963,13 +998,16 @@ export const getGroupStreak = cache(async (groupId: string) => {
 			userId: { in: memberIds },
 			date: { gte: challengeStartDate, lte: rangeEnd },
 		},
-		select: { date: true },
+		select: { date: true, createdAt: true },
 		orderBy: { date: "asc" },
 	});
 
+	// Filter by retroactive setting
+	const filtered = filterRetroactiveChecks(workouts, group.allowRetroactiveWorkouts);
+
 	// Collect unique dates where at least one member trained
 	const uniqueDatesSet = new Set<string>();
-	for (const w of workouts) {
+	for (const w of filtered) {
 		const d = new Date(w.date);
 		d.setHours(0, 0, 0, 0);
 		uniqueDatesSet.add(d.toISOString());
