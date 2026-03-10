@@ -1,8 +1,4 @@
 import { env } from "@/env";
-import {
-  DEFAULT_CHEAT_MEAL_PRESETS,
-  DEFAULT_WORKOUT_PRESETS,
-} from "@/lib/constants/colors";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
@@ -91,19 +87,7 @@ export const auth = betterAuth({
       create: {
         after: async (user) => {
           const username = await generateUniqueUsername();
-          await Promise.all([
-            prisma.user.update({ where: { id: user.id }, data: { username } }),
-            ...DEFAULT_WORKOUT_PRESETS.map((preset) =>
-              prisma.workoutPreset.create({
-                data: { ...preset, userId: user.id },
-              }),
-            ),
-            ...DEFAULT_CHEAT_MEAL_PRESETS.map((preset) =>
-              prisma.cheatMealPreset.create({
-                data: { ...preset, userId: user.id },
-              }),
-            ),
-          ]);
+          await prisma.user.update({ where: { id: user.id }, data: { username } });
         },
       },
     },
