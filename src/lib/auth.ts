@@ -2,7 +2,7 @@ import { env } from "@/env";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { emailOTP } from "better-auth/plugins";
+import { bearer, emailOTP } from "better-auth/plugins";
 import prisma from "./db";
 
 const ADJECTIVES = [
@@ -61,6 +61,7 @@ export const auth = betterAuth({
   }),
   plugins: [
     nextCookies(),
+    bearer(),
     emailOTP({
       ...(process.env.NODE_ENV !== "production" && {
         generateOTP: () => "000000",
