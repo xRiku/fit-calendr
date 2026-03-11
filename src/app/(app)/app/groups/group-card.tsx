@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 type GroupWithCount = {
 	id: string;
 	name: string;
+	description: string | null;
 	endDate: Date;
 	role: string;
 	_count: { members: number };
@@ -32,6 +33,11 @@ export function GroupCard({ group }: { group: GroupWithCount }) {
 						</span>
 					)}
 				</div>
+				{group.description && (
+					<p className="text-xs text-muted-foreground line-clamp-1">
+						{group.description}
+					</p>
+				)}
 				<div className="flex items-center gap-3 text-xs text-muted-foreground">
 					<span className="flex items-center gap-1">
 						<Users className="size-3" />

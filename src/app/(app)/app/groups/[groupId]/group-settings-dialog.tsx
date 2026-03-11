@@ -22,6 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -34,6 +35,7 @@ import { Switch } from "@/components/ui/switch";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   updateGroupName,
+  updateGroupDescription,
   updateGroupEndDate,
   regenerateInviteCode,
   deleteGroup,
@@ -47,6 +49,7 @@ import { cn } from "@/lib/utils";
 interface Props {
   groupId: string;
   currentName: string;
+  currentDescription: string | null;
   currentEndDate: Date;
   isActive: boolean;
   allowRetroactiveWorkouts: boolean;
@@ -55,6 +58,7 @@ interface Props {
 export function GroupSettingsDialog({
   groupId,
   currentName,
+  currentDescription,
   currentEndDate,
   isActive,
   allowRetroactiveWorkouts,
@@ -63,12 +67,15 @@ export function GroupSettingsDialog({
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const [description, setDescription] = useState(currentDescription ?? "");
   const [endDate, setEndDate] = useState<Date>(() => new Date(currentEndDate));
   const [retroActive, setRetroActive] = useState(allowRetroactiveWorkouts);
+  const [isPendingDesc, startDescTransition] = useTransition();
 
   function handleOpenChange(value: boolean) {
     if (value) {
       setName(currentName);
+      setDescription(currentDescription ?? "");
       setEndDate(new Date(currentEndDate));
     }
     setOpen(value);
@@ -85,6 +92,17 @@ export function GroupSettingsDialog({
         toast.success("Nome do grupo atualizado");
       } catch {
         toast.error("Falha ao atualizar nome");
+      }
+    });
+  }
+
+  function handleSaveDescription() {
+    startDescTransition(async () => {
+      const res = await updateGroupDescription(groupId, description);
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("Descrição atualizada");
       }
     });
   }
@@ -168,6 +186,29 @@ export function GroupSettingsDialog({
                 Salvar
               </Button>
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="group-description-edit">Descrição (opcional)</Label>
+            <Textarea
+              id="group-description-edit"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              maxLength={280}
+              rows={3}
+              placeholder="Regras, objetivo, motivação…"
+            />
+            <Button
+              size="sm"
+              onClick={handleSaveDescription}
+              disabled={
+                isPendingDesc ||
+                description.trim() === (currentDescription ?? "")
+              }
+              className="self-end"
+            >
+              Salvar descrição
+            </Button>
           </div>
 
           <div className="flex flex-col gap-2">

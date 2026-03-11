@@ -31,11 +31,13 @@ function computeEndDate(duration: GroupDuration, customEndDate?: Date): Date {
 
 export async function createGroup({
 	name,
+	description,
 	duration,
 	customEndDate,
 	allowRetroactiveWorkouts = true,
 }: {
 	name: string;
+	description?: string;
 	duration: GroupDuration;
 	customEndDate?: Date;
 	allowRetroactiveWorkouts?: boolean;
@@ -45,10 +47,13 @@ export async function createGroup({
 
 	const endDate = computeEndDate(duration, customEndDate);
 
+	const trimmedDescription = description?.trim().slice(0, 280) || null;
+
 	const inviteCode = randomBytes(6).toString("base64url").slice(0, 8);
 	const group = await prisma.group.create({
 		data: {
 			name: name.trim(),
+			description: trimmedDescription,
 			ownerId: session.user.id,
 			endDate,
 			inviteCode,
@@ -135,6 +140,27 @@ export async function updateGroupName(groupId: string, name: string) {
 	});
 
 	revalidatePath(`/app/groups/${groupId}`);
+}
+
+export async function updateGroupDescription(
+	groupId: string,
+	description: string,
+): Promise<{ error?: string }> {
+	const session = await auth.api.getSession({ headers: await headers() });
+	if (!session?.user?.id) return { error: "Não autorizado" };
+
+	const group = await prisma.group.findUnique({ where: { id: groupId } });
+	if (!group || group.ownerId !== session.user.id)
+		return { error: "Sem permissão" };
+
+	const trimmed = description.trim().slice(0, 280);
+	await prisma.group.update({
+		where: { id: groupId },
+		data: { description: trimmed || null },
+	});
+
+	revalidatePath(`/app/groups/${groupId}`);
+	return {};
 }
 
 export async function updateGroupEndDate(groupId: string, newEndDate: Date) {

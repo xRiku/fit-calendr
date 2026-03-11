@@ -78,6 +78,9 @@ export default async function GroupPage({ params }: Props) {
               {ended && <Trophy className="size-5 text-yellow-400 shrink-0" />}
               <h1 className="text-2xl font-bold truncate">{group.name}</h1>
             </div>
+            {group.description && (
+              <p className="text-sm text-muted-foreground">{group.description}</p>
+            )}
             <div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
               <span className="flex items-center gap-1.5">
                 <Users className="size-3.5" />
@@ -114,6 +117,7 @@ export default async function GroupPage({ params }: Props) {
               <GroupSettingsDialog
                 groupId={group.id}
                 currentName={group.name}
+                currentDescription={group.description}
                 currentEndDate={group.endDate}
                 isActive={!ended}
                 allowRetroactiveWorkouts={group.allowRetroactiveWorkouts}

@@ -11,6 +11,7 @@ import {
   ResponsiveDialogTrigger,
 } from "@/components/ui/responsive-dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { createGroup, type GroupDuration } from "@/actions/group-actions";
@@ -69,6 +70,7 @@ function getPreviewEndDate(
 type DialogState = {
   open: boolean;
   name: string;
+  description: string;
   duration: GroupDuration;
   customDate: Date | undefined;
 };
@@ -76,6 +78,7 @@ type DialogState = {
 type DialogAction =
   | { type: "SET_OPEN"; open: boolean }
   | { type: "SET_NAME"; name: string }
+  | { type: "SET_DESCRIPTION"; description: string }
   | { type: "SET_DURATION"; duration: GroupDuration }
   | { type: "SET_CUSTOM_DATE"; date: Date | undefined }
   | { type: "RESET" };
@@ -83,6 +86,7 @@ type DialogAction =
 const initialState: DialogState = {
   open: false,
   name: "",
+  description: "",
   duration: "90d",
   customDate: undefined,
 };
@@ -93,6 +97,8 @@ function reducer(state: DialogState, action: DialogAction): DialogState {
       return { ...state, open: action.open };
     case "SET_NAME":
       return { ...state, name: action.name };
+    case "SET_DESCRIPTION":
+      return { ...state, description: action.description };
     case "SET_DURATION":
       return { ...state, duration: action.duration };
     case "SET_CUSTOM_DATE":
@@ -105,7 +111,7 @@ function reducer(state: DialogState, action: DialogAction): DialogState {
 export function CreateGroupDialog() {
   const router = useRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { open, name, duration, customDate } = state;
+  const { open, name, description, duration, customDate } = state;
   const [isPending, startTransition] = useTransition();
 
   const previewEnd = getPreviewEndDate(duration, customDate);
@@ -117,6 +123,7 @@ export function CreateGroupDialog() {
       try {
         const group = await createGroup({
           name,
+          description,
           duration,
           customEndDate: customDate,
         });
@@ -158,6 +165,20 @@ export function CreateGroupDialog() {
                 dispatch({ type: "SET_NAME", name: e.target.value })
               }
               maxLength={60}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="group-description">Descrição (opcional)</Label>
+            <Textarea
+              id="group-description"
+              placeholder="Regras, objetivo, motivação…"
+              value={description}
+              onChange={(e) =>
+                dispatch({ type: "SET_DESCRIPTION", description: e.target.value })
+              }
+              maxLength={280}
+              rows={3}
             />
           </div>
 
