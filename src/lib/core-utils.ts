@@ -29,9 +29,10 @@ export function filterRetroactiveChecks<T extends { date: Date; createdAt: Date 
 	if (allow) return checks;
 	return checks.filter((c) => {
 		const d = new Date(c.date);
-		d.setHours(0, 0, 0, 0);
+		d.setUTCHours(0, 0, 0, 0);
 		const cr = new Date(c.createdAt);
-		cr.setHours(0, 0, 0, 0);
+		cr.setUTCHours(0, 0, 0, 0);
+		cr.setUTCDate(cr.getUTCDate() - 1); // 1-day timezone buffer for negative UTC offsets
 		return d >= cr;
 	});
 }
@@ -44,9 +45,10 @@ export function countFiltered(
 	for (const c of checks) {
 		if (!allow) {
 			const d = new Date(c.date);
-			d.setHours(0, 0, 0, 0);
+			d.setUTCHours(0, 0, 0, 0);
 			const cr = new Date(c.createdAt);
-			cr.setHours(0, 0, 0, 0);
+			cr.setUTCHours(0, 0, 0, 0);
+			cr.setUTCDate(cr.getUTCDate() - 1); // 1-day timezone buffer for negative UTC offsets
 			if (d < cr) continue;
 		}
 		map.set(c.userId, (map.get(c.userId) ?? 0) + 1);

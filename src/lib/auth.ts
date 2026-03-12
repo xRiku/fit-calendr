@@ -68,7 +68,8 @@ export const auth = betterAuth({
       }),
       async sendVerificationOTP({ email, otp }) {
         if (process.env.NODE_ENV !== "production") {
-          return; // OTP is always "0000" in dev — no email needed
+          console.log(`[DEV] OTP for ${email}: ${otp}`);
+          return; // OTP is always "000000" in dev — no email needed
         }
         await fetch(`${env.BETTER_AUTH_URL}/api/send`, {
           method: "POST",
