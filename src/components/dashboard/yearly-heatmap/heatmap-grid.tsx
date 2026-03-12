@@ -16,7 +16,7 @@ const MONTH_LABELS = [
 	"Nov",
 	"Dez",
 ];
-const DAY_LABELS = ["", "Seg", "", "Qua", "", "Sex", ""];
+const DAY_LABELS = ["Seg", "", "Qua", "", "Sex", "", "Dom"];
 
 function getIntensity(count: number): 0 | 1 | 2 | 3 {
 	if (count === 0) return 0;

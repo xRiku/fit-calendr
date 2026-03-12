@@ -1,7 +1,7 @@
 import { Dumbbell, PartyPopper } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 type WorkoutItem = {
@@ -86,12 +86,17 @@ function WorkoutFeedItem({ item }: { item: WorkoutItem }) {
 				</p>
 			</div>
 
-			<span className="text-xs text-muted-foreground shrink-0">
-				{formatDistanceToNow(new Date(item.createdAt), {
-					addSuffix: false,
-					locale: ptBR,
-				})}
-			</span>
+			<div className="flex flex-col items-end shrink-0">
+				<span className="text-xs text-muted-foreground">
+					{formatDistanceToNow(new Date(item.createdAt), {
+						addSuffix: false,
+						locale: ptBR,
+					})}
+				</span>
+				<span className="text-xs text-muted-foreground/60">
+					{format(new Date(item.createdAt), "d MMM yyyy, HH:mm", { locale: ptBR })}
+				</span>
+			</div>
 		</div>
 	);
 }
@@ -105,12 +110,17 @@ function MilestoneFeedItem({ item }: { item: MilestoneItem }) {
 
 			<p className="text-sm flex-1 min-w-0">{item.message}</p>
 
-			<span className="text-xs text-muted-foreground shrink-0">
-				{formatDistanceToNow(new Date(item.createdAt), {
-					addSuffix: false,
-					locale: ptBR,
-				})}
-			</span>
+			<div className="flex flex-col items-end shrink-0">
+				<span className="text-xs text-muted-foreground">
+					{formatDistanceToNow(new Date(item.createdAt), {
+						addSuffix: false,
+						locale: ptBR,
+					})}
+				</span>
+				<span className="text-xs text-muted-foreground/60">
+					{format(new Date(item.createdAt), "d MMM yyyy, HH:mm", { locale: ptBR })}
+				</span>
+			</div>
 		</div>
 	);
 }
