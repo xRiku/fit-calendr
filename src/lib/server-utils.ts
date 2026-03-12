@@ -346,7 +346,7 @@ export async function getMemberProfile(groupId: string, username: string) {
 
 	// Normalize group start date to beginning of day (to include workouts from the join date)
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 
 	// Parallel DB fetches
 	const [allWorkouts, challengeWorkouts, allTimeWorkouts, allTimeCheatMeals, targetUserGoals] = await Promise.all([
@@ -459,7 +459,7 @@ export async function getGroupWithMembers(groupId: string) {
 	const rangeEnd =
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 	const workouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: { in: group.members.map((m) => m.userId) },
@@ -504,7 +504,7 @@ export const getGroupWeeklyLeaderboard = cache(async (groupId: string) => {
 
 	// Normalize group start date to beginning of day
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 
 	// Current week: Monday to Sunday
 	const now = new Date();
@@ -650,7 +650,7 @@ export const getGroupActivityFeed = cache(
 
 		const memberIds = group.members.map((m) => m.userId);
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 
 		const [workouts, milestoneNotifications] = await Promise.all([
 			prisma.gymCheck.findMany({
@@ -755,7 +755,7 @@ export const getGroupCalendarData = cache(async (groupId: string) => {
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 	const workouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: { in: memberIds },
@@ -801,7 +801,7 @@ export const getGroupStreak = cache(async (groupId: string) => {
 		new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 	const workouts = await prisma.gymCheck.findMany({
 		where: {
 			userId: { in: memberIds },

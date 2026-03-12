@@ -31,7 +31,7 @@ export async function GET(
 	const memberIds = group.members.map((m) => m.userId);
 
 	const challengeStartDate = new Date(group.startDate);
-	challengeStartDate.setHours(0, 0, 0, 0);
+	challengeStartDate.setUTCHours(0, 0, 0, 0);
 	const rangeEnd = new Date(group.endDate) < new Date() ? group.endDate : new Date();
 
 	// Weekly leaderboard
