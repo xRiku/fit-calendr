@@ -42,6 +42,7 @@ export function countFiltered(
 	allow: boolean,
 ): Map<string, number> {
 	const map = new Map<string, number>();
+	const seen = new Set<string>();
 	for (const c of checks) {
 		if (!allow) {
 			const d = new Date(c.date);
@@ -51,6 +52,10 @@ export function countFiltered(
 			cr.setUTCDate(cr.getUTCDate() - 1); // 1-day timezone buffer for negative UTC offsets
 			if (d < cr) continue;
 		}
+		const dateKey = new Date(c.date).toISOString().slice(0, 10); // "YYYY-MM-DD"
+		const key = `${c.userId}:${dateKey}`;
+		if (seen.has(key)) continue;
+		seen.add(key);
 		map.set(c.userId, (map.get(c.userId) ?? 0) + 1);
 	}
 	return map;
