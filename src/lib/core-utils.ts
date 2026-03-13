@@ -28,11 +28,12 @@ export function filterRetroactiveChecks<T extends { date: Date; createdAt: Date 
 ): T[] {
 	if (allow) return checks;
 	return checks.filter((c) => {
+		const dateObj = new Date(c.date);
+		const offsetMs = dateObj.getUTCHours() * 3_600_000 + dateObj.getUTCMinutes() * 60_000;
 		const d = new Date(c.date);
 		d.setUTCHours(0, 0, 0, 0);
-		const cr = new Date(c.createdAt);
+		const cr = new Date(c.createdAt.getTime() - offsetMs);
 		cr.setUTCHours(0, 0, 0, 0);
-		cr.setUTCDate(cr.getUTCDate() - 1); // 1-day timezone buffer for negative UTC offsets
 		return d >= cr;
 	});
 }
@@ -45,11 +46,12 @@ export function countFiltered(
 	const seen = new Set<string>();
 	for (const c of checks) {
 		if (!allow) {
+			const dateObj = new Date(c.date);
+			const offsetMs = dateObj.getUTCHours() * 3_600_000 + dateObj.getUTCMinutes() * 60_000;
 			const d = new Date(c.date);
 			d.setUTCHours(0, 0, 0, 0);
-			const cr = new Date(c.createdAt);
+			const cr = new Date(c.createdAt.getTime() - offsetMs);
 			cr.setUTCHours(0, 0, 0, 0);
-			cr.setUTCDate(cr.getUTCDate() - 1); // 1-day timezone buffer for negative UTC offsets
 			if (d < cr) continue;
 		}
 		const dateKey = new Date(c.date).toISOString().slice(0, 10); // "YYYY-MM-DD"
