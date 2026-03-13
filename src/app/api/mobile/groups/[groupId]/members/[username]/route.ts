@@ -1,5 +1,5 @@
 import { getMobileSession } from "@/lib/mobile-auth";
-import { calculateGoalStreak, calculateStreak } from "@/lib/core-utils";
+import { calculateGoalStreak, calculateStreak, filterRetroactiveChecks } from "@/lib/core-utils";
 import prisma from "@/lib/db";
 
 export async function GET(
@@ -46,8 +46,9 @@ export async function GET(
 				select: { date: true },
 				orderBy: { date: "asc" },
 			}),
-			prisma.gymCheck.count({
+			prisma.gymCheck.findMany({
 				where: { userId: targetUser.id, date: { gte: challengeStartDate, lte: rangeEnd } },
+				select: { date: true, createdAt: true },
 			}),
 			prisma.gymCheck.findMany({
 				where: { userId: targetUser.id },
@@ -63,6 +64,11 @@ export async function GET(
 				select: { weeklyWorkoutGoal: true, weeklyCheatMealBudget: true },
 			}),
 		]);
+
+	// Filter retroactive workouts and deduplicate by date
+	const filteredChallengeWorkouts = filterRetroactiveChecks(challengeWorkouts, group.allowRetroactiveWorkouts);
+	const uniqueChallengeDays = new Set(filteredChallengeWorkouts.map((w) => new Date(w.date).toISOString().slice(0, 10)));
+	const challengeWorkoutCount = uniqueChallengeDays.size;
 
 	const heatmapData: Record<string, number> = {};
 	for (const w of allWorkouts) {
@@ -88,7 +94,7 @@ export async function GET(
 			currentStreak,
 			longestStreak,
 			totalWorkouts: allTimeWorkouts.length,
-			challengeWorkouts,
+			challengeWorkouts: challengeWorkoutCount,
 			goalStreak,
 		},
 		heatmapData,

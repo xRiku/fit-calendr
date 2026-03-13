@@ -362,12 +362,13 @@ export async function getMemberProfile(groupId: string, username: string) {
 			select: { date: true },
 			orderBy: { date: "asc" },
 		}),
-		// Workouts within challenge period
-		prisma.gymCheck.count({
+		// Workouts within challenge period (need date+createdAt for retroactive filtering)
+		prisma.gymCheck.findMany({
 			where: {
 				userId: targetUserId,
 				date: { gte: challengeStartDate, lte: rangeEnd },
 			},
+			select: { date: true, createdAt: true },
 		}),
 		// All-time workouts for streak calculation
 		prisma.gymCheck.findMany({
@@ -386,6 +387,11 @@ export async function getMemberProfile(groupId: string, username: string) {
 			select: { weeklyWorkoutGoal: true, weeklyCheatMealBudget: true },
 		}),
 	]);
+
+	// Filter retroactive workouts and deduplicate by date
+	const filteredChallengeWorkouts = filterRetroactiveChecks(challengeWorkouts, group.allowRetroactiveWorkouts);
+	const uniqueChallengeDays = new Set(filteredChallengeWorkouts.map((w) => new Date(w.date).toISOString().slice(0, 10)));
+	const challengeWorkoutCount = uniqueChallengeDays.size;
 
 	// Build heatmap map directly
 	const heatmapData = new Map<string, number>();
@@ -415,7 +421,7 @@ export async function getMemberProfile(groupId: string, username: string) {
 			currentStreak,
 			longestStreak,
 			totalWorkouts: allTimeWorkouts.length,
-			challengeWorkouts,
+			challengeWorkouts: challengeWorkoutCount,
 			goalStreak,
 		},
 		heatmapData,
