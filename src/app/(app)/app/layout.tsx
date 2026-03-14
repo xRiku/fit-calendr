@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				<div className="hidden md:block">
 					<LoggedHeader />
 				</div>
-				<main className="flex flex-col gap-4 pb-20 md:pb-8 px-4 md:px-6 pt-[max(env(safe-area-inset-top),1rem)] md:pt-4 flex-1 overflow-y-auto w-full max-w-7xl mx-auto">
+				<main className="flex flex-col gap-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 px-4 md:px-6 pt-[max(env(safe-area-inset-top),1rem)] md:pt-4 flex-1 min-h-0 overflow-y-auto w-full max-w-7xl mx-auto">
 					{children}
 				</main>
 				<BottomNav />
