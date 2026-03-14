@@ -570,6 +570,34 @@ export async function quickToggleWorkout({
 	return { success: true };
 }
 
+export async function getTodayEntries() {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		throw new Error("Não autorizado");
+	}
+
+	const userId = session.user.id;
+	const now = new Date();
+	const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+	const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+	const [gymChecks, cheatMeals] = await Promise.all([
+		prisma.gymCheck.findMany({
+			where: { userId, date: { gte: startOfDay, lte: endOfDay } },
+			include: { preset: { select: { id: true, label: true, color: true } } },
+		}),
+		prisma.cheatMeal.findMany({
+			where: { userId, date: { gte: startOfDay, lte: endOfDay } },
+			include: { preset: { select: { id: true, label: true, color: true } } },
+		}),
+	]);
+
+	return { gymChecks, cheatMeals };
+}
+
 export async function deleteProgressInRange(startDate: Date, endDate: Date) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
