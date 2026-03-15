@@ -27,7 +27,7 @@ export default function DayInfoDialog() {
         <DialogHeader aria-describedby="Day Info Form">
           <DialogTitle className="font-extrabold text-2xl">
             {dayInfoType === "create" && "Adicione as informações do dia"}
-            {dayInfoType === "edit" && "Edit info for the day"}
+            {dayInfoType === "edit" && "Editar informações do dia"}
           </DialogTitle>
           <DialogDescription>
             {selectedDayInfo?.date.toDateString()}

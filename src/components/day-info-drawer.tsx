@@ -26,11 +26,11 @@ export default function DayInfoDrawer() {
 			<DrawerContent className="max-h-[90vh]">
 				<DrawerHeader className="px-6 pt-6 pb-2 shrink-0">
 					<DrawerTitle className="font-extrabold text-2xl text-left">
-						{dayInfoType === "create" && "Add info for the day"}
-						{dayInfoType === "edit" && "Edit info for the day"}
+						{dayInfoType === "create" && "Adicionar informações do dia"}
+						{dayInfoType === "edit" && "Editar informações do dia"}
 					</DrawerTitle>
 					<DrawerDescription className="text-left text-base">
-						{selectedDayInfo?.date.toLocaleDateString("en-US", {
+						{selectedDayInfo?.date.toLocaleDateString("pt-BR", {
 							weekday: "long",
 							month: "long",
 							day: "numeric",

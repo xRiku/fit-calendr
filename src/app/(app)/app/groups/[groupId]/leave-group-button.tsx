@@ -55,14 +55,14 @@ export function LeaveGroupButton({ groupId }: { groupId: string }) {
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Leave this group?</AlertDialogTitle>
+					<AlertDialogTitle>Sair deste grupo?</AlertDialogTitle>
 					<AlertDialogDescription>
-						You'll need a new invite link to rejoin.
+						Você precisará de um novo link de convite para entrar novamente.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={handleLeave}>Leave</AlertDialogAction>
+					<AlertDialogCancel>Cancelar</AlertDialogCancel>
+					<AlertDialogAction onClick={handleLeave}>Sair</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

@@ -179,10 +179,10 @@ export const WorkoutChipInput = forwardRef<
 			onChangeRef.current([...valueRef.current, newChip]);
 			setInputValue("");
 			setOpen(false);
-			toast.success(`Created new preset: ${newPreset.label}`);
+			toast.success(`Novo atalho criado: ${newPreset.label}`);
 			return newChip;
 		} catch (error) {
-			toast.error("Failed to create preset");
+			toast.error("Falha ao criar atalho");
 			console.error(error);
 			return null;
 		}
@@ -248,8 +248,8 @@ export const WorkoutChipInput = forwardRef<
 					onKeyDown={handleKeyDown}
 					placeholder={
 						value.length === 0
-							? "Type to search presets..."
-							: "Add another workout..."
+							? "Pesquisar atalhos..."
+							: "Adicionar outro treino..."
 					}
 					className="w-full pr-10 bg-transparent border-neutral-200 dark:border-neutral-800"
 				/>
@@ -264,7 +264,7 @@ export const WorkoutChipInput = forwardRef<
 								onClick={flushInput}
 								className="flex w-full items-center px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800"
 							>
-								Create &quot;{inputValue.trim()}&quot;
+								Criar &quot;{inputValue.trim()}&quot;
 							</button>
 						) : (
 							<div className="py-1">

@@ -26,7 +26,7 @@ export function AvatarUpload({ avatarUrl, name, initials }: AvatarUploadProps) {
 		if (!file) return;
 
 		if (file.size > 5 * 1024 * 1024) {
-			toast.error("File too large (max 5MB)");
+			toast.error("Arquivo muito grande (máx 5MB)");
 			return;
 		}
 
@@ -44,12 +44,12 @@ export function AvatarUpload({ avatarUrl, name, initials }: AvatarUploadProps) {
 
 			if (!res.ok) {
 				const data = await res.json();
-				toast.error(data.error ?? "Upload failed");
+				toast.error(data.error ?? "Falha no upload");
 				setPreview(null);
 				return;
 			}
 
-			toast.success("Avatar updated");
+			toast.success("Avatar atualizado");
 			router.refresh();
 		});
 	}
@@ -59,12 +59,12 @@ export function AvatarUpload({ avatarUrl, name, initials }: AvatarUploadProps) {
 			const res = await fetch("/api/avatar", { method: "DELETE" });
 
 			if (!res.ok) {
-				toast.error("Failed to remove avatar");
+				toast.error("Falha ao remover avatar");
 				return;
 			}
 
 			setPreview(null);
-			toast.success("Avatar removed");
+			toast.success("Avatar removido");
 			router.refresh();
 		});
 	}
