@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
+  ResponsiveDialogFooter,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
@@ -34,12 +35,9 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
-  updateGroupName,
-  updateGroupDescription,
-  updateGroupEndDate,
+  updateGroupSettings,
   regenerateInviteCode,
   deleteGroup,
-  updateGroupAllowRetroactiveWorkouts,
 } from "@/actions/group-actions";
 import { toast } from "sonner";
 import { Settings, CalendarIcon, RefreshCw, Trash2 } from "lucide-react";
@@ -70,63 +68,50 @@ export function GroupSettingsDialog({
   const [description, setDescription] = useState(currentDescription ?? "");
   const [endDate, setEndDate] = useState<Date>(() => new Date(currentEndDate));
   const [retroActive, setRetroActive] = useState(allowRetroactiveWorkouts);
-  const [isPendingDesc, startDescTransition] = useTransition();
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   function handleOpenChange(value: boolean) {
     if (value) {
       setName(currentName);
       setDescription(currentDescription ?? "");
       setEndDate(new Date(currentEndDate));
+      setRetroActive(allowRetroactiveWorkouts);
     }
     setOpen(value);
   }
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  const [isPendingRetro, startRetroTransition] = useTransition();
 
-  function handleSaveName() {
-    if (name.trim() === currentName) return;
+  const isDirty =
+    name.trim() !== currentName ||
+    description.trim() !== (currentDescription ?? "") ||
+    endDate.toDateString() !== new Date(currentEndDate).toDateString() ||
+    retroActive !== allowRetroactiveWorkouts;
+
+  function handleSave() {
     startTransition(async () => {
-      try {
-        await updateGroupName(groupId, name);
-        toast.success("Nome do grupo atualizado");
-      } catch {
-        toast.error("Falha ao atualizar nome");
-      }
-    });
-  }
-
-  function handleSaveDescription() {
-    startDescTransition(async () => {
-      const res = await updateGroupDescription(groupId, description);
+      const res = await updateGroupSettings(groupId, {
+        name,
+        description,
+        endDate,
+        allowRetroactiveWorkouts: retroActive,
+      });
       if (res.error) {
         toast.error(res.error);
+        return;
+      }
+      if (res.endDateChanged) {
+        toast.success(
+          "Configurações atualizadas — os membros foram notificados sobre a nova data final",
+        );
       } else {
-        toast.success("Descrição atualizada");
+        toast.success("Configurações atualizadas");
       }
+      setOpen(false);
     });
   }
 
-  function handleSaveEndDate() {
-    startTransition(async () => {
-      try {
-        await updateGroupEndDate(groupId, endDate);
-        toast.success("Data final atualizada — os membros foram notificados");
-      } catch {
-        toast.error("Falha ao atualizar data final");
-      }
-    });
-  }
-
-  function handleRetroactiveToggle(value: boolean) {
-    setRetroActive(value);
-    startRetroTransition(async () => {
-      const res = await updateGroupAllowRetroactiveWorkouts(groupId, value);
-      if (res.error) {
-        setRetroActive(!value);
-        toast.error(res.error);
-      }
-    });
+  function handleCancel() {
+    setOpen(false);
   }
 
   function handleRegenerateCode() {
@@ -171,21 +156,12 @@ export function GroupSettingsDialog({
         <div className="flex flex-col gap-5 p-4 pt-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="group-name-edit">Nome do grupo</Label>
-            <div className="flex gap-2">
-              <Input
-                id="group-name-edit"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength={60}
-              />
-              <Button
-                size="sm"
-                onClick={handleSaveName}
-                disabled={isPending || name.trim() === currentName}
-              >
-                Salvar
-              </Button>
-            </div>
+            <Input
+              id="group-name-edit"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={60}
+            />
           </div>
 
           <div className="flex flex-col gap-2">
@@ -198,104 +174,63 @@ export function GroupSettingsDialog({
               rows={3}
               placeholder="Regras, objetivo, motivação…"
             />
-            <Button
-              size="sm"
-              onClick={handleSaveDescription}
-              disabled={
-                isPendingDesc ||
-                description.trim() === (currentDescription ?? "")
-              }
-              className="self-end"
-            >
-              Salvar descrição
-            </Button>
           </div>
 
           <div className="flex flex-col gap-2">
             <Label>Data final</Label>
             {isDesktop ? (
-              <div className="flex gap-2">
-                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn("flex-1 justify-start gap-2 font-normal")}
-                    >
-                      <CalendarIcon className="size-4" />
-                      {format(endDate, "PPP")}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={endDate}
-                      onSelect={(d) => {
-                        if (d) {
-                          setEndDate(d);
-                          setCalendarOpen(false);
-                        }
-                      }}
-                      disabled={(d) => d <= new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Button
-                  size="sm"
-                  onClick={handleSaveEndDate}
-                  disabled={
-                    isPending ||
-                    endDate.toDateString() ===
-                      new Date(currentEndDate).toDateString()
-                  }
-                >
-                  Salvar
-                </Button>
-              </div>
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn("justify-start gap-2 font-normal")}
+                  >
+                    <CalendarIcon className="size-4" />
+                    {format(endDate, "PPP")}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={(d) => {
+                      if (d) {
+                        setEndDate(d);
+                        setCalendarOpen(false);
+                      }
+                    }}
+                    disabled={(d) => d <= new Date()}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             ) : (
-              <>
-                <Calendar
-                  mode="single"
-                  selected={endDate}
-                  onSelect={(d) => {
-                    if (d) setEndDate(d);
-                  }}
-                  disabled={(d) => d <= new Date()}
-                  className="rounded-md border self-center"
-                />
-                <Button
-                  size="sm"
-                  onClick={handleSaveEndDate}
-                  disabled={
-                    isPending ||
-                    endDate.toDateString() ===
-                      new Date(currentEndDate).toDateString()
-                  }
-                >
-                  Salvar
-                </Button>
-              </>
+              <Calendar
+                mode="single"
+                selected={endDate}
+                onSelect={(d) => {
+                  if (d) setEndDate(d);
+                }}
+                disabled={(d) => d <= new Date()}
+                className="rounded-md border self-center"
+              />
             )}
             <p className="text-xs text-muted-foreground">
               Todos os membros serão notificados quando você alterar isso.
             </p>
           </div>
 
-<div className="flex items-center justify-between gap-4 py-2">
+          <div className="flex items-center justify-between gap-4 py-2">
             <div>
               <p className="text-sm font-medium">Treinos retroativos</p>
               <p className="text-xs text-muted-foreground">
                 Permite contar treinos registrados após a data do treino
               </p>
             </div>
-            <Switch
-              checked={retroActive}
-              onCheckedChange={handleRetroactiveToggle}
-              disabled={isPendingRetro}
-            />
+            <Switch checked={retroActive} onCheckedChange={setRetroActive} />
           </div>
 
-                    {isActive && (
+          {isActive && (
             <>
               <Separator />
               <div className="flex flex-col gap-2">
@@ -353,6 +288,15 @@ export function GroupSettingsDialog({
             </AlertDialog>
           </div>
         </div>
+
+        <ResponsiveDialogFooter className="flex-col-reverse border-t p-4">
+          <Button variant="outline" onClick={handleCancel} disabled={isPending}>
+            Cancelar
+          </Button>
+          <Button onClick={handleSave} disabled={!isDirty || isPending}>
+            Salvar
+          </Button>
+        </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

@@ -125,84 +125,71 @@ export async function deleteGroup(groupId: string) {
 	revalidatePath("/app/groups");
 }
 
-export async function updateGroupName(groupId: string, name: string) {
-	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Não autorizado");
-
-	const group = await prisma.group.findUnique({ where: { id: groupId } });
-	if (!group) throw new Error("Grupo não encontrado");
-	if (group.ownerId !== session.user.id)
-		throw new Error("Apenas o dono pode renomear este grupo");
-
-	await prisma.group.update({
-		where: { id: groupId },
-		data: { name: name.trim() },
-	});
-
-	revalidatePath(`/app/groups/${groupId}`);
-}
-
-export async function updateGroupDescription(
+export async function updateGroupSettings(
 	groupId: string,
-	description: string,
-): Promise<{ error?: string }> {
+	data: {
+		name: string;
+		description: string;
+		endDate: Date;
+		allowRetroactiveWorkouts: boolean;
+	},
+): Promise<{ error?: string; endDateChanged?: boolean }> {
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session?.user?.id) return { error: "Não autorizado" };
-
-	const group = await prisma.group.findUnique({ where: { id: groupId } });
-	if (!group || group.ownerId !== session.user.id)
-		return { error: "Sem permissão" };
-
-	const trimmed = description.trim().slice(0, 280);
-	await prisma.group.update({
-		where: { id: groupId },
-		data: { description: trimmed || null },
-	});
-
-	revalidatePath(`/app/groups/${groupId}`);
-	return {};
-}
-
-export async function updateGroupEndDate(groupId: string, newEndDate: Date) {
-	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session) throw new Error("Não autorizado");
 
 	const group = await prisma.group.findUnique({
 		where: { id: groupId },
 		include: { members: { select: { userId: true } } },
 	});
-	if (!group) throw new Error("Grupo não encontrado");
-	if (group.ownerId !== session.user.id)
-		throw new Error("Apenas o dono pode alterar a data final");
+	if (!group || group.ownerId !== session.user.id)
+		return { error: "Sem permissão" };
 
-	const formattedDate = new Intl.DateTimeFormat("pt-BR", {
-		month: "long",
-		day: "numeric",
-		year: "numeric",
-	}).format(newEndDate);
+	const trimmedDescription = data.description.trim().slice(0, 280) || null;
+	const endDateChanged =
+		data.endDate.toDateString() !== new Date(group.endDate).toDateString();
 
-	const memberIds = group.members
-		.map((m) => m.userId)
-		.filter((id) => id !== session.user.id);
+	const notifications: ReturnType<typeof prisma.groupNotification.create>[] =
+		[];
+	if (endDateChanged) {
+		const formattedDate = new Intl.DateTimeFormat("pt-BR", {
+			month: "long",
+			day: "numeric",
+			year: "numeric",
+		}).format(data.endDate);
+
+		const memberIds = group.members
+			.map((m) => m.userId)
+			.filter((id) => id !== session.user.id);
+
+		for (const userId of memberIds) {
+			notifications.push(
+				prisma.groupNotification.create({
+					data: {
+						groupId,
+						userId,
+						type: "end_date_changed",
+						message: `A data final de "${group.name}" foi alterada para ${formattedDate}.`,
+					},
+				}),
+			);
+		}
+	}
 
 	await prisma.$transaction([
 		prisma.group.update({
 			where: { id: groupId },
-			data: { endDate: newEndDate },
+			data: {
+				name: data.name.trim(),
+				description: trimmedDescription,
+				endDate: data.endDate,
+				allowRetroactiveWorkouts: data.allowRetroactiveWorkouts,
+			},
 		}),
-		...memberIds.map((userId) =>
-			prisma.groupNotification.create({
-				data: {
-					groupId,
-					userId,
-					type: "end_date_changed",
-					message: `A data final de "${group.name}" foi alterada para ${formattedDate}.`,
-				},
-			}),
-		),
+		...notifications,
 	]);
 
 	revalidatePath(`/app/groups/${groupId}`);
+	return { endDateChanged };
 }
 
 export async function regenerateInviteCode(groupId: string) {
@@ -234,25 +221,6 @@ export async function markNotificationsRead(notificationIds: string[]) {
 	});
 }
 
-export async function updateGroupAllowRetroactiveWorkouts(
-	groupId: string,
-	allowRetroactiveWorkouts: boolean,
-): Promise<{ error?: string }> {
-	const session = await auth.api.getSession({ headers: await headers() });
-	if (!session?.user?.id) return { error: "Não autorizado" };
-
-	const group = await prisma.group.findUnique({ where: { id: groupId } });
-	if (!group || group.ownerId !== session.user.id)
-		return { error: "Sem permissão" };
-
-	await prisma.group.update({
-		where: { id: groupId },
-		data: { allowRetroactiveWorkouts },
-	});
-
-	revalidatePath(`/app/groups/${groupId}`);
-	return {};
-}
 
 export async function getUnreadGroupNotifications() {
 	const session = await auth.api.getSession({ headers: await headers() });
