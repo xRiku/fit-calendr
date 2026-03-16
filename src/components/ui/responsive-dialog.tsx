@@ -1,27 +1,27 @@
 "use client";
 
-import * as React from "react";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
-	DialogHeader,
-	DialogTitle,
 	DialogDescription,
 	DialogFooter,
-	DialogClose,
+	DialogHeader,
+	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import {
 	Drawer,
+	DrawerClose,
 	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
 	DrawerDescription,
 	DrawerFooter,
-	DrawerClose,
+	DrawerHeader,
+	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import * as React from "react";
 
 const ResponsiveDialogContext = React.createContext(true);
 
@@ -65,7 +65,10 @@ function ResponsiveDialogContent({
 	const isDesktop = React.useContext(ResponsiveDialogContext);
 	if (isDesktop) {
 		return (
-			<DialogContent className={className} {...props}>
+			<DialogContent
+				className={`max-h-[85vh] overflow-y-auto ${className ?? ""}`}
+				{...props}
+			>
 				{children}
 			</DialogContent>
 		);
@@ -77,9 +80,7 @@ function ResponsiveDialogContent({
 	);
 }
 
-function ResponsiveDialogHeader(
-	props: React.HTMLAttributes<HTMLDivElement>,
-) {
+function ResponsiveDialogHeader(props: React.HTMLAttributes<HTMLDivElement>) {
 	const isDesktop = React.useContext(ResponsiveDialogContext);
 	return isDesktop ? <DialogHeader {...props} /> : <DrawerHeader {...props} />;
 }
@@ -102,9 +103,7 @@ function ResponsiveDialogDescription(
 	);
 }
 
-function ResponsiveDialogFooter(
-	props: React.HTMLAttributes<HTMLDivElement>,
-) {
+function ResponsiveDialogFooter(props: React.HTMLAttributes<HTMLDivElement>) {
 	const isDesktop = React.useContext(ResponsiveDialogContext);
 	return isDesktop ? <DialogFooter {...props} /> : <DrawerFooter {...props} />;
 }
