@@ -34,13 +34,14 @@ type CheatMealChipInputProps = {
 	presets: CheatMealPreset[];
 	value: CheatMealChip[];
 	onChange: (chips: CheatMealChip[]) => void;
+	onInputChange?: (hasInput: boolean) => void;
 	className?: string;
 };
 
 export const CheatMealChipInput = forwardRef<
 	CheatMealChipInputRef,
 	CheatMealChipInputProps
->(function CheatMealChipInput({ presets, value, onChange, className }, ref) {
+>(function CheatMealChipInput({ presets, value, onChange, onInputChange, className }, ref) {
 	const [inputValue, setInputValue] = useState("");
 	const [open, setOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -49,12 +50,14 @@ export const CheatMealChipInput = forwardRef<
 	const valueRef = useRef(value);
 	const presetsRef = useRef(presets);
 	const onChangeRef = useRef(onChange);
+	const onInputChangeRef = useRef(onInputChange);
 
 	useEffect(() => {
 		inputValueRef.current = inputValue;
 		valueRef.current = value;
 		presetsRef.current = presets;
 		onChangeRef.current = onChange;
+		onInputChangeRef.current = onInputChange;
 	});
 
 	const filteredPresets = inputValue
@@ -64,10 +67,6 @@ export const CheatMealChipInput = forwardRef<
 					!value.some((chip) => chip.presetId === preset.id),
 			)
 		: [];
-
-	const duplicateChip = value.find(
-		(chip) => chip.label.toLowerCase() === inputValue.toLowerCase(),
-	);
 
 	const handleSelect = useCallback(
 		(preset: CheatMealPreset) => {
@@ -94,6 +93,7 @@ export const CheatMealChipInput = forwardRef<
 	const handleInputChange = useCallback((newValue: string) => {
 		setInputValue(newValue);
 		setOpen(newValue.length > 0);
+		onInputChangeRef.current?.(newValue.trim().length > 0);
 	}, []);
 
 	const handleRemoveChip = useCallback(
@@ -116,6 +116,7 @@ export const CheatMealChipInput = forwardRef<
 		if (currentDuplicate) {
 			setInputValue("");
 			setOpen(false);
+			onInputChangeRef.current?.(false);
 			return null;
 		}
 
@@ -136,10 +137,12 @@ export const CheatMealChipInput = forwardRef<
 				onChangeRef.current([...valueRef.current, newChip]);
 				setInputValue("");
 				setOpen(false);
+				onInputChangeRef.current?.(false);
 				return newChip;
 			}
 			setInputValue("");
 			setOpen(false);
+			onInputChangeRef.current?.(false);
 			return null;
 		}
 
@@ -164,10 +167,10 @@ export const CheatMealChipInput = forwardRef<
 			onChangeRef.current([...valueRef.current, newChip]);
 			setInputValue("");
 			setOpen(false);
-			toast.success(`Novo atalho criado: ${newPreset.label}`);
+			onInputChangeRef.current?.(false);
 			return newChip;
 		} catch (error) {
-			toast.error("Falha ao criar atalho");
+			toast.error("Falha ao criar item salvo");
 			console.error(error);
 			return null;
 		}
@@ -229,41 +232,31 @@ export const CheatMealChipInput = forwardRef<
 					onKeyDown={handleKeyDown}
 					placeholder={
 						value.length === 0
-							? "Pesquisar atalhos..."
+							? "Pesquisar itens salvos..."
 							: "Adicionar outra refeição livre..."
 					}
 					className="w-full pr-10 bg-transparent border-neutral-200 dark:border-neutral-800"
 				/>
 				<Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 pointer-events-none" />
 
-				{open && inputValue && (
+				{open && inputValue && filteredPresets.length > 0 && (
 					<div className="absolute z-50 w-full mt-1 rounded-md border border-neutral-200 bg-white shadow-md dark:border-neutral-800 dark:bg-neutral-950">
-						{filteredPresets.length === 0 && !duplicateChip ? (
-							<button
-								type="button"
-								onClick={flushInput}
-								className="flex w-full items-center px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800"
-							>
-								Criar &quot;{inputValue.trim()}&quot;
-							</button>
-						) : (
-							<div className="py-1">
-								{filteredPresets.map((preset) => (
-									<button
-										key={preset.id}
-										type="button"
-										onClick={() => handleSelect(preset)}
-										className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800"
-									>
-										<span
-											className="size-3 rounded-full"
-											style={{ backgroundColor: preset.color }}
-										/>
-										{preset.label}
-									</button>
-								))}
-							</div>
-						)}
+						<div className="py-1">
+							{filteredPresets.map((preset) => (
+								<button
+									key={preset.id}
+									type="button"
+									onClick={() => handleSelect(preset)}
+									className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-900 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800"
+								>
+									<span
+										className="size-3 rounded-full"
+										style={{ backgroundColor: preset.color }}
+									/>
+									{preset.label}
+								</button>
+							))}
+						</div>
 					</div>
 				)}
 			</div>

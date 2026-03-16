@@ -42,7 +42,7 @@ export function CheatMealPresetsSection() {
 			setPresets(userPresets);
 			setLoading(false);
 		} catch {
-			toast.error("Falha ao carregar atalhos");
+			toast.error("Falha ao carregar itens salvos");
 			setLoading(false);
 		}
 	}, []);
@@ -60,7 +60,7 @@ export function CheatMealPresetsSection() {
 				const result = await migrateExistingUserCheatMealPresets();
 				if (mounted && result.created > 0) {
 					toast.success(
-						`Criados ${result.created} atalhos de refeições livres`,
+						`Criados ${result.created} itens salvos de refeições livres`,
 					);
 					await loadPresets();
 				}
@@ -135,7 +135,7 @@ export function CheatMealPresetsSection() {
 				),
 			);
 		} catch {
-			toast.error("Falha ao reordenar atalhos");
+			toast.error("Falha ao reordenar itens salvos");
 			loadPresets();
 		}
 	};
@@ -144,9 +144,9 @@ export function CheatMealPresetsSection() {
 		try {
 			await deleteCheatMealPreset({ id: presetId });
 			setPresets((prev) => prev.filter((p) => p.id !== presetId));
-			toast.success("Atalho excluído");
+			toast.success("Item salvo excluído");
 		} catch {
-			toast.error("Falha ao excluir atalho");
+			toast.error("Falha ao excluir item salvo");
 		}
 	};
 
@@ -157,15 +157,15 @@ export function CheatMealPresetsSection() {
 				PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)].value;
 			const maxOrder = Math.max(...presets.map((p) => p.order), -1);
 			const newPreset = await createCheatMealPreset({
-				label: "Novo Atalho",
+				label: "Novo Item",
 				color: randomColor,
 				order: maxOrder + 1,
 			});
 			setPresets((prev) => [...prev, newPreset]);
-			toast.success("Atalho criado");
+			toast.success("Item salvo criado");
 			setIsCreating(false);
 		} catch {
-			toast.error("Falha ao criar atalho");
+			toast.error("Falha ao criar item salvo");
 			setIsCreating(false);
 		}
 	};
@@ -202,7 +202,7 @@ export function CheatMealPresetsSection() {
 
 	return (
 		<div className="w-full space-y-4">
-			<div>
+			<div className="space-y-2">
 				{presets.map((preset, index) => (
 					<PresetItem
 						key={preset.id}
@@ -224,7 +224,7 @@ export function CheatMealPresetsSection() {
 					className="flex-1"
 				>
 					<Plus className="mr-2 h-4 w-4" />
-					Adicionar Atalho
+					Adicionar Item Salvo
 				</Button>
 
 				<AlertDialog>
@@ -241,7 +241,7 @@ export function CheatMealPresetsSection() {
 						<AlertDialogHeader>
 							<AlertDialogTitle>Restaurar Padrões</AlertDialogTitle>
 							<AlertDialogDescription className="dark:text-neutral-400">
-								Isso excluirá todos os seus atalhos personalizados e restaurará
+								Isso excluirá todos os seus itens salvos personalizados e restaurará
 								as refeições livres padrão. Tem certeza?
 							</AlertDialogDescription>
 						</AlertDialogHeader>

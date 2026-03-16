@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { PRESET_COLORS } from "@/lib/constants/colors";
-import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Pencil, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
 export interface BasePreset {
@@ -90,33 +90,71 @@ export function PresetItem({
 				</Popover>
 
 				{isEditing ? (
-					<Input
-						value={editLabel}
-						onChange={(e) => setEditLabel(e.target.value)}
-						onBlur={handleSave}
-						autoFocus
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								handleSave();
-							}
-							if (e.key === "Escape") {
-								setIsEditing(false);
-								setEditLabel(preset.label);
-							}
-						}}
-						className="flex-1 bg-neutral-800 border-neutral-700"
-					/>
+					<>
+						<Input
+							value={editLabel}
+							onChange={(e) => setEditLabel(e.target.value)}
+							autoFocus
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleSave();
+								}
+								if (e.key === "Escape") {
+									setIsEditing(false);
+									setEditLabel(preset.label);
+								}
+							}}
+							className="flex-1 bg-neutral-800 border-neutral-700"
+						/>
+						<div className="flex items-center gap-1">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="h-7 w-7 text-green-500 hover:text-green-400"
+								onClick={handleSave}
+								aria-label="Save label"
+							>
+								<Check className="h-4 w-4" />
+							</Button>
+							<Button
+								variant="ghost"
+								size="icon"
+								className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
+								onClick={() => {
+									setIsEditing(false);
+									setEditLabel(preset.label);
+								}}
+								aria-label="Cancel editing"
+							>
+								<X className="h-4 w-4" />
+							</Button>
+						</div>
+					</>
 				) : (
-					<button
-						type="button"
-						onClick={() => {
-							setIsEditing(true);
-							setEditLabel(preset.label);
-						}}
-						className="flex-1 text-left text-sm font-medium text-neutral-200 hover:text-neutral-100 transition-colors focus:outline-none"
-					>
-						{preset.label}
-					</button>
+					<>
+						<button
+							type="button"
+							onClick={() => {
+								setIsEditing(true);
+								setEditLabel(preset.label);
+							}}
+							className="flex-1 text-left text-sm font-medium text-neutral-200 hover:text-neutral-100 transition-colors focus:outline-none"
+						>
+							{preset.label}
+						</button>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="h-7 w-7 text-neutral-500 hover:text-neutral-300"
+							onClick={() => {
+								setIsEditing(true);
+								setEditLabel(preset.label);
+							}}
+							aria-label="Edit label"
+						>
+							<Pencil className="h-3.5 w-3.5" />
+						</Button>
+					</>
 				)}
 
 				<div className="flex items-center gap-1">

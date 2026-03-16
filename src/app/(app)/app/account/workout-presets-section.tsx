@@ -39,7 +39,7 @@ export function WorkoutPresetsSection() {
 			setPresets(userPresets);
 			setLoading(false);
 		} catch {
-			toast.error("Falha ao carregar atalhos");
+			toast.error("Falha ao carregar itens salvos");
 			setLoading(false);
 		}
 	}, []);
@@ -57,7 +57,7 @@ export function WorkoutPresetsSection() {
 				const result = await migrateExistingUserPresets();
 				if (mounted && result.created > 0) {
 					toast.success(
-						`Criados ${result.created} atalhos do seu histórico de treinos`,
+						`Criados ${result.created} itens salvos do seu histórico de treinos`,
 					);
 					await loadPresets();
 				}
@@ -130,7 +130,7 @@ export function WorkoutPresetsSection() {
 				reorderedPresets.map((p) => updatePreset({ id: p.id, order: p.order })),
 			);
 		} catch {
-			toast.error("Falha ao reordenar atalhos");
+			toast.error("Falha ao reordenar itens salvos");
 			loadPresets();
 		}
 	};
@@ -139,9 +139,9 @@ export function WorkoutPresetsSection() {
 		try {
 			await deletePreset({ id: presetId });
 			setPresets((prev) => prev.filter((p) => p.id !== presetId));
-			toast.success("Atalho excluído");
+			toast.success("Item salvo excluído");
 		} catch {
-			toast.error("Falha ao excluir atalho");
+			toast.error("Falha ao excluir item salvo");
 		}
 	};
 
@@ -152,15 +152,15 @@ export function WorkoutPresetsSection() {
 				PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)].value;
 			const maxOrder = Math.max(...presets.map((p) => p.order), -1);
 			const newPreset = await createPreset({
-				label: "Novo Atalho",
+				label: "Novo Item",
 				color: randomColor,
 				order: maxOrder + 1,
 			});
 			setPresets((prev) => [...prev, newPreset]);
-			toast.success("Atalho criado");
+			toast.success("Item salvo criado");
 			setIsCreating(false);
 		} catch {
-			toast.error("Falha ao criar atalho");
+			toast.error("Falha ao criar item salvo");
 			setIsCreating(false);
 		}
 	};
@@ -197,7 +197,7 @@ export function WorkoutPresetsSection() {
 
 	return (
 		<div className="w-full space-y-4">
-			<div>
+			<div className="space-y-2">
 				{presets.map((preset, index) => (
 					<PresetItem
 						key={preset.id}
@@ -219,7 +219,7 @@ export function WorkoutPresetsSection() {
 					className="flex-1"
 				>
 					<Plus className="mr-2 h-4 w-4" />
-					Adicionar Atalho
+					Adicionar Item Salvo
 				</Button>
 
 				<AlertDialog>
@@ -236,7 +236,7 @@ export function WorkoutPresetsSection() {
 						<AlertDialogHeader>
 							<AlertDialogTitle>Restaurar Padrões</AlertDialogTitle>
 							<AlertDialogDescription className="dark:text-neutral-400">
-								Isso excluirá todos os seus atalhos personalizados e restaurará
+								Isso excluirá todos os seus itens salvos personalizados e restaurará
 								os treinos padrão. Tem certeza?
 							</AlertDialogDescription>
 						</AlertDialogHeader>

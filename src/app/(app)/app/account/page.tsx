@@ -93,7 +93,7 @@ export default async function AccountPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Atalhos</CardTitle>
+            <CardTitle>Itens Salvos</CardTitle>
             <CardDescription>
               Acesso rápido aos seus itens mais usados
             </CardDescription>

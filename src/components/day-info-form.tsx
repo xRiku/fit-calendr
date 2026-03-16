@@ -44,6 +44,8 @@ export default function DayInfoForm() {
 	const [cheatMealPresets, setCheatMealPresets] = useState<
 		Awaited<ReturnType<typeof getUserCheatMealPresets>>
 	>([]);
+	const [hasWorkoutInput, setHasWorkoutInput] = useState(false);
+	const [hasCheatMealInput, setHasCheatMealInput] = useState(false);
 	const workoutInputRef = useRef<WorkoutChipInputRef>(null);
 	const cheatMealInputRef = useRef<CheatMealChipInputRef>(null);
 
@@ -168,6 +170,7 @@ export default function DayInfoForm() {
 							presets={workoutPresets}
 							value={workoutChips}
 							onChange={setWorkoutChips}
+							onInputChange={setHasWorkoutInput}
 						/>
 					</FormControl>
 					<FormMessage />
@@ -182,6 +185,7 @@ export default function DayInfoForm() {
 							presets={cheatMealPresets}
 							value={cheatMealChips}
 							onChange={setCheatMealChips}
+							onInputChange={setHasCheatMealInput}
 						/>
 					</FormControl>
 					<FormMessage />
@@ -195,6 +199,8 @@ export default function DayInfoForm() {
 					disabled={
 						!workoutChips.length &&
 						!cheatMealChips.length &&
+						!hasWorkoutInput &&
+						!hasCheatMealInput &&
 						dayInfoType === "create"
 					}
 					form="day-info-form"
@@ -223,6 +229,8 @@ export default function DayInfoForm() {
 					disabled={
 						!workoutChips.length &&
 						!cheatMealChips.length &&
+						!hasWorkoutInput &&
+						!hasCheatMealInput &&
 						dayInfoType === "create"
 					}
 					className="w-1/4"
