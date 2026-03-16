@@ -26,23 +26,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   updateGroupSettings,
   regenerateInviteCode,
   deleteGroup,
 } from "@/actions/group-actions";
 import { toast } from "sonner";
-import { Settings, CalendarIcon, RefreshCw, Trash2 } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { Settings, RefreshCw, Trash2 } from "lucide-react";
 
 interface Props {
   groupId: string;
@@ -62,13 +55,11 @@ export function GroupSettingsDialog({
   allowRetroactiveWorkouts,
 }: Props) {
   const router = useRouter();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState(currentDescription ?? "");
   const [endDate, setEndDate] = useState<Date>(() => new Date(currentEndDate));
   const [retroActive, setRetroActive] = useState(allowRetroactiveWorkouts);
-  const [calendarOpen, setCalendarOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function handleOpenChange(value: boolean) {
@@ -148,11 +139,12 @@ export function GroupSettingsDialog({
           Configurações
         </Button>
       </ResponsiveDialogTrigger>
-      <ResponsiveDialogContent className="sm:max-w-md">
+      <ResponsiveDialogContent className="sm:max-w-lg">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Configurações do Grupo</ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
 
+        <ScrollArea className="max-h-[60vh]">
         <div className="flex flex-col gap-5 p-4 pt-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="group-name-edit">Nome do grupo</Label>
@@ -178,43 +170,16 @@ export function GroupSettingsDialog({
 
           <div className="flex flex-col gap-2">
             <Label>Data final</Label>
-            {isDesktop ? (
-              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn("justify-start gap-2 font-normal")}
-                  >
-                    <CalendarIcon className="size-4" />
-                    {format(endDate, "PPP")}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    onSelect={(d) => {
-                      if (d) {
-                        setEndDate(d);
-                        setCalendarOpen(false);
-                      }
-                    }}
-                    disabled={(d) => d <= new Date()}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            ) : (
-              <Calendar
-                mode="single"
-                selected={endDate}
-                onSelect={(d) => {
-                  if (d) setEndDate(d);
-                }}
-                disabled={(d) => d <= new Date()}
-                className="rounded-md border self-center"
-              />
-            )}
+            <Calendar
+              mode="single"
+              selected={endDate}
+              onSelect={(d) => {
+                if (d) setEndDate(d);
+              }}
+              disabled={(d) => d <= new Date()}
+              className="rounded-md border self-center"
+              style={{ '--cell-size': '2.5rem' } as React.CSSProperties}
+            />
             <p className="text-xs text-muted-foreground">
               Todos os membros serão notificados quando você alterar isso.
             </p>
@@ -288,6 +253,7 @@ export function GroupSettingsDialog({
             </AlertDialog>
           </div>
         </div>
+        </ScrollArea>
 
         <ResponsiveDialogFooter className="flex-col-reverse border-t p-4">
           <Button variant="outline" onClick={handleCancel} disabled={isPending}>
