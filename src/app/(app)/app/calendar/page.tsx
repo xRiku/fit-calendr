@@ -21,7 +21,7 @@ export default async function CalendarPage({
 		<div className="flex flex-col lg:h-[calc(100dvh-6.5rem)] lg:overflow-hidden">
 			<CalendarToolbar />
 			<div className="flex flex-col lg:flex-row flex-1 gap-6 lg:min-h-0 pb-12 lg:pb-0">
-				<div className="lg:flex-1 min-w-0 order-1 lg:order-2">
+				<div className="lg:flex-1 min-w-0 lg:min-h-0 order-1 lg:order-2 lg:flex lg:flex-col">
 					<Suspense
 						fallback={
 							<div className="animate-pulse h-80 w-full bg-muted rounded-lg" />

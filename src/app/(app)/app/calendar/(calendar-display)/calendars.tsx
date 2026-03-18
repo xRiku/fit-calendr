@@ -125,7 +125,8 @@ export default function Calendars({
     toggleDayInfoModalState,
   ]);
 
-  const handleDayClick = (date: Date) => {
+  const handleDayClick = (date: Date, modifiers: { outside?: boolean }) => {
+    if (modifiers.outside) return;
     if (date > new Date()) return;
 
     const dateKey = formatDateKey(date);
@@ -189,7 +190,8 @@ export default function Calendars({
     <Calendar
       className="w-full"
       captionLayout="dropdown"
-      showOutsideDays={false}
+      showOutsideDays={true}
+      fixedWeeks
       startMonth={new Date(2024, 0)}
       endMonth={new Date(2030, 11)}
       disabled={{ after: new Date() }}

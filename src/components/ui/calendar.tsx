@@ -45,7 +45,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "bg-white group/calendar p-2 sm:p-3 [--cell-size:--spacing(11)] sm:[--cell-size:--spacing(14)] md:[--cell-size:--spacing(16)] lg:[--cell-size:--spacing(26)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent dark:bg-neutral-950",
+        "bg-white group/calendar p-2 sm:p-3 [--cell-size:--spacing(11)] sm:[--cell-size:--spacing(14)] md:[--cell-size:--spacing(16)] lg:[--cell-size:--spacing(20)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent dark:bg-neutral-950",
         "rtl:**:[.rdp-button\\_next>svg]:rotate-180",
         "rtl:**:[.rdp-button\\_previous>svg]:rotate-180",
         className,
@@ -57,12 +57,12 @@ function Calendar({
         ...formatters,
       }}
       classNames={{
-        root: cn("w-full", defaultClassNames.root),
+        root: cn("w-full lg:flex-1 lg:flex lg:flex-col", defaultClassNames.root),
         months: cn(
-          "flex gap-4 flex-col md:flex-row relative",
+          "flex gap-4 flex-col md:flex-row relative lg:flex-1",
           defaultClassNames.months,
         ),
-        month: cn("flex flex-col w-full gap-4", defaultClassNames.month),
+        month: cn("flex flex-col w-full gap-4 lg:flex-1", defaultClassNames.month),
         nav: cn(
           "flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
           defaultClassNames.nav,
@@ -97,13 +97,14 @@ function Calendar({
             : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-neutral-500 [&>svg]:size-3.5 dark:[&>svg]:text-neutral-400",
           defaultClassNames.caption_label,
         ),
-        table: "w-full border-collapse",
+        month_grid: cn("w-full lg:flex-1 lg:flex lg:flex-col", defaultClassNames.month_grid),
+        weeks: cn("lg:flex-1 lg:flex lg:flex-col", defaultClassNames.weeks),
         weekdays: cn("flex", defaultClassNames.weekdays),
         weekday: cn(
           "text-neutral-500 rounded-md flex-1 font-medium text-sm sm:text-[0.8rem] py-2 sm:py-1 whitespace-nowrap select-none dark:text-neutral-400",
           defaultClassNames.weekday,
         ),
-        week: cn("flex w-full mt-2", defaultClassNames.week),
+        week: cn("flex w-full mt-2 lg:flex-1", defaultClassNames.week),
         week_number_header: cn(
           "select-none w-(--cell-size)",
           defaultClassNames.week_number_header,
@@ -113,7 +114,7 @@ function Calendar({
           defaultClassNames.week_number,
         ),
         day: cn(
-          "relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square md:aspect-auto select-none",
+          "relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square md:aspect-auto select-none flex flex-col",
           defaultClassNames.day,
         ),
         range_start: cn(
@@ -130,7 +131,7 @@ function Calendar({
           defaultClassNames.today,
         ),
         outside: cn(
-          "text-neutral-500 aria-selected:text-neutral-500 dark:text-neutral-400 dark:aria-selected:text-neutral-400",
+          "text-neutral-700 dark:text-neutral-600 opacity-30",
           defaultClassNames.outside,
         ),
         disabled: cn(
@@ -229,13 +230,19 @@ function CalendarDayButton({
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
 
+  const isOutside = modifiers.outside;
+
   const dateKey = formatDateKey(day.date);
-  const hasWorkout = workoutDates?.has(dateKey);
-  const hasCheatMeal = cheatMealDates?.has(dateKey);
+  const hasWorkout = !isOutside && workoutDates?.has(dateKey);
+  const hasCheatMeal = !isOutside && cheatMealDates?.has(dateKey);
   const hasData = hasWorkout || hasCheatMeal;
-  const gymCheck = gymChecksByDate?.get(dateKey);
-  const workoutColors = workoutColorsByDate?.get(dateKey) ?? [];
-  const cheatMealColors = cheatMealColorsByDate?.get(dateKey) ?? [];
+  const gymCheck = !isOutside ? gymChecksByDate?.get(dateKey) : undefined;
+  const workoutColors = !isOutside
+    ? (workoutColorsByDate?.get(dateKey) ?? [])
+    : [];
+  const cheatMealColors = !isOutside
+    ? (cheatMealColorsByDate?.get(dateKey) ?? [])
+    : [];
 
   // Long-press support for mobile quick toggle
   const [isPressing, setIsPressing] = React.useState(false);
@@ -243,7 +250,7 @@ function CalendarDayButton({
   const PRESS_DURATION = 500;
 
   const handleTouchStart = () => {
-    if (modifiers.disabled || !onQuickToggle) return;
+    if (modifiers.disabled || isOutside || !onQuickToggle) return;
     setIsPressing(true);
     pressTimer.current = setTimeout(() => {
       onQuickToggle(day.date, gymCheck?.id);
@@ -271,7 +278,7 @@ function CalendarDayButton({
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onQuickToggle && !modifiers.disabled) {
+    if (onQuickToggle && !modifiers.disabled && !isOutside) {
       onQuickToggle(day.date, gymCheck?.id);
     }
   };
@@ -293,7 +300,8 @@ function CalendarDayButton({
       data-range-middle={modifiers.range_middle}
       data-has-data={hasData}
       className={cn(
-        "relative data-[selected-single=true]:bg-neutral-900 data-[selected-single=true]:text-neutral-50 data-[range-middle=true]:bg-neutral-100 data-[range-middle=true]:text-neutral-900 data-[range-start=true]:bg-neutral-900 data-[range-start=true]:text-neutral-50 data-[range-end=true]:bg-neutral-900 data-[range-end=true]:text-neutral-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-neutral-900 flex aspect-square md:aspect-auto size-auto w-full min-w-(--cell-size) min-h-(--cell-size) flex-col items-center justify-center leading-none font-normal group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-neutral-50 dark:data-[selected-single=true]:text-neutral-900 dark:data-[range-middle=true]:bg-neutral-800 dark:data-[range-middle=true]:text-neutral-50 dark:data-[range-start=true]:bg-neutral-50 dark:data-[range-start=true]:text-neutral-900 dark:data-[range-end=true]:bg-neutral-50 dark:data-[range-end=true]:text-neutral-900 dark:dark:hover:text-neutral-50 p-1 sm:p-2 transition-all duration-200",
+        "relative data-[selected-single=true]:bg-neutral-900 data-[selected-single=true]:text-neutral-50 data-[range-middle=true]:bg-neutral-100 data-[range-middle=true]:text-neutral-900 data-[range-start=true]:bg-neutral-900 data-[range-start=true]:text-neutral-50 data-[range-end=true]:bg-neutral-900 data-[range-end=true]:text-neutral-50 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-neutral-900 flex aspect-square md:aspect-auto size-auto w-full min-w-(--cell-size) min-h-(--cell-size) flex-col items-center justify-center leading-none font-normal lg:min-h-0 group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70 dark:data-[selected-single=true]:bg-neutral-50 dark:data-[selected-single=true]:text-neutral-900 dark:data-[range-middle=true]:bg-neutral-800 dark:data-[range-middle=true]:text-neutral-50 dark:data-[range-start=true]:bg-neutral-50 dark:data-[range-start=true]:text-neutral-900 dark:data-[range-end=true]:bg-neutral-50 dark:data-[range-end=true]:text-neutral-900 dark:dark:hover:text-neutral-50 p-1 sm:p-2 transition-all duration-200 flex-1",
+        isOutside && "pointer-events-none",
         isPressing &&
           "scale-95 bg-neutral-100 dark:bg-neutral-800 ring-2 ring-primary/20",
         defaultClassNames.day,
@@ -305,38 +313,40 @@ function CalendarDayButton({
       onTouchMove={handleTouchMove}
       {...props}
     >
-      {props.children}
-      {(hasData || workoutColors.length > 0 || cheatMealColors.length > 0) && (
-        <div className="absolute bottom-1.5 sm:bottom-2 left-0 right-0 flex gap-0.5 justify-center items-center flex-wrap content-end">
-          {workoutColors.slice(0, 4).map((color, i) => (
-            <span
-              key={`w-dot-${color}-${i}`}
-              className="size-1.5 sm:size-1.5 rounded-full"
-              style={{ backgroundColor: color }}
-            />
-          ))}
-          {workoutColors.length > 4 && (
-            <span className="text-[0.5rem] sm:text-[0.6rem] leading-none font-medium text-neutral-400">
-              +
-            </span>
-          )}
-          {cheatMealColors.slice(0, 4).map((color, i) => (
-            <span
-              key={`c-dot-${color}-${i}`}
-              className="size-1.5 sm:size-1.5 rounded-full shadow-[0_0_3px_var(--dot-color)]"
-              style={{
-                backgroundColor: color,
-                ["--dot-color" as string]: color,
-              }}
-            />
-          ))}
-          {cheatMealColors.length > 4 && (
-            <span className="text-[0.5rem] sm:text-[0.6rem] leading-none font-medium text-neutral-400">
-              +
-            </span>
-          )}
-        </div>
-      )}
+      <div className="flex flex-col items-center my-auto">
+        {props.children}
+        {(hasData || workoutColors.length > 0 || cheatMealColors.length > 0) && (
+          <div className="mt-0.5 flex gap-0.5 justify-center items-center flex-wrap content-end">
+            {workoutColors.slice(0, 4).map((color, i) => (
+              <span
+                key={`w-dot-${color}-${i}`}
+                className="size-1.5 sm:size-1.5 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+            ))}
+            {workoutColors.length > 4 && (
+              <span className="text-[0.5rem] sm:text-[0.6rem] leading-none font-medium text-neutral-400">
+                +
+              </span>
+            )}
+            {cheatMealColors.slice(0, 4).map((color, i) => (
+              <span
+                key={`c-dot-${color}-${i}`}
+                className="size-1.5 sm:size-1.5 rounded-full shadow-[0_0_3px_var(--dot-color)]"
+                style={{
+                  backgroundColor: color,
+                  ["--dot-color" as string]: color,
+                }}
+              />
+            ))}
+            {cheatMealColors.length > 4 && (
+              <span className="text-[0.5rem] sm:text-[0.6rem] leading-none font-medium text-neutral-400">
+                +
+              </span>
+            )}
+          </div>
+        )}
+      </div>
     </Button>
   );
 }
